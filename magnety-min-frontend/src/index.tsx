@@ -1,12 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { StarknetProvider } from '@starknet-react/core'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+
+
 root.render(
   <React.StrictMode>
+    <StarknetProvider>
+    <div>sfeeeeeeeeeeeeeeeeeeeeeeee</div>
+    </StarknetProvider>
     <App />
   </React.StrictMode>
 );
