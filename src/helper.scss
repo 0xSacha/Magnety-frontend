@@ -1,0 +1,37 @@
+$widthPercentageList: 0, 25, 50, 100;
+@each $w in $widthPercentageList {
+  .w-#{$w} {
+    width: $w * 1% !important;
+  }
+}
+
+$widthPixelList: 0, 25, 50, 100;
+@each $w in $widthPixelList {
+  .w-#{$w}-px {
+    width: $w * 1px !important;
+  }
+}
+
+$fontSizes: 10, 12, 14, 16, 18, 20, 22, 35, 36;
+@each $fs in $fontSizes {
+  .fs-#{$fs} {
+    font-size: $fs * 1px;
+  }
+}
+
+$colors: (
+  "primary": $primaryColor,
+  "white": #fff,
+  "black": #000,
+  "danger": $dangerColor,
+  "success": $successColor,
+);
+
+@each $name, $value in $colors {
+  .bg-#{$name} {
+    background-color: $value;
+  }
+  .text-#{$name} {
+    color: $value;
+  }
+}
