@@ -1,0 +1,96 @@
+@import "./variables.scss";
+@import "./helper.scss";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --color-primary: #030135;
+  --color-secondary: #f6643c;
+  --color-danger: #91141d;
+  --color-success: #0dab45;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+* {
+  box-sizing: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.d-flex {
+  display: flex;
+}
+.f-flex-column {
+  display: flex;
+  font-display: column;
+}
+
+// page navbar with content
+div.page {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  max-height: 100vh;
+  .pageContent {
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+}
+
+// dotted pattern for background
+.bgDotted {
+  // --m: 5px;
+  // --dotColor: hsla(0, 0%, 0%, 10%);
+  // --bgColor: rgba(3, 1, 53, 30%);
+  // $sizey: calc(var(--m) * 3); // height
+  // $sizex: calc(var(--m) * 2); // width
+  // $dotSize: calc(var(--m) * 1.25); // half of square
+
+  // background-image:
+  // radial-gradient(circle $dotSize at 75% 75%, var(--dotColor) 40%, transparent 40%),
+  // radial-gradient(circle $dotSize at 25% 25%, var(--dotColor) 40%, transparent 40%);
+  // background-color: var(--bgColor);
+  // background-size: $sizex $sizey;
+  background-image: url("/bg.svg");
+}
+
+button {
+  --text: #ffffff;
+  --bgColor: var(--color-primary, black);
+  color: var(--text);
+  background-color: var(--bgColor);
+  padding: 8px 12px;
+  border-radius: 10px;
+  &:hover {
+    background-color: var(--text);
+    color: var(--bgColor);
+  }
+  &[data-color="primary"] {
+    --text: #ffffff;
+    --bgColor: var(--color-primary, black);
+  }
+  &[data-color="secondary"] {
+    --text: #ffffff;
+    --bgColor: var(--color-secondary, black);
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  /* background: transparent; */
+  background: $primaryColor;
+}
+::-webkit-scrollbar-thumb {
+  background: $secondaryColor;
+  border-radius: 19px;
+  border: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  border-radius: 10px;
+}
