@@ -1,30 +1,6 @@
 import { NextPage } from "next";
-import Navbar from "../components/Navbar";
-import styles from "../styles/home.module.scss";
+import FakeImage from "~/components/FakeImage"
 
-type FakeImageProp = {
-  width?: string;
-  height?: string;
-  fillColor?: string;
-  maxWidth?: string;
-  maxHeight?: string;
-  borderRadius?: string;
-};
-
-const FakeImage = (props: FakeImageProp) => {
-  return (
-    <div
-      style={{
-        width: props.width ?? "auto",
-        height: props.height ?? "auto",
-        backgroundColor: props.fillColor ?? "transparent",
-        maxWidth: props.maxWidth ?? "100%",
-        maxHeight: props.maxHeight ?? "100%",
-        borderRadius: props.borderRadius ?? "0",
-      }}
-    ></div>
-  );
-};
 
 type OurSelectionCardProp = {
   vaultName: string;
@@ -33,6 +9,7 @@ type OurSelectionCardProp = {
   decrease?: number;
   time: string;
 };
+
 const OurSelectionCard = (props: OurSelectionCardProp) => {
   return (
     <>
@@ -50,7 +27,7 @@ const OurSelectionCard = (props: OurSelectionCardProp) => {
             gap: "10px",
             borderRadius: "15px",
           }}
-          className="bgDotted"
+          className="bg__dotted"
         >
           <div>
             <FakeImage
@@ -83,18 +60,12 @@ const OurSelectionCard = (props: OurSelectionCardProp) => {
 
 const Home: NextPage = () => {
   return (
-    <div className={`page`}>
-      <Navbar />
-      <div className={`pageContent ${styles.pageContent}`}>
-        Content of page 1
-        <OurSelectionCard
-          pricePerShare={0.58}
-          vaultName={"A vault name"}
-          increase={1.34}
-          time={"24Hrs"}
-        />
-      </div>
-    </div>
+    <OurSelectionCard
+      pricePerShare={0.58}
+      vaultName={"A vault name"}
+      increase={1.34}
+      time={"24Hrs"}
+    />
   );
 };
 

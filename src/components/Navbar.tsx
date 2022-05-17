@@ -1,15 +1,17 @@
 import { useState } from "react";
 import styles from "../styles/header.module.scss";
 import Image from 'next/image'
+import { useRouter } from "next/router";
 
 type HeaderListItem = {
-    label: string;
-    onClick: Function;
-    customClass?: string;
-  };
+  label: string;
+  onClick: Function;
+  customClass?: string;
+};
   
 export default () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const router = useRouter();
   
     const NAVBAR_ITEMS: HeaderListItem[] = [
       {
@@ -51,7 +53,7 @@ export default () => {
     return (
       <>
         <div className={`${styles.headerContainer}`}>
-          <div style={{marginLeft: '17px'}}>
+          <div style={{marginLeft: '17px'}} onClick={() => router.replace('/')}>
             <Image src="/logo1.svg" alt="A" width={'32px'} height={'46px'}/>
           </div>
           <div className={styles.divider}></div>

@@ -1,6 +1,5 @@
-import next, { NextPage } from "next";
+import { NextPage } from "next";
 import React from "react";
-import Navbar from "~/components/Navbar";
 import styles from "~/styles/contract.module.scss";
 type FieldType = {
   name: string;
@@ -206,7 +205,6 @@ const Contract: NextPage = () => {
       onChange: handleForm,
     },
   ];
-
   const FIELDS3: FormInputTextFieldProps[] = [
     {
       fiels: [
@@ -224,7 +222,6 @@ const Contract: NextPage = () => {
       onChange: handleForm,
     },
   ];
-
   const FIELDS4: FormInputTextFieldProps[] = [
     {
       fiels: [
@@ -323,93 +320,87 @@ const Contract: NextPage = () => {
   ];
 
   return (
-    <div className={`page`}>
-      <Navbar />
-      <div className={`${styles.pageContent}`}>
-        <div className={`${styles.pageBackdrop}`}> </div>
-        <div className={`${styles.pageWrapper}`}>
-          <div className="fs-35"> Create</div>
-          <form
-            onSubmit={(e) => {
-              onSubmit(e);
-            }}
-            method="post"
-          >
-            <div className={`${styles.formContainer} bgDotted`}>
-              <div className={styles.header}>Let's Begin</div>
+    <div className={`${styles.pageContent}`}>
+      <div className="fs-35"> Create</div>
+      <form
+        onSubmit={(e) => {
+          onSubmit(e);
+        }}
+        method="post"
+      >
+        <div className={`${styles.formContainer} bg__dotted`}>
+          <div className={styles.header}>Let's Begin</div>
 
-              {FIELDS1.map((item, index) => (
-                <FormInputTextField
-                  key={index}
-                  fiels={item.fiels}
-                  infoMessages={item.infoMessages}
-                  formGroupClass={item.formGroupClass}
-                  onChange={item.onChange}
-                />
-              ))}
-            </div>
-            <div className={`${styles.formContainer} bgDotted`}>
-              <div className={styles.header}>Restrictions</div>
+          {FIELDS1.map((item, index) => (
+            <FormInputTextField
+              key={index}
+              fiels={item.fiels}
+              infoMessages={item.infoMessages}
+              formGroupClass={item.formGroupClass}
+              onChange={item.onChange}
+            />
+          ))}
+        </div>
+        <div className={`${styles.formContainer} bg__dotted`}>
+          <div className={styles.header}>Restrictions</div>
 
-              {FIELDS2.map((item, index) => (
-                <FormInputTextField
-                  key={index}
-                  fiels={item.fiels}
-                  infoMessages={item.infoMessages}
-                  formGroupClass={item.formGroupClass}
-                  onChange={item.onChange}
-                />
-              ))}
-            </div>
-            <div className={`${styles.formContainer} bgDotted`}>
-              <div className={styles.header}>Withdrawals preference</div>
+          {FIELDS2.map((item, index) => (
+            <FormInputTextField
+              key={index}
+              fiels={item.fiels}
+              infoMessages={item.infoMessages}
+              formGroupClass={item.formGroupClass}
+              onChange={item.onChange}
+            />
+          ))}
+        </div>
+        <div className={`${styles.formContainer} bg__dotted`}>
+          <div className={styles.header}>Withdrawals preference</div>
 
-              {FIELDS3.map((item, index) => (
-                <FormInputTextField
-                  key={index}
-                  fiels={item.fiels}
-                  infoMessages={item.infoMessages}
-                  formGroupClass={item.formGroupClass}
-                  onChange={item.onChange}
-                />
-              ))}
-            </div>
-            <div className={`${styles.formContainer} bgDotted`}>
-              <div className={styles.header}>Fees</div>
+          {FIELDS3.map((item, index) => (
+            <FormInputTextField
+              key={index}
+              fiels={item.fiels}
+              infoMessages={item.infoMessages}
+              formGroupClass={item.formGroupClass}
+              onChange={item.onChange}
+            />
+          ))}
+        </div>
+        <div className={`${styles.formContainer} bg__dotted`}>
+          <div className={styles.header}>Fees</div>
 
-              {FIELDS4.map((item, index) => (
-                <FormInputTextField
-                  key={index}
-                  fiels={item.fiels}
-                  infoMessages={item.infoMessages}
-                  formGroupClass={item.formGroupClass}
-                  onChange={item.onChange}
-                />
-              ))}
-            </div>
-            <div className={`${styles.formContainer} bgDotted`}>
-              <div className={styles.header}>Policies</div>
+          {FIELDS4.map((item, index) => (
+            <FormInputTextField
+              key={index}
+              fiels={item.fiels}
+              infoMessages={item.infoMessages}
+              formGroupClass={item.formGroupClass}
+              onChange={item.onChange}
+            />
+          ))}
+        </div>
+        <div className={`${styles.formContainer} bg__dotted`}>
+          <div className={styles.header}>Policies</div>
 
-              {FIELDS5.map((item, index) => (
-                <FormInputTextField
-                  key={index}
-                  fiels={item.fiels}
-                  infoMessages={item.infoMessages}
-                  formGroupClass={item.formGroupClass}
-                  onChange={item.onChange}
-                />
-              ))}
-            </div>
-            <button
-              data-color="secondary"
-              type="submit"
-              style={{ display: "block", marginLeft: 'auto' }}
-            >
-              Go!
-            </button>
-          </form>
-        </div>  
-      </div>
+          {FIELDS5.map((item, index) => (
+            <FormInputTextField
+              key={index}
+              fiels={item.fiels}
+              infoMessages={item.infoMessages}
+              formGroupClass={item.formGroupClass}
+              onChange={item.onChange}
+            />
+          ))}
+        </div>
+        <button
+          data-color="secondary"
+          type="submit"
+          style={{ display: "block", marginLeft: "auto" }}
+        >
+          Go!
+        </button>
+      </form>
     </div>
   );
 };

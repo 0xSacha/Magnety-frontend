@@ -12,10 +12,24 @@ $widthPixelList: 0, 25, 50, 100;
   }
 }
 
-$fontSizes: 10, 12, 14, 16, 18, 20, 22, 35, 36;
+$fontSizes: 10, 12, 14, 16, 18, 20, 22, 28, 35, 36, 38, 48;
 @each $fs in $fontSizes {
   .fs-#{$fs} {
     font-size: $fs * 1px;
+  }
+}
+
+$fontWeights: 10, 12, 14, 16, 18, 20, 22, 28, 35, 36, 38, 48;
+@each $fs in $fontSizes {
+  .fs-#{$fs} {
+    font-size: $fs * 1px;
+  }
+}
+
+$borderRadius: 0, 5, 10, 15;
+@each $br in $borderRadius {
+  .border-radius-#{$br} {
+    border-radius: $br * 1px;
   }
 }
 
@@ -33,5 +47,57 @@ $colors: (
   }
   .text-#{$name} {
     color: $value;
+  }
+}
+
+
+.d-flex {
+  display: flex;
+}
+.d-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+$textAlign: center, start, end;
+@each $value in $textAlign {
+  .text-align-#{$value} {
+    text-align: $value;
+  }
+}
+
+
+.text-right{
+  text-align: right;
+}
+
+$justifyContent: center, baseline, start, flex-start, end, flex-end, space-around, space-between, space-evenly, stretch;
+@each $value in $justifyContent {
+  .justify-content-#{$value} {
+    justify-content: $value;
+  }
+}
+
+
+$justifyContent: center, baseline, start, flex-start, end, flex-end, space-around, space-between, space-evenly, stretch;
+@each $value in $justifyContent {
+  .align-items-#{$value} {
+    justify-content: $value;
+  }
+}
+
+
+.grid-container {
+  display: grid;
+  gap: var(--gap, 0);
+  grid-template-columns: repeat(var(--cols, 12), auto);
+  grid-template-rows: repeat(var(--rows, auto), auto);
+  min-height: 100%;
+  > * {
+    grid-column: var(--grid-col, auto / auto);
+    grid-row: var(--grid-row, auto / auto);
+    &.full-width {
+      --grid-col: 1 / -1;
+    }
   }
 }

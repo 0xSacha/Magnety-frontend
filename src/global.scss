@@ -14,17 +14,9 @@ body {
 }
 
 * {
-  box-sizing: 0;
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
-}
-
-.d-flex {
-  display: flex;
-}
-.f-flex-column {
-  display: flex;
-  font-display: column;
 }
 
 // page navbar with content
@@ -33,14 +25,44 @@ div.page {
   grid-template-rows: auto 1fr;
   height: 100vh;
   max-height: 100vh;
-  .pageContent {
-    overflow: scroll;
+  .page__content {
+    height: 100%;
+    box-sizing: border-box;
     overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+  }
+  .page__wrapper {
+    background-color: $primaryColor;
+    box-sizing: border-box;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .page__backdrop {
+    --dot1Color: #f6643c;
+    --dot2Color: #ffffff;
+    background: radial-gradient(
+        circle 30vh at 55vw 30vh,
+        var(--dot2Color) 80%,
+        transparent
+      ),
+      radial-gradient(
+        circle 50vh at 25vw -10vh,
+        var(--dot1Color) 80%,
+        transparent
+      );
+    filter: blur(20px);
+    -webkit-filter: blur(20px);
+    opacity: 0.5;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
   }
 }
 
 // dotted pattern for background
-.bgDotted {
+.bg__dotted {
   // --m: 5px;
   // --dotColor: hsla(0, 0%, 0%, 10%);
   // --bgColor: rgba(3, 1, 53, 30%);
@@ -58,22 +80,28 @@ div.page {
 
 button {
   --text: #ffffff;
-  --bgColor: var(--color-primary, black);
+  --bg: var(--color-primary, black);
   color: var(--text);
-  background-color: var(--bgColor);
+  background-color: var(--bg);
   padding: 8px 12px;
+  border-width: 0px;
   border-radius: 10px;
+  cursor: pointer;
   &:hover {
-    background-color: var(--text);
-    color: var(--bgColor);
+    background-color: var(--hover-bg, var(--text));
+    color: var(--hover-text, var(--bg));
   }
   &[data-color="primary"] {
     --text: #ffffff;
-    --bgColor: var(--color-primary, black);
+    --bg: var(--color-primary, black);
   }
   &[data-color="secondary"] {
     --text: #ffffff;
-    --bgColor: var(--color-secondary, black);
+    --bg: var(--color-secondary, black);
+  }
+  &[data-color="white"] {
+    --text: var(--color-secondary, black);
+    --bg: white;
   }
 }
 
