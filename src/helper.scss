@@ -12,17 +12,17 @@ $widthPixelList: 0, 25, 50, 100;
   }
 }
 
-$fontSizes: 10, 12, 14, 16, 18, 20, 22, 28, 35, 36, 38, 48;
+$fontSizes: 10, 12, 14, 16, 18, 20, 22, 24, 28, 35, 36, 38, 48;
 @each $fs in $fontSizes {
   .fs-#{$fs} {
     font-size: $fs * 1px;
   }
 }
 
-$fontWeights: 10, 12, 14, 16, 18, 20, 22, 28, 35, 36, 38, 48;
-@each $fs in $fontSizes {
-  .fs-#{$fs} {
-    font-size: $fs * 1px;
+$fontWeights: 100,200,300,400,500,600,700,800,900, bold;
+@each $fw in $fontWeights {
+  .fw-#{$fw} {
+    font-weight: $fw;
   }
 }
 
@@ -66,6 +66,9 @@ $textAlign: center, start, end;
   }
 }
 
+.overflow-hidden{
+  overflow: hidden;
+}
 
 .text-right{
   text-align: right;

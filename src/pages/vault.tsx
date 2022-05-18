@@ -101,7 +101,93 @@ const options = {
   }
 }
 
+type PortfolioData = {
+  coinName: string ,
+  coinFullName: string,
+  balance: number,
+  price: number,
+  value: number,
+  allocationPercentage: number,
+}[];
+
 const vault: NextPage = () => {
+  const portfolioData: PortfolioData = [
+    {
+      coinName: 'ETH' ,
+      coinFullName: 'Ethereum',
+      balance: 1.045,
+      price: 100,
+      value: 2,
+      allocationPercentage: 35,
+    },
+    {
+      coinName: 'other coin' ,
+      coinFullName: 'other',
+      balance: 10,
+      price: 10,
+      value: 3,
+      allocationPercentage: 5,
+    }
+  ];
+  const feesData = [
+    {
+      feesType: 'Management Fee' ,
+      settingsPercentage: '2.00',
+      ratePercentage: '2.00',
+      unpaidFeesPercentage: 35,
+    },
+    {
+      feesType: 'Performance Fee' ,
+      settingsPercentage: '2.00',
+      ratePercentage: '2.00',
+      unpaidFeesPercentage: 35,
+    },
+    {
+      feesType: 'Exit Fee(Vault)' ,
+      settingsPercentage: '2.00',
+      ratePercentage: '2.00',
+      unpaidFeesPercentage: 35,
+    },
+    {
+      feesType: 'Protocal Fee' ,
+      settingsPercentage: '2.00',
+      ratePercentage: '2.00',
+      unpaidFeesPercentage: 35,
+    }
+  ];
+  const depositorsData=[
+    {
+      depositor: '0x123...ab',
+      Since: '2 Months',
+      numberOfShares:2300,
+      percentage: 35
+    },
+    {
+      depositor: '0x123...ab',
+      Since: '2 Months',
+      numberOfShares:2300,
+      percentage: 35
+    },
+    {
+      depositor: '0x123...ab',
+      Since: '2 Months',
+      numberOfShares:2300,
+      percentage: 35
+    },
+    {
+      depositor: '0x123...ab',
+      Since: '2 Months',
+      numberOfShares:2300,
+      percentage: 35
+    },
+    {
+      depositor: '0x123...ab',
+      Since: '2 Months',
+      numberOfShares:2300,
+      percentage: 35
+    }
+  ];
+
   return ( <>
       <div className={`${styles.pageContainer}`}>
         <div className={`${styles.cardWrapper1}`}>
@@ -158,9 +244,13 @@ const vault: NextPage = () => {
           <div className='bg__dotted'>
             <div className='d-flex justify-content-space-between'>
               <div>Share price
-                <div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  gap: '16px'
+                }}>
                   <span className='fs-48'> $0.58 </span>
-                  <span className='fs-18'> +1.34% </span> 
+                  <span className='fs-18 text-success'> +1.34% </span> 
                   <span className='fs-14'> past 1D </span> 
                 </div>
               </div>
@@ -186,14 +276,200 @@ const vault: NextPage = () => {
         </div>
         {/* Tabs */}
         <div style={{
-          height: '400px'
+          minHeight: '500px',
+          maxHeight: '80vh',
         }}>
-          <Tabs activeTab='2'>
-              <Tab label='TAB1' id='1'>
-                <div> Tab 1 Body </div>
+          <Tabs activeTab='6'>
+              <Tab label='Portfolio' id='1'>
+                <div  className={`${styles.portfolioTable} bg__dotted`}>
+                  <table cellSpacing="0" cellPadding="0">
+                    <thead>
+                      <tr>
+                        <th>Assets</th>
+                        <th>Balance</th>
+                        <th>Price</th>
+                        <th>Value</th>
+                        <th>Allocation</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {portfolioData.map((p,index)=>(
+                        <tr key={index}>
+                          <td>
+                            <FakeImage width='50px' height='50px' fillColor='var(--color-secondary)' borderRadius='50%'></FakeImage>
+                            <div>
+                              <span> {p.coinName} </span>
+                              <span> {p.coinFullName} </span>
+                            </div>
+                          </td>
+                          <td> ${p.balance}</td>
+                          <td>{p.price}</td>
+                          <td>{p.value}</td>
+                          <td>{p.allocationPercentage}%</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </Tab>
-              <Tab label='tab2' id='2'>
-                <div> Tab 2 Body </div>
+              <Tab label='Financials' id='2'>
+                <div className={`bg__dotted ${styles.financialTabContent}`}> 
+                  <div>
+                    <div className='fs-24 fw-600'>General Information</div>
+                    <div>
+                      <div className='fw-600'>General Assets Vault (GAV)</div>
+                      <div>
+                        <span className='fw-700'>1,993,516.452 MGTY</span>
+                        <span>$1,993,516.452</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div>
+                      <div className='fw-600'>Net Assets Valut (NAV)</div>
+                      <div>
+                        <span  className='fw-700'>1,993,516.452 MGTY</span>
+                        <span>$1,993,516.452</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div className='fs-24 fw-600'>Financial Metrics</div>
+                    <div>
+                      <div className='fw-600'>Return Month-to-Date</div>
+                      <div>
+                        <span className='text-success'>+0.5%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Tab>
+              <Tab label='Fees' id='3'>
+                <div className={`${styles.feesTable} bg__dotted`} >
+                  <table cellSpacing="0" cellPadding="0">
+                    <thead>
+                      <tr>
+                        <th>Fee Type</th>
+                        <th>Settings</th>
+                        <th> </th>
+                        <th>Unpaid Fees</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {feesData.map((f,index)=>(
+                        <tr key={index}>
+                          <td>
+                            {f.feesType}
+                          </td>
+                          <td>
+                            <div>
+                              <div>Rate</div>
+                              <div>{f.settingsPercentage} %</div>
+                            </div>
+                          </td>
+                          <td>
+                            <div>
+                              <div>Rate</div>
+                              <div>{f.ratePercentage} %</div>
+                            </div>
+                          </td>
+                          <td>{f.unpaidFeesPercentage} %</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Tab>
+              <Tab label='Policies' id='4'>
+                <div className={`bg__dotted ${styles.policiesTabContent}`}> 
+                  <div>
+                    <div className='fs-24 fw-600'>Limit Wallets Permitted To Deposit</div>
+                    <div>
+                      <button data-color= "primary">0x123...ab</button>
+                      <button data-color= "primary">0x123...ab</button>
+                      <button data-color= "primary">0x123...ab</button>
+                      <button data-color= "primary">0x123...ab</button>
+                    </div>
+                    <div>view more</div>
+                  </div>
+                  <div>
+                    <div className='fs-24 fw-600'>Deposit Limits</div>
+                    <div>minimum : 300 MGTY</div>
+                    <div>maximum : no</div>
+                  </div>
+                </div>
+              </Tab>
+              <Tab label='Depositors' id='5'>
+                <div className={`${styles.depositorsTable} bg__dotted`}>
+                  <table cellSpacing="0" cellPadding="0">
+                    <thead>
+                      <tr>
+                        <th>Depositor</th>
+                        <th>Since</th>
+                        <th>Number of Shares</th>
+                        <th>Percentage</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {depositorsData.map((d,index)=>(
+                        <tr key={index}>
+                          <td>
+                            {d.depositor}
+                          </td>
+                          <td> 
+                            {d.Since}
+                          </td>
+                          <td>
+                            {d.numberOfShares}
+                          </td>
+                          <td>
+                            {d.percentage} %
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Tab>
+              <Tab label='Activities' id='6'>
+                <div className={`${styles.activitiesContainer}`}>
+                  <div  className='bg__dotted'>
+                    <div>
+                      <div>
+                        <div>
+                          <div className='fs-12'>29 Apr 2022 01:22</div>
+                          <div className='fs-24 fw-600'>Deposit</div>
+                        </div>
+                        <div>
+                          <FakeImage height='50px' width='50px' borderRadius='50%' fillColor='black'/>
+                          <div>
+                            <div className='fs-20 fw-700'>Vault name</div>
+                            <div className='fs-12'>0x4s21...1452</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <div>Amount</div>
+                        <div>Shares received</div>
+                        <div>Depositor</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='bg__dotted'>
+
+                  </div>
+                </div>
+              </Tab>
+              <Tab label='Fidelity' id='7'>
+                <div className={`bg__dotted ${styles.fidelityTabContent}`}>
+                  <div>
+                    <div className='fs-24 fw-600'>General Informations</div>
+                    <div>
+                      <div className='fw-600'>Airdrops accross the time</div>
+                      <div>5%</div>
+                    </div>
+                  </div>
+                </div>
               </Tab>
           </Tabs>
         </div>

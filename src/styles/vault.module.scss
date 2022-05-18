@@ -1,5 +1,5 @@
 .pageContainer{
-    padding: 0px 25px;
+    padding: 0px 25px 25px 25px;
     .cardWrapper1, .cardWrapper2{
         display: flex;
         justify-content: space-between;
@@ -78,4 +78,252 @@
         }
     }
         
+}
+
+
+
+.portfolioTable{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    min-height: 382px;
+    table{
+        width: 100%;
+        thead{
+            background: var(--color-secondary);
+            tr{
+                th{
+                    padding: 7px 0px 7px 25px;
+                    text-align: start;
+                    color: #000;
+                }
+            }
+        }
+        tbody{
+            tr{
+                td{
+                    border-bottom: 1px solid var(--color-secondary);
+                    padding: 22px 0px 22px 25px;
+                    text-align: start;
+                }
+                td:first-child{
+                    display: flex;
+                    align-items: center;
+                    gap: 17px;
+                    >div:last-child{
+                        display: flex;
+                        flex-direction: column;
+                        >span:first-child{
+                            font-weight: 600;
+                            line-height: 19px;
+                        }
+                        >span:last-child{
+                            line-height: 19px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+}
+
+.feesTable{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    min-height: 434px;
+    table{
+        width: 100%;
+        thead{
+            background: var(--color-secondary);
+            tr{
+                th{
+                    padding: 7px 0px 7px 25px;
+                    text-align: start;
+                    color: #000;
+                }
+            }
+        }
+        tbody{
+            tr{
+                td{
+                    padding: 23px 0px 26px 25px;
+                    border-bottom: 1px solid var(--color-secondary);
+                    text-align: start;
+                    div{
+                        display: flex;
+                        flex-direction: column;
+                        gap: 7px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.financialTabContent{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    // padding-bottom: 28px;
+    min-height: 382px;
+    >div{
+        padding: 22px 35px;
+        border-bottom: 1px solid var(--color-secondary);
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        >div{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            >div:first-child{
+                margin-left: 24px;
+            }
+            >div:last-child{
+                width: 200px;
+                text-align: start;
+                margin-right: 144px;
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+}
+
+.policiesTabContent{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    min-height: 434px;
+    button{
+        min-width: 180px;
+        padding: 5px;
+        border-radius: 5px;
+        &:hover {
+            background-color: white;
+            color: black;
+        }
+    }
+    >div{
+        padding: 19px;
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+        border-bottom: 1px solid var(--color-secondary);
+        >div{
+            display: flex;
+            gap: 25px;
+        }
+    }
+}
+
+.depositorsTable{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    min-height: 434px;
+    table{
+        width: 100%;
+        thead{
+            background: var(--color-secondary);
+            tr{
+                th{
+                    padding: 12px 0px 12px 38px;
+                    text-align: start;
+                    color: #000;
+                }
+            }
+        }
+        tbody{
+            tr{
+                td{
+                    border-bottom: 1px solid var(--color-secondary);
+                    padding: 12px 0px 12px 38px;
+                    text-align: start;
+                    width: 1%;
+                    white-space: nowrap;
+                }
+            }
+        }
+    }
+}
+
+.activitiesContainer{
+    display: flex;
+    gap: 12px;
+    min-height: 434px;
+    >div:first-child{
+        border: 1px solid var(--color-secondary);
+        border-radius: 15px;
+        padding: 16px 24px 10px 13px;
+        width: 60%;
+        >div{
+            border: 1px solid var(--color-secondary);
+            border-radius: 15px;
+            padding: 12px 12px 13px 12px;
+            display: flex;
+            gap: 15%;
+            justify-content: space-between;
+            min-height: 232px;
+            >div:first-child{
+                padding-top: 8px;
+                padding-bottom: 16px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                flex-grow: 1;
+                >div:last-child{
+                    align-self: flex-end;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+            }
+            >div:last-child{
+                min-height: 100%;
+                width: 54%;
+                border-radius: 15px;
+                background-color: var(--color-primary);
+                padding: 33px 26px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+        }
+    }
+    >div:last-child{
+        border: 1px solid var(--color-secondary);
+        border-radius: 15px;
+        height: 280px;
+        flex-grow: 1;
+    }
+}
+
+.fidelityTabContent{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    // padding-bottom: 28px;
+    min-height: 382px;
+    >div{
+        padding: 22px 35px;
+        border-bottom: 1px solid var(--color-secondary);
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        >div{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            >div:last-child{
+                width: 200px;
+                text-align: start;
+                margin-right: 144px;
+            }
+        }
+    }
 }
