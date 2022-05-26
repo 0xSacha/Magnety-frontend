@@ -3,10 +3,14 @@ import type { NextPage } from 'next'
 import { useMemo } from 'react'
 import { toBN } from 'starknet/dist/utils/number'
 import { ConnectWallet } from '~/components/ConnectWallet'
+import { DeployFund } from '~/components/DeployFund'
 import { IncrementCounter } from '~/components/IncrementCounter'
 import { TransactionList } from '~/components/TransactionList'
 import { useCounterContract } from '~/hooks/counter'
 import { useVaultLibContract } from '~/hooks/vaultLib'
+
+
+
 
 const Home: NextPage = () => {
   const { contract: counter } = useCounterContract()
@@ -64,6 +68,8 @@ const Home: NextPage = () => {
       <p>fund Name: {fundNameVaue}</p>
       <h2>Recent Transactions</h2>
       <TransactionList />
+      <DeployFund />
+
     </div>
   )
 }
