@@ -158,16 +158,17 @@ const Contract: NextPage = () => {
   const { account } = useStarknet()
   const { contract: vaultFactory } = useVaultFactoryContract()
   const { invoke } = useStarknetInvoke({ contract: vaultFactory, method: 'initializeFund' })
-
+  // const { contract: comptroller } = useComptrollerContract()
+  // const { invoked } = useStarknetInvoke({ contract: comptroller, method: 'activateVault' })
 
   function addNewAsset(id: number) {
-    const address = hexToDecimalString(Asset[id].address)
+    const addressAsset = hexToDecimalString(Asset[id].address)
     let tab: string[] = trackedAsset
-    if (tab.includes(address)) {
+    if (tab.includes(addressAsset)) {
       return
     }
     else {
-      tab.push(address)
+      tab.push(addressAsset)
       setTrackedAsset(tab)
       return
     }
@@ -178,6 +179,7 @@ const Contract: NextPage = () => {
     let toDeci = hexToDecimalString(integrationArgs[0])
     integrationArgs[0] = toDeci
     let tab = allowedProtocol
+
     if (tab.includes(integrationArgs)) {
       return
     }
@@ -189,9 +191,9 @@ const Contract: NextPage = () => {
   }
 
   function removeAsset(id: number) {
-    const address = Asset[id].address
+    const addressAsset = Asset[id].address
     let tab: string[] = trackedAsset
-    if (tab.includes(address)) {
+    if (tab.includes(addressAsset)) {
       //tab.remove the value of address
       setTrackedAsset(tab)
       return
@@ -618,7 +620,7 @@ const Contract: NextPage = () => {
         <div className={`${styles.formContainer} bg__dotted`}>
           <div className={styles.header}>Asset manager policies</div>
           <div>
-            <div>Select Protocol you want to use</div>
+            <div>Select Protocol  you want to use</div>
             <div>
               <button type="button" onClick={() => addNewProtocol(0)} style={{ width: "100px" }}>
                 <Image src={alphaRoad} alt="btc" />

@@ -5,7 +5,7 @@ import { useVaultFactoryContract } from '~/hooks/vaultFactory'
 export function InitializeFund() {
     const { account } = useStarknet()
     const { contract: vaultFactory } = useVaultFactoryContract()
-    const { invoke } = useStarknetInvoke({ contract: vaultFactory, method: 'initializeFund' })
+    const { invoke } = useStarknetInvoke({ contract: vaultFactory, method: 'addGlobalAllowedIntegration' })
 
     if (!account) {
         return null
