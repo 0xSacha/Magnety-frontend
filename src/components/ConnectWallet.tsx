@@ -1,16 +1,19 @@
-import { useStarknet, InjectedConnector } from '@starknet-react/core'
+import { getStarknet } from '../starknetWrapper'
+import React, {  useState } from "react";
+
 
 export function ConnectWallet() {
-  const { account, connect, disconnect } = useStarknet()
+    let [address, setAddress] = useState("connect wallet");
+    const onClick = () => {
+        const starkNet = getStarknet()
+        starkNet.enable({showModal: true}).then(value => {
+          setAddress(JSON.stringify(value))
+        })
+    }
 
-  if (account) {
     return (
-      <div>
-        <p>Account: {account}</p>
-        <button onClick={() => disconnect(new InjectedConnector())}>Disconnect</button>
-      </div>
-    )
-  }
-
-  return <button onClick={() => connect(new InjectedConnector())}>Connect</button>
+        <div className="App">
+            <button onClick={onClick}> {address}</button>
+        </div>
+    );
 }

@@ -4,6 +4,10 @@ import styles from "~/styles/contract.module.scss";
 import { useContractFactory } from "~/hooks/deploy";
 import TargetSource from "../abi/Vault.json";
 import { hexToDecimalString } from 'starknet/dist/utils/number'
+import type { AccountInterface, Provider, Signer } from '../starknetWrapper';
+import { getStarknet } from '../starknetWrapper'
+
+
 import Image from "next/image";
 import {
   Abi,
@@ -14,6 +18,7 @@ import {
 import {
   useStarknet, useStarknetInvoke
 } from "@starknet-react/core";
+
 import { Asset } from "../registry/tokenSupported"
 import { Integration } from "../registry/protocolSupported"
 import { useVaultFactoryContract } from '~/hooks/vaultFactory'
@@ -21,6 +26,7 @@ import { useVaultFactoryContract } from '~/hooks/vaultFactory'
 import btc from '../image/BTC.png';
 import eth from '../image/ETH.png';
 import alphaRoad from '../image/alphaRoad.jpg'
+import { getKeyPair } from "starknet/dist/utils/ellipticCurve";
 
 type FieldType = {
   name: string;
@@ -155,11 +161,15 @@ const Contract: NextPage = () => {
   const [denominationAsset, setDenominationAsset] = React.useState<number>(0);
   const [trackedAsset, setTrackedAsset] = React.useState<string[]>([]);
   const [allowedProtocol, setAllowedProtocol] = React.useState<Array<string[]>>([]);
-  const { account } = useStarknet()
+  const {  library  } = useStarknet()
+  const {  account  } = getStarknet()
   const { contract: vaultFactory } = useVaultFactoryContract()
   const { invoke } = useStarknetInvoke({ contract: vaultFactory, method: 'initializeFund' })
+
   // const { contract: comptroller } = useComptrollerContract()
   // const { invoked } = useStarknetInvoke({ contract: comptroller, method: 'activateVault' })
+  
+
 
   function addNewAsset(id: number) {
     const addressAsset = hexToDecimalString(Asset[id].address)
@@ -229,6 +239,24 @@ const Contract: NextPage = () => {
       }, '0x'),
     )
   }
+
+  const multicall = async (_tab: any[], _tabA: any[]) => {
+    console.log("invoke")
+    let tx1 = await account.execute(
+    [
+      {
+      contractAddress: '0x07e16969f27d6d968043d3a7e5dd4739f4895f5be397fac0fc204504efb203b0',
+      entrypoint: 'initializeFund',
+      calldata: _tab,
+  },
+  {
+    contractAddress: '0x066350da54aee782cdeda3853e6c4688bf2d9453a0c858471abdf0d6fc142b04',
+    entrypoint: 'activateVault',
+    calldata: _tabA,
+  }
+    ]
+  );
+  };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     let tab: any[] = []
@@ -302,14 +330,23 @@ const Contract: NextPage = () => {
     console.log(tab)
     const tabTest = ['0x4684848484drge4', '1', '1', '1', ['1', '1'], ['1', '1', '1', '1'], ['1', '2'], [["0", "1", "2"], ["0", "1", "2"]], ['1', '1'], ['1', '1'], '1', '1']
     console.log(tabTest)
-    if (!account) {
+
+    const _tabA = []
+    _tabA.push(hexToDecimalString(deployedVaultAddress))
+    _tabA.push(hexToDecimalString(Asset[denominationAsset].address))
+    var amountToInvest = parseFloat(formData.amount_to_invest);
+    amountToInvest = amountToInvest * 1000000000000000000
+    _tabA.push(amountToInvest.toString())
+    
+    if (!account.address) {
       console.log("no account detected")
     }
     else {
       console.log("connected")
-      // invoke({ args: tab })
-      invoke({ args: tab })
+      multicall(tab, _tabA)
     }
+
+    
     e.preventDefault();
   };
 
@@ -327,8 +364,6 @@ const Contract: NextPage = () => {
       };
     });
   };
-
-  const { library } = useStarknet();
 
   const [deployedVaultAddress, setDeployedVaultAddress] =
     useState<string>("");
@@ -473,18 +508,8 @@ const Contract: NextPage = () => {
   ];
   const FIELDS3: FormInputTextFieldProps[] = [
     {
-      fiels: [
-        {
-          type: "text",
-          label: "Harvest lockup time",
-          name: "harvest_lockup_time",
-          required: true,
-          toggle: true,
-          toggleMessage:
-            "You can set up a harvest lockup time, an investor will not be able to resell his shares after having invested if the time limit imposed by the fund manager in the lockup has not been reached. ",
-        },
-      ],
-      infoMessages: ["Set your harvest lockup time"],
+      fiels: [{ type: "number", label: "Amount to Invest", name: "amount_to_invest", required: true }],
+      infoMessages: ["You will receive 1000 shares, the inital price of your share will be this amount/1000"],
       onChange: handleForm,
     },
   ];
@@ -657,6 +682,19 @@ const Contract: NextPage = () => {
           <div className={styles.header}>Fees</div>
 
           {FIELDS4.map((item, index) => (
+            <FormInputTextField
+              key={index}
+              fiels={item.fiels}
+              infoMessages={item.infoMessages}
+              formGroupClass={item.formGroupClass}
+              onChange={item.onChange}
+            />
+          ))}
+        </div>
+        <div className={`${styles.formContainer} bg__dotted`}>
+          <div className={styles.header}>Feed your fund</div>
+
+          {FIELDS3.map((item, index) => (
             <FormInputTextField
               key={index}
               fiels={item.fiels}
