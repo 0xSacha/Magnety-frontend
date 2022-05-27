@@ -6,6 +6,6 @@ import vaultFactoryAbi from '~/abi/VaultFactory.json'
 export function useVaultFactoryContract() {
     return useContract({
         abi: vaultFactoryAbi as Abi,
-        address: '0x066350da54aee782cdeda3853e6c4688bf2d9453a0c858471abdf0d6fc142b04',
+        address: '0x07e16969f27d6d968043d3a7e5dd4739f4895f5be397fac0fc204504efb203b0',
     })
 }

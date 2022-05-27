@@ -1,20 +1,19 @@
 import { useStarknetCall } from '@starknet-react/core'
 import type { NextPage } from 'next'
 import { useMemo } from 'react'
-import { toBN } from 'starknet/dist/utils/number'
+import { toBN, hexToDecimalString } from 'starknet/dist/utils/number'
 import { ConnectWallet } from '~/components/ConnectWallet'
-import { DeployFund } from '~/components/DeployFund'
+// import { DeployFund } from '~/components/DeployFund'
 import { IncrementCounter } from '~/components/IncrementCounter'
 import { TransactionList } from '~/components/TransactionList'
 import { useCounterContract } from '~/hooks/counter'
-import { useVaultLibContract } from '~/hooks/vaultLib'
-
-
+import { InitializeFund } from '~/components/InitializeFund'
+import { useVaultContract } from '~/hooks/vault'
 
 
 const Home: NextPage = () => {
   const { contract: counter } = useCounterContract()
-  const { contract: vaultLib } = useVaultLibContract()
+  const { contract: vaultLib } = useVaultContract()
 
   const { data: counterResult } = useStarknetCall({
     contract: counter,
@@ -62,13 +61,16 @@ const Home: NextPage = () => {
       <h2>Counter Contract</h2>
       <p>Address: {counter?.address}</p>
       <p>Value: {counterValue}</p>
-      <IncrementCounter />
+      {/* <IncrementCounter /> */}
+      <InitializeFund />
       <h2>VaultLib Contract</h2>
       <p>Address: {vaultLib?.address}</p>
+      <p>0x02fe94b72a6eee4b24da419ba898ca2b0d994b6d0408ce93f53129f6f9df3f25</p>
+      <p>{hexToDecimalString("0x02fe94b72a6eee4b24da419ba898ca2b0d994b6d0408ce93f53129f6f9df3f25")}</p>
       <p>fund Name: {fundNameVaue}</p>
       <h2>Recent Transactions</h2>
       <TransactionList />
-      <DeployFund />
+      {/* <DeployFund /> */}
 
     </div>
   )
