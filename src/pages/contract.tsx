@@ -4,29 +4,33 @@ import styles from "~/styles/contract.module.scss";
 import { useContractFactory } from "~/hooks/deploy";
 import TargetSource from "../abi/Vault.json";
 import { hexToDecimalString } from 'starknet/dist/utils/number'
-import type { AccountInterface, Provider, Signer } from '../starknetWrapper';
 import { getStarknet } from '../starknetWrapper'
-
+import { contractAddress } from "~/registry/address";
 
 import Image from "next/image";
 import {
   Abi,
   CompiledContract,
   json,
-  number,
 } from "starknet";
 import {
-  useStarknet, useStarknetInvoke
+  useStarknet,
 } from "@starknet-react/core";
 
 import { Asset } from "../registry/tokenSupported"
 import { Integration } from "../registry/protocolSupported"
-import { useVaultFactoryContract } from '~/hooks/vaultFactory'
 
 import btc from '../image/BTC.png';
 import eth from '../image/ETH.png';
+import zkp from '../image/ZKP.png';
+import tst from '../image/TST.svg';
 import alphaRoad from '../image/alphaRoad.jpg'
-import { getKeyPair } from "starknet/dist/utils/ellipticCurve";
+import ethzkp from '../image/ETH-ZKP.png';
+import btctst from '../image/BTC-TST.png';
+import ethtst from '../image/ETH-TST.png';
+import ethbtc from '../image/ETH-BTC.png';
+import { compileString } from "sass";
+
 
 type FieldType = {
   name: string;
@@ -156,19 +160,20 @@ const FormInputTextField = (props: FormInputTextFieldProps) => {
   );
 };
 
+const comptroller = "0x008f8d553a5614491f00cf6161b57825a7cf5f3b5e908f4a22e3b0085ce27c36";
+
+
 const Contract: NextPage = () => {
   const [formData, setFormData] = React.useState<any>({});
   const [denominationAsset, setDenominationAsset] = React.useState<number>(0);
   const [trackedAsset, setTrackedAsset] = React.useState<string[]>([]);
   const [allowedProtocol, setAllowedProtocol] = React.useState<Array<string[]>>([]);
-  const {  library  } = useStarknet()
-  const {  account  } = getStarknet()
-  const { contract: vaultFactory } = useVaultFactoryContract()
-  const { invoke } = useStarknetInvoke({ contract: vaultFactory, method: 'initializeFund' })
+  const { library } = useStarknet()
+  const { account } = getStarknet()
 
   // const { contract: comptroller } = useComptrollerContract()
   // const { invoked } = useStarknetInvoke({ contract: comptroller, method: 'activateVault' })
-  
+
 
 
   function addNewAsset(id: number) {
@@ -183,11 +188,19 @@ const Contract: NextPage = () => {
       return
     }
   }
+  function addNewProtocolMult(idTab: number[]) {
+    for (let pas = 0; pas < idTab.length; pas++) {
+      addNewProtocol(idTab[pas])
+    }
+
+  }
 
   function addNewProtocol(id: number) {
     let integrationArgs = Integration[id].integration
     let toDeci = hexToDecimalString(integrationArgs[0])
+    let toDeci2 = hexToDecimalString(integrationArgs[1])
     integrationArgs[0] = toDeci
+    integrationArgs[1] = toDeci2
     let tab = allowedProtocol
 
     if (tab.includes(integrationArgs)) {
@@ -226,10 +239,7 @@ const Contract: NextPage = () => {
     }
   }
 
-  function shortStringFeltToStr(felt: bigint): string {
-    const newStrB = Buffer.from(felt.toString(16), 'hex')
-    return newStrB.toString()
-  }
+
   function strToShortStringFelt(str: string): bigint {
     const strB = Buffer.from(str)
     return BigInt(
@@ -240,79 +250,152 @@ const Contract: NextPage = () => {
     )
   }
 
-  const multicall = async (_tab: any[], _tabA: any[]) => {
+  const multicall = async (_tab: any[], _tabA: any[], _tabB: any[]) => {
     console.log("invoke")
     let tx1 = await account.execute(
-    [
-      {
-      contractAddress: '0x07e16969f27d6d968043d3a7e5dd4739f4895f5be397fac0fc204504efb203b0',
-      entrypoint: 'initializeFund',
-      calldata: _tab,
-  },
-  {
-    contractAddress: '0x066350da54aee782cdeda3853e6c4688bf2d9453a0c858471abdf0d6fc142b04',
-    entrypoint: 'activateVault',
-    calldata: _tabA,
-  }
-    ]
-  );
+      [
+        {
+          contractAddress: '0x07e16969f27d6d968043d3a7e5dd4739f4895f5be397fac0fc204504efb203b0',
+          entrypoint: 'initializeFund',
+          calldata: _tab,
+        },
+        {
+          contractAddress: Asset[denominationAsset].address.toString(),
+          entrypoint: 'approve',
+          calldata: _tabA,
+        },
+        {
+          contractAddress: '0x066350da54aee782cdeda3853e6c4688bf2d9453a0c858471abdf0d6fc142b04',
+          entrypoint: 'activateVault',
+          calldata: _tabB,
+        }
+      ]
+    );
+    console.log(tx1)
+    // return (tx1)
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     let tab: any[] = []
-    let tabUint: string[] = []
-    let tabFee: string[] = []
     console.log(formData);
+    // tab.push(hexToDecimalString(deployedVaultAddress))
+    // tab.push(strToShortStringFelt(formData.name).toString())
+    // tab.push(strToShortStringFelt(formData.symbol).toString())
+    // tab.push(hexToDecimalString(Asset[denominationAsset].address))
+    // tabUint.push(formData.maximum_position.toString())
+    // tabUint.push('0')
+    // tab.push(tabUint)
+    // tabUint = []
+    // if (typeof formData.entrance_fees == "undefined") {
+    //   tabFee.push('0')
+    // }
+    // else {
+    //   tabFee.push(formData.entrance_fees)
+    // }
+    // if (typeof formData.exit_fees == "undefined") {
+    //   tabFee.push('0')
+    // }
+    // else {
+    //   tabFee.push(formData.exit_fees)
+    // }
+    // if (typeof formData.yearly_management_fees == "undefined") {
+    //   tabFee.push('0')
+    // }
+    // else {
+    //   tabFee.push(formData.yearly_management_fees)
+    // }
+    // if (typeof formData.performance_fees == "undefined") {
+    //   tabFee.push('0')
+    // }
+    // else {
+    //   tabFee.push(formData.performance_fees)
+    // }
+    // tab.push(tabFee)
+    // tab.push(trackedAsset)
+    // tab.push(allowedProtocol)
+
+
+    // var min = parseFloat(formData.minimum);
+    // min = min * 1000000000000000000
+    // tabUint.push(min.toString())
+    // tabUint.push('0')
+    // tab.push(tabUint)
+    // tabUint = []
+
+    // var max = parseFloat(formData.maximum);
+    // max = max * 1000000000000000000
+    // tabUint.push(max.toString())
+    // tabUint.push('0')
+    // tab.push(tabUint)
+    // tabUint = []
+
+    // if (typeof formData.harvest_lockup_time == "undefined") {
+    //   tab.push('0')
+    // }
+    // else {
+    //   tab.push(formData.harvest_lockup_time)
+    // }
+
+    // if (typeof formData.fund_type == "undefined") {
+    //   tab.push('1')
+    // }
+    // else {
+    //   tab.push('0')
+    // }
+
     tab.push(hexToDecimalString(deployedVaultAddress))
     tab.push(strToShortStringFelt(formData.name).toString())
     tab.push(strToShortStringFelt(formData.symbol).toString())
     tab.push(hexToDecimalString(Asset[denominationAsset].address))
-    tabUint.push(formData.maximum_position.toString())
-    tabUint.push('0')
-    tab.push(tabUint)
-    tabUint = []
+    tab.push(formData.maximum_position.toString())
+    tab.push('0')
+    tab.push('4')
+
     if (typeof formData.entrance_fees == "undefined") {
-      tabFee.push('0')
+      tab.push('0')
     }
     else {
-      tabFee.push(formData.entrance_fees)
+      tab.push(formData.entrance_fees)
     }
     if (typeof formData.exit_fees == "undefined") {
-      tabFee.push('0')
+      tab.push('0')
     }
     else {
-      tabFee.push(formData.exit_fees)
+      tab.push(formData.exit_fees)
     }
     if (typeof formData.yearly_management_fees == "undefined") {
-      tabFee.push('0')
+      tab.push('0')
     }
     else {
-      tabFee.push(formData.yearly_management_fees)
+      tab.push(formData.yearly_management_fees)
     }
     if (typeof formData.performance_fees == "undefined") {
-      tabFee.push('0')
+      tab.push('0')
     }
     else {
-      tabFee.push(formData.performance_fees)
+      tab.push(formData.performance_fees)
     }
-    tab.push(tabFee)
-    tab.push(trackedAsset)
-    tab.push(allowedProtocol)
 
+    tab.push(trackedAsset.length.toString())
+    for (let pas = 0; pas < trackedAsset.length; pas++) {
+      tab.push(trackedAsset[pas])
+    }
+    tab.push(allowedProtocol.length.toString())
+    for (let pas = 0; pas < allowedProtocol.length; pas++) {
+      tab.push(allowedProtocol[pas][0])
+      tab.push(allowedProtocol[pas][1])
+      tab.push('0')
+    }
 
     var min = parseFloat(formData.minimum);
     min = min * 1000000000000000000
-    tabUint.push(min.toString())
-    tabUint.push('0')
-    tab.push(tabUint)
-    tabUint = []
+    tab.push(min.toString())
+    tab.push('0')
 
     var max = parseFloat(formData.maximum);
     max = max * 1000000000000000000
-    tabUint.push(max.toString())
-    tabUint.push('0')
-    tab.push(tabUint)
-    tabUint = []
+    tab.push(max.toString())
+    tab.push('0')
 
     if (typeof formData.harvest_lockup_time == "undefined") {
       tab.push('0')
@@ -327,26 +410,36 @@ const Contract: NextPage = () => {
     else {
       tab.push('0')
     }
+
     console.log(tab)
-    const tabTest = ['0x4684848484drge4', '1', '1', '1', ['1', '1'], ['1', '1', '1', '1'], ['1', '2'], [["0", "1", "2"], ["0", "1", "2"]], ['1', '1'], ['1', '1'], '1', '1']
-    console.log(tabTest)
 
     const _tabA = []
-    _tabA.push(hexToDecimalString(deployedVaultAddress))
-    _tabA.push(hexToDecimalString(Asset[denominationAsset].address))
+
+
+    _tabA.push(comptroller)
+
+
+    const _tabB = []
+    _tabB.push(hexToDecimalString(deployedVaultAddress))
+    _tabB.push(hexToDecimalString(Asset[denominationAsset].address))
     var amountToInvest = parseFloat(formData.amount_to_invest);
     amountToInvest = amountToInvest * 1000000000000000000
     _tabA.push(amountToInvest.toString())
-    
+    _tabA.push("0")
+
+    _tabB.push(amountToInvest.toString())
+    _tabB.push("0")
+
+    console.log(_tabB)
     if (!account.address) {
       console.log("no account detected")
     }
     else {
       console.log("connected")
-      multicall(tab, _tabA)
+      multicall(tab, _tabA, _tabB)
     }
 
-    
+
     e.preventDefault();
   };
 
@@ -390,7 +483,7 @@ const Contract: NextPage = () => {
   const onDeploy = async () => {
     const _deployTarget = async () => {
       const deployment = await deployTarget({
-        constructorCalldata: [2, 3],
+        constructorCalldata: [hexToDecimalString("0x07e16969f27d6d968043d3a7e5dd4739f4895f5be397fac0fc204504efb203b0"), hexToDecimalString("0x066350da54aee782cdeda3853e6c4688bf2d9453a0c858471abdf0d6fc142b04")],
       });
       if (deployment) {
         setDeployedVaultAddress(deployment.address);
@@ -651,7 +744,7 @@ const Contract: NextPage = () => {
                 <Image src={alphaRoad} alt="btc" />
                 <div>Swap</div>
               </button>
-              <button type="button" onClick={() => addNewProtocol(1)} style={{ width: "100px" }}>
+              <button type="button" onClick={() => addNewProtocolMult([1, 2])} style={{ width: "100px" }}>
                 <Image src={alphaRoad} alt="eth" />
                 <div>Liquidity</div>
               </button>
@@ -669,12 +762,30 @@ const Contract: NextPage = () => {
           <div>
             <div>Select the Assets you want to use</div>
             <div>
-              <button type="button" onClick={() => addNewAsset(0)}>
+              <button type="button" onClick={() => addNewAsset(0)} style={{ width: "100px" }}>
                 <Image src={btc} alt="btc" />
               </button>
-              <button type="button" onClick={() => addNewAsset(1)}>
+              <button type="button" onClick={() => addNewAsset(1)} style={{ width: "100px" }}>
                 <Image src={eth} alt="eth" />
               </button>
+              <button type="button" onClick={() => addNewAsset(2)} style={{ width: "100px" }}>
+                <Image src={zkp} alt="eth" />
+              </button>
+              <button type="button" onClick={() => addNewAsset(3)} style={{ width: "100px" }}>
+                <Image src={tst} alt="eth" />
+              </button>
+              <button type="button" onClick={() => addNewAsset(4)} style={{ width: "100px" }}>
+                <Image src={ethzkp} alt="eth" />
+              </button>
+              <button type="button" onClick={() => addNewAsset(5)} style={{ width: "100px" }}>
+                <Image src={btctst} alt="eth" />
+              </button>
+              <button type="button" onClick={() => addNewAsset(6)} style={{ width: "100px" }}>
+                <Image src={ethtst} alt="eth" />
+              </button>
+              <button type="button" onClick={() => addNewAsset(7)} style={{ width: "100px" }}>
+                <Image src={ethbtc} alt="eth" />
+              </button>;
             </div>
           </div>
         </div>

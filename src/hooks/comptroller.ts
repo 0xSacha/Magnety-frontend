@@ -6,6 +6,6 @@ import ComptrollerAbi from '~/abi/Comptroller.json'
 export function useComptrollerContract() {
     return useContract({
         abi: ComptrollerAbi as Abi,
-        address: '0x066350da54aee782cdeda3853e6c4688bf2d9453a0c858471abdf0d6fc142b04',
+        address: '0x008f8d553a5614491f00cf6161b57825a7cf5f3b5e908f4a22e3b0085ce27c36',
     })
 }

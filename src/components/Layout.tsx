@@ -1,12 +1,31 @@
-import React, { PropsWithChildren, Props, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import Navbar from "./Navbar";
-import { ConnectWallet } from '~/components/ConnectWallet'
-
+import { getStarknet } from '../starknetWrapper'
 
 
 const Layout = (props: PropsWithChildren<unknown>) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+
+  function ConnectWallet() {
+    let [address, setAddress] = useState("connect wallet");
+
+    const onClick = () => {
+      const starkNet = getStarknet()
+      starkNet.enable({ showModal: true }).then(value => {
+        setAddress(JSON.stringify(value))
+        console.log(starkNet.account)
+        setIsConnected(true)
+      })
+    }
+    return (
+      <div className="App">
+        <button data-color="secondary" style={{ display: 'flex', margin: '12px auto' }} onClick={onClick}> {address}</button>
+      </div>
+    );
+  }
+
+
   return (
     <>
       <div className="page">
@@ -23,9 +42,9 @@ const Layout = (props: PropsWithChildren<unknown>) => {
           <div className="page__sidebar">
             {!isSidebarOpen && !isConnected && <>
               <div className="fs-16 fw-700">Hello</div>
-              <div className="fs-12">please connect you wallect in order to use the full fonctionnalities of Magnety</div>
+              <div className="fs-12">please connect you wallect in order to use the full fonctionnalities of Magnety </div>
               <ConnectWallet />
-              <button data-color="secondary" style={{ display: 'flex', margin: '12px auto' }} onClick={() => setIsConnected(true)}>Connect Wallet</button>
+
             </>}
             {!isSidebarOpen && isConnected && <>
               <div className="fs-16 fw-700">Hello Jake21</div>
