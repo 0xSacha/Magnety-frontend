@@ -160,7 +160,7 @@ const FormInputTextField = (props: FormInputTextFieldProps) => {
   );
 };
 
-const comptroller = "0x008f8d553a5614491f00cf6161b57825a7cf5f3b5e908f4a22e3b0085ce27c36";
+const comptroller = "0x04432fc00432c1025c8b03775fc64180948d5a2725cc50882f4dec0b526459f5";
 
 
 const Contract: NextPage = () => {
@@ -255,7 +255,7 @@ const Contract: NextPage = () => {
     let tx1 = await account.execute(
       [
         {
-          contractAddress: '0x07e16969f27d6d968043d3a7e5dd4739f4895f5be397fac0fc204504efb203b0',
+          contractAddress: '0x031ed52f5b1ea0dc84172a99fad44d202beaa528e8629d0a1f0d4a8b163a71b1',
           entrypoint: 'initializeFund',
           calldata: _tab,
         },
@@ -265,7 +265,7 @@ const Contract: NextPage = () => {
           calldata: _tabA,
         },
         {
-          contractAddress: '0x066350da54aee782cdeda3853e6c4688bf2d9453a0c858471abdf0d6fc142b04',
+          contractAddress: comptroller,
           entrypoint: 'activateVault',
           calldata: _tabB,
         }
@@ -416,7 +416,7 @@ const Contract: NextPage = () => {
     const _tabA = []
 
 
-    _tabA.push(comptroller)
+    _tabA.push(hexToDecimalString(comptroller))
 
 
     const _tabB = []
@@ -483,7 +483,7 @@ const Contract: NextPage = () => {
   const onDeploy = async () => {
     const _deployTarget = async () => {
       const deployment = await deployTarget({
-        constructorCalldata: [hexToDecimalString("0x07e16969f27d6d968043d3a7e5dd4739f4895f5be397fac0fc204504efb203b0"), hexToDecimalString("0x066350da54aee782cdeda3853e6c4688bf2d9453a0c858471abdf0d6fc142b04")],
+        constructorCalldata: [hexToDecimalString("0x031ed52f5b1ea0dc84172a99fad44d202beaa528e8629d0a1f0d4a8b163a71b1"), hexToDecimalString(comptroller)],
       });
       if (deployment) {
         setDeployedVaultAddress(deployment.address);
@@ -711,12 +711,12 @@ const Contract: NextPage = () => {
             />
           ))}
           <div>
-            <div>Choose your denomination Asset</div>
+            <div>Choose your denomination Asset f{hexToDecimalString("0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7")}</div>
             <div>
-              <button type="button" onClick={() => setDenominationAsset(0)}>
+              <button type="button" onClick={() => setDenominationAsset(1)}>
                 <Image src={btc} alt="btc" />
               </button>
-              <button type="button" onClick={() => setDenominationAsset(1)}>
+              <button type="button" onClick={() => setDenominationAsset(0)}>
                 <Image src={eth} alt="eth" />
               </button>
             </div>

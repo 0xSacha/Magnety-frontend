@@ -1,4 +1,4 @@
-import { getStarknet, connect } from '../starknetWrapper'
+import { getStarknet } from '../starknetWrapper'
 import React, { useState } from "react";
 
 

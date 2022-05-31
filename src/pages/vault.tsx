@@ -2,16 +2,26 @@ import React, { useEffect } from 'react';
 import { NextPage } from 'next';
 import styles from '~/styles/vault.module.scss';
 import FakeImage from "~/components/FakeImage";
+import Image from "next/image";
+import { useAppSelector } from '../app/hooks'
+import {
+  selectCount,
+} from '../app/counterSlice'
 import 'chart.js/auto';
 import { Chart, Line } from 'react-chartjs-2';
-import { number } from 'starknet';
+
 import { ChartData, ScatterDataPoint, ChartOptions, CoreChartOptions, ElementChartOptions, PluginChartOptions, DatasetChartOptions, ScaleChartOptions, LineControllerChartOptions } from 'chart.js/auto';
 import { _DeepPartialObject } from 'chart.js/types/utils';
 import Tabs from '~/components/Tabs';
 import Tab from '~/components/Tab';
-import { getSelectorFromName, getStarknet } from "../starknetWrapper"
+import { getStarknet, AccountInterface } from "../starknetWrapper"
 import { contractAddress } from '~/registry/address';
-const { provider } = getStarknet()
+import { hexToDecimalString } from 'starknet/dist/utils/number';
+import { number } from 'starknet';
+
+
+const { provider, account } = getStarknet()
+
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 const times = (n: number, fn: (i: number) => any = (i: number) => i): any[] => Array.from({ length: n }, (_, x) => fn(x));
@@ -39,6 +49,8 @@ const randomChartData = (n: number, startAt: number = 0, maxChanges: number = 10
 
 
 const vaultAddress = contractAddress.StakingVault
+const comptroller = contractAddress.Comptroller
+const valueIntepretor = contractAddress.valueInterpretor
 const feeManager = contractAddress.FeeManager
 const policyManager = contractAddress.PolicyManager
 
@@ -113,15 +125,42 @@ const options = {
 
 type PortfolioData = {
   coinName: string,
-  coinFullName: string,
-  balance: number,
-  price: number,
-  value: number,
-  allocationPercentage: number,
+  coinSymbol: string,
+  balance: string,
+  value: string,
+  allocation: string,
 }[];
 
 const vault: NextPage = () => {
-  const [name, setName] = React.useState<any>({});
+  let count = useAppSelector(selectCount)
+
+
+  const [name, setName] = React.useState<string>("name");
+  const [symbol, setSymbol] = React.useState<string>("symbol");
+  const [accountInterface, setAccountInterface] = React.useState<AccountInterface>(account);
+  const [acccountAddress, setAcccountAddress] = React.useState<string>("acccountAddress");
+  const [assetManager, setAssetManager] = React.useState<string>("add");
+  const [denominationAsset, setDenominationAsset] = React.useState<string>("deno");
+  const [entranceFee, setEntranceFee] = React.useState<string>("");
+  const [exitFee, setExitFee] = React.useState<string>("");
+  const [performanceFee, setPerformanceFee] = React.useState<string>("");
+  const [managementFee, setManagementFee] = React.useState<string>("");
+  const [isPublic, setIsPublic] = React.useState<string>("");
+  const [timeLock, setTimeLock] = React.useState<string>("");
+  const [minAmount, setMinAmount] = React.useState<string>("");
+  const [maxAmount, setMaxAmount] = React.useState<string>("");
+  const [denominationAssetAddress, setDenominationAssetAddress] = React.useState<string>("deno");
+  const [shareHolders, setShareHolders] = React.useState<string>("0");
+  const [shareSupply, setShareSupply] = React.useState<string>("0");
+  const [sharePrice, setSharePrice] = React.useState<string>("0");
+  const [gav, setGav] = React.useState<string>("0");
+  const [trackedAssets, setTrackedAssets] = React.useState<PortfolioData>([]);
+  const [trackedAssetsLen, setTrackedAssetsLen] = React.useState<number>(0);
+  const [userBalance, setUserBalance] = React.useState<string>("0");
+  const [isAllowedDepositor, setIsAllowedDepositor] = React.useState<string>("0");
+
+
+
   function shortStringFeltToStr(felt: bigint): string {
     const newStrB = Buffer.from(felt.toString(16), 'hex')
     return newStrB.toString()
@@ -130,58 +169,145 @@ const vault: NextPage = () => {
   useEffect(() => {
     const res = provider.callContract({ contractAddress: vaultAddress, entrypoint: "getName", calldata: [] })
     res.then(value => {
-      const _name = shortStringFeltToStr(BigInt(parseInt(value.result[0])))
-      console.log(_name)
+      const _name = shortStringFeltToStr(BigInt(hexToDecimalString(value.result[0])))
+      setName(_name)
     }).catch(err => {
       console.log(err);
     });
     const res2 = provider.callContract({ contractAddress: vaultAddress, entrypoint: "getSymbol", calldata: [] })
     res2.then(value => {
-      const _symbol = shortStringFeltToStr(BigInt(parseInt(value.result[0])))
-      console.log(_symbol)
+      const _symbol = shortStringFeltToStr(BigInt(hexToDecimalString(value.result[0])))
+      setSymbol(_symbol)
     }).catch(err => {
       console.log(err);
     });
 
-    // const res3 = provider.callContract({ contractAddress: vaultAddress, entrypoint: "getDenominationAsset", calldata: [] })
-    // res3.then(value => {
-    //   const _denominationAsset = (value.result[0])
-    //   console.log(_denominationAsset)
-    // }).catch(err => {
-    //   console.log(err);
-    // });
+    const res3 = provider.callContract({ contractAddress: vaultAddress, entrypoint: "getAssetManager", calldata: [] })
+    res3.then(value => {
+      const _assetManager = value.result[0]
+      setAssetManager(_assetManager)
+    }).catch(err => {
+      console.log(err);
+    });
 
-    // const res4 = provider.callContract({ contractAddress: feeManager, entrypoint: "getEntranceFee", calldata: [vaultAddress] })
-    // res4.then(value => {
-    //   const _entranceFee = (value.result[0])
-    //   console.log(_entranceFee)
-    // }).catch(err => {
-    //   console.log(err);
-    // });
+    const res4 = provider.callContract({ contractAddress: vaultAddress, entrypoint: "getDenominationAsset", calldata: [] })
+    res4.then(value => {
+      const _denominationAsset = (value.result[0])
+      setDenominationAssetAddress(_denominationAsset)
+      const name = provider.callContract({ contractAddress: _denominationAsset, entrypoint: "name", calldata: [] })
+      name.then(value => {
+        const _denominationAssetName = shortStringFeltToStr(BigInt(hexToDecimalString(value.result[0])))
+        setDenominationAsset(_denominationAssetName)
+      }).catch(err => {
+        console.log(err);
+      });
+    }).catch(err => {
+      console.log(err);
+    });
 
-    // const res5 = provider.callContract({ contractAddress: feeManager, entrypoint: "getExitFee", calldata: [vaultAddress] })
-    // res4.then(value => {
-    //   const _exitFee = (value.result[0])
-    //   console.log(_exitFee)
-    // }).catch(err => {
-    //   console.log(err);
-    // });
 
-    // const res6 = provider.callContract({ contractAddress: feeManager, entrypoint: "getPerformanceFee", calldata: [vaultAddress] })
-    // res4.then(value => {
-    //   const _performanceFee = (value.result[0])
-    //   console.log(_performanceFee)
-    // }).catch(err => {
-    //   console.log(err);
-    // });
 
-    // const res7 = provider.callContract({ contractAddress: feeManager, entrypoint: "getManagementFee", calldata: [vaultAddress] })
-    // res4.then(value => {
-    //   const _managementFee = (value.result[0])
-    //   console.log(_managementFee)
-    // }).catch(err => {
-    //   console.log(err);
-    // });
+    const res5 = provider.callContract({ contractAddress: vaultAddress, entrypoint: "totalSupply", calldata: [] })
+    res5.then(value => {
+      const _shareholders = hexToDecimalString(value.result[0])
+      setShareHolders(_shareholders)
+    }).catch(err => {
+      console.log(err);
+    });
+
+    const res6 = provider.callContract({ contractAddress: vaultAddress, entrypoint: "sharesTotalSupply", calldata: [] })
+    res6.then(value => {
+      const _shareSupply = hexToDecimalString(value.result[0])
+      setShareSupply(_shareSupply)
+    }).catch(err => {
+      console.log(err);
+    });
+
+    const res7 = provider.callContract({ contractAddress: comptroller, entrypoint: "getSharePrice", calldata: [hexToDecimalString(vaultAddress)] })
+    res7.then(value => {
+      const _sharePrice = hexToDecimalString(value.result[0])
+      const sharePrice_ = parseFloat(_sharePrice) / 1000000000000000000
+      setSharePrice(sharePrice_.toString())
+    }).catch(err => {
+      console.log(err);
+    });
+
+
+    const res8 = provider.callContract({ contractAddress: comptroller, entrypoint: "calc_gav", calldata: [hexToDecimalString(vaultAddress)] })
+    res8.then(value => {
+      const _gav = hexToDecimalString(value.result[0])
+      const gav_ = parseFloat(_gav) / 1000000000000000000
+      setGav(gav_.toString())
+    }).catch(err => {
+      console.log(err);
+    });
+
+
+
+    const res9 = provider.callContract({ contractAddress: feeManager, entrypoint: "getEntranceFee", calldata: [hexToDecimalString(vaultAddress)] })
+    res9.then(value => {
+      const _entranceFee = (hexToDecimalString(value.result[0]))
+      setEntranceFee(_entranceFee)
+    }).catch(err => {
+      console.log(err);
+    });
+
+    const res10 = provider.callContract({ contractAddress: feeManager, entrypoint: "getExitFee", calldata: [hexToDecimalString(vaultAddress)] })
+    res10.then(value => {
+      const _exitFee = (hexToDecimalString(value.result[0]))
+      setExitFee(_exitFee)
+    }).catch(err => {
+      console.log(err);
+    });
+
+    const res11 = provider.callContract({ contractAddress: feeManager, entrypoint: "getPerformanceFee", calldata: [hexToDecimalString(vaultAddress)] })
+    res11.then(value => {
+      const _performanceFee = (hexToDecimalString(value.result[0]))
+      setPerformanceFee(_performanceFee)
+    }).catch(err => {
+      console.log(err);
+    });
+
+    const res12 = provider.callContract({ contractAddress: feeManager, entrypoint: "getManagementFee", calldata: [hexToDecimalString(vaultAddress)] })
+    res12.then(value => {
+      const _managementFee = (hexToDecimalString(value.result[0]))
+      setManagementFee(_managementFee)
+    }).catch(err => {
+      console.log(err);
+    });
+
+    const res13 = provider.callContract({ contractAddress: policyManager, entrypoint: "checkIsPublic", calldata: [hexToDecimalString(vaultAddress)] })
+    res13.then(value => {
+      const _isPublic = (hexToDecimalString(value.result[0]))
+      console.log(_isPublic)
+      setIsPublic(_isPublic)
+    }).catch(err => {
+      console.log(err);
+    });
+
+    const res14 = provider.callContract({ contractAddress: policyManager, entrypoint: "getTimelock", calldata: [hexToDecimalString(vaultAddress)] })
+    res14.then(value => {
+      const _timeLock = (hexToDecimalString(value.result[0]))
+      setTimeLock(_timeLock)
+    }).catch(err => {
+      console.log(err);
+    });
+
+    const res15 = provider.callContract({ contractAddress: policyManager, entrypoint: "getMaxminAmount", calldata: [hexToDecimalString(vaultAddress)] })
+    res15.then(value => {
+
+      const minAmount__ = (hexToDecimalString(value.result[0]))
+      const minAmount_ = parseFloat(minAmount__) / 1000000000000000000
+      setMinAmount(minAmount_.toString())
+      const maxAmount__ = (hexToDecimalString(value.result[2]))
+      const maxAmount_ = parseFloat(maxAmount__) / 1000000000000000000
+      setMaxAmount(maxAmount_.toString())
+
+    }).catch(err => {
+      console.log(err);
+    });
+
+
 
     // const res8 = provider.callContract({ contractAddress: feeManager, entrypoint: "getClaimedTimestamp", calldata: [vaultAddress] })
     // res3.then(value => {
@@ -191,83 +317,124 @@ const vault: NextPage = () => {
     //   console.log(err);
     // });
 
-    // const res9 = provider.callContract({ contractAddress: policyManager, entrypoint: "getMaxminAmount", calldata: [vaultAddress] })
-    // res3.then(value => {
-    //   // const _minAmount = (value.result[0])
-    //   console.log(value)
-    // }).catch(err => {
-    //   console.log(err);
-    // });
-
-    // const res10 = provider.callContract({ contractAddress: "0x02fe94b72a6eee4b24da419ba898ca2b0d994b6d0408ce93f53129f6f9df3f25", entrypoint: "getDenominationAsset", calldata: [] })
-    // res3.then(value => {
-    //   const _denominationAsset = (value.result[0])
-    //   console.log(_denominationAsset)
-    // }).catch(err => {
-    //   console.log(err);
-    // });
-
-    // const res11 = provider.callContract({ contractAddress: "0x02fe94b72a6eee4b24da419ba898ca2b0d994b6d0408ce93f53129f6f9df3f25", entrypoint: "getDenominationAsset", calldata: [] })
-    // res3.then(value => {
-    //   const _denominationAsset = (value.result[0])
-    //   console.log(_denominationAsset)
-    // }).catch(err => {
-    //   console.log(err);
-    // });
-
-    // const res12 = provider.callContract({ contractAddress: "0x02fe94b72a6eee4b24da419ba898ca2b0d994b6d0408ce93f53129f6f9df3f25", entrypoint: "getDenominationAsset", calldata: [] })
-    // res3.then(value => {
-    //   const _denominationAsset = (value.result[0])
-    //   console.log(_denominationAsset)
-    // }).catch(err => {
-    //   console.log(err);
-    // });
   }, []);
 
-  const portfolioData: PortfolioData = [
-    {
-      coinName: 'ETH',
-      coinFullName: 'Ethereum',
-      balance: 1.045,
-      price: 100,
-      value: 2,
-      allocationPercentage: 35,
-    },
-    {
-      coinName: 'other coin',
-      coinFullName: 'other',
-      balance: 10,
-      price: 10,
-      value: 3,
-      allocationPercentage: 5,
+
+
+
+  useEffect(() => {
+    console.log("useEffectAddress")
+    const { account } = getStarknet()
+    setAccountInterface(account)
+    console.log("accountInteface set")
+    console.log(accountInterface)
+
+    const address_ = account.address
+    setAcccountAddress(address_)
+    if (address_ != "" && denominationAssetAddress != "deno") {
+      const res1 = provider.callContract({ contractAddress: denominationAssetAddress, entrypoint: "balanceOf", calldata: [hexToDecimalString(address_)] })
+      res1.then(value => {
+        const userBalance__ = (hexToDecimalString(value.result[0]))
+        const userBalance_ = parseFloat(userBalance__) / 1000000000000000000
+        setUserBalance(userBalance_.toString())
+      }).catch(err => {
+        console.log(err);
+      });
+      const res2 = provider.callContract({ contractAddress: policyManager, entrypoint: "checkIsPublic", calldata: [hexToDecimalString(vaultAddress)] })
+      res2.then(value => {
+        const _isPublic = (hexToDecimalString(value.result[0]))
+        if (_isPublic == "0") {
+          const res3 = provider.callContract({ contractAddress: policyManager, entrypoint: "checkIsAllowedDepositor", calldata: [hexToDecimalString(vaultAddress), hexToDecimalString(address_)] })
+          res3.then(value => {
+            const _isAllowedDepositor = (hexToDecimalString(value.result[0]))
+            setIsAllowedDepositor(_isAllowedDepositor)
+
+          }).catch(err => {
+            console.log(err);
+          });
+        }
+        else {
+          setIsAllowedDepositor("1")
+        }
+      }).catch(err => {
+        console.log(err);
+      });
     }
-  ];
-  const feesData = [
-    {
-      feesType: 'Management Fee',
-      settingsPercentage: '2.00',
-      ratePercentage: '2.00',
-      unpaidFeesPercentage: 35,
-    },
-    {
-      feesType: 'Performance Fee',
-      settingsPercentage: '2.00',
-      ratePercentage: '2.00',
-      unpaidFeesPercentage: 35,
-    },
-    {
-      feesType: 'Exit Fee(Vault)',
-      settingsPercentage: '2.00',
-      ratePercentage: '2.00',
-      unpaidFeesPercentage: 35,
-    },
-    {
-      feesType: 'Protocal Fee',
-      settingsPercentage: '2.00',
-      ratePercentage: '2.00',
-      unpaidFeesPercentage: 35,
+
+  }, [count, denominationAssetAddress]);
+
+
+
+  useEffect(() => {
+    if (denominationAssetAddress != "deno" && gav != "0") {
+      const res9 = provider.callContract({ contractAddress: vaultAddress, entrypoint: "getTrackedAssets", calldata: [] })
+      res9.then(value => {
+        let tab__ = value.result
+        let size_ = tab__.shift()
+        let tab_ = tab__
+        for (let pas = 0; pas < tab_.length; pas++) {
+          let address_ = tab_[pas]
+          const name = provider.callContract({ contractAddress: address_, entrypoint: "name", calldata: [] })
+          name.then(value => {
+            const coinName_ = shortStringFeltToStr(BigInt(hexToDecimalString(value.result[0])))
+
+            const symbol = provider.callContract({ contractAddress: address_, entrypoint: "symbol", calldata: [] })
+            symbol.then(value => {
+              const coinSymbol_ = shortStringFeltToStr(BigInt(hexToDecimalString(value.result[0])))
+
+              const balance = provider.callContract({ contractAddress: address_, entrypoint: "balanceOf", calldata: [hexToDecimalString(vaultAddress)] })
+              balance.then(value => {
+                const __coinBalance = hexToDecimalString(value.result[0])
+                const _coinBalance = parseFloat(__coinBalance) / 1000000000000000000
+                const coinBalance_ = _coinBalance.toString()
+                const price = provider.callContract({ contractAddress: valueIntepretor, entrypoint: "calculAssetValue", calldata: [hexToDecimalString(address_), __coinBalance, "0", hexToDecimalString(denominationAssetAddress)] })
+                price.then(value => {
+                  const __coinPrice = hexToDecimalString(value.result[0])
+                  const _coinPrice = parseFloat(__coinPrice) / 1000000000000000000
+                  const coinPrice_ = _coinPrice.toString()
+
+                  let coinAllocation_ = ((parseFloat(gav) / parseFloat(coinPrice_)) * 100).toString()
+                  coinAllocation_ = coinAllocation_.concat("%")
+
+                  let portfolioData2: PortfolioData = trackedAssets
+                  portfolioData2.push(
+                    {
+                      coinName: coinName_,
+                      coinSymbol: coinSymbol_,
+                      balance: coinBalance_,
+                      value: coinPrice_,
+                      allocation: coinAllocation_,
+                    }
+                  )
+                  console.log(portfolioData2)
+                  setTrackedAssets(portfolioData2)
+                  let TrackedAssetLen_ = trackedAssetsLen + 1
+                  setTrackedAssetsLen(TrackedAssetLen_)
+                }).catch(err => {
+                  console.log(err);
+                });
+              }).catch(err => {
+                console.log(err);
+              });
+            }).catch(err => {
+              console.log(err);
+            });
+          }).catch(err => {
+            console.log(err);
+          });
+        }
+      }).catch(err => {
+        console.log(err);
+      });
     }
-  ];
+
+  }, [denominationAssetAddress, gav]);
+
+
+
+
+
+
   const depositorsData = [
     {
       depositor: '0x123...ab',
@@ -301,70 +468,200 @@ const vault: NextPage = () => {
     }
   ];
 
+  const multicall = async (_tab: any[], _tabA: any[]) => {
+    console.log("invoke")
+    console.log(denominationAssetAddress)
+    console.log(comptroller)
+    let tx1 = await accountInterface.execute(
+      [
+        {
+          contractAddress: denominationAssetAddress,
+          entrypoint: 'approve',
+          calldata: _tabA,
+        },
+        {
+          contractAddress: comptroller,
+          entrypoint: 'buyShare',
+          calldata: _tab,
+        },
+      ]
+    );
+    console.log(tx1)
+    // return (tx1)
+  };
+
   return (<>
     <div className={`${styles.pageContainer}`}>
-      <div className={`${styles.cardWrapper1}`}>
-        {/* Left Side */}
+      <div className={`${styles.head}`}>
         <div>
-          <FakeImage width='65px' height='65px' fillColor='black' borderRadius='50%' />
-          <div>
-            <div className="fs-38">PKM22</div>
-            <div className="">By Michel trader</div>
-            <div className="">About this user</div>
+          <div className={`${styles.title}`}>
+            <FakeImage width='120px' height='120px' fillColor='black' borderRadius='50%' />
+            <span className='fs-48' style={{ fontWeight: "bold" }}> {name} </span>
+          </div>
+
+          <div className={`${styles.description}`}>
+            <span className='fs-22' style={{ fontWeight: "400" }}> Magnety Staking Vault receive 16% of total protocol platform fees, funds are used buy Starknet BlueChip</span>
+            <div>
+              <span className='fs-20' style={{ fontWeight: "400" }}> #DeFi </span>
+              <span className='fs-20' style={{ fontWeight: "400" }}> #HodL </span>
+              <span className='fs-20' style={{ fontWeight: "400" }}> #ETH </span>
+              <span className='fs-20' style={{ fontWeight: "400" }}> #StarknetGems </span>
+            </div>
+          </  div>
+        </div>
+
+        <div>
+          <div className={`${styles.generalInformation}`}>
+            <div>
+              <div>
+                <div className='fs-20'>Gross Asset Value </div>
+              </div>
+              <div>
+                <div className='fs-28'> {gav} {denominationAsset} </div>
+              </div>
+            </div>
+            <div>
+              <div>
+                <div className='fs-20'> Shareholders</div>
+              </div>
+              <div>
+                <div className='fs-28'> {shareHolders}</div>
+              </div>
+            </div>
+            <div>
+              <div>
+                <div className='fs-20'>Projected APR </div>
+              </div>
+              <div>
+                <div className='fs-28' style={{ color: "#0dab45" }}>20.3%</div>
+              </div>
+            </div>
+            <div>
+              <div>
+                <div className='fs-20'>Risk Factor </div>
+              </div>
+              <div>
+                <div className='fs-28' style={{ color: "#FF0000" }}> 8 / 16</div>
+              </div>
+            </div>
           </div>
         </div>
-        {/* Right Side */}
-        <div>
-          <div className='bg__dotted'>
-            <div> Annual Percentage rate </div>
-            <div className='fs-28 text-align-end text-success'> +5.05% </div>
-          </div>
-          <div className='bg__dotted'>
-            <div> Value managed </div>
-            <div className='fs-28 text-align-end'> $101.05k </div>
-          </div>
-          <div className='bg__dotted'>
-            <div> Investors </div>
-            <div className='fs-28 text-align-end'> 15 </div>
-          </div>
-          <div className='bg__dotted'>
-            <div> Rewards - Airdrops </div>
-            <div className='fs-28 text-align-end'> 0 - 2% </div>
-          </div>
-        </div>
+
       </div>
       <div className={`${styles.cardWrapper2}`}>
         {/* Left Side */}
         <div>
-          <div className='bg__dotted border-radius-15'>
-            <div>
-              <div className='fs-20'>About</div>
-              <div className='fs-14' style={{ marginTop: '5px' }}>Created in order to short </div>
-            </div>
-            <div style={{ marginTop: '15px' }}>
-              <div className='fs-20'>Ranking</div>
-              <div className='fs-14 d-flex justify-content-space-between' style={{ marginTop: '5px' }}>
-                <span>Weekly: 2/234</span>
-                <span>Monthly: 13/234</span>
+          <div className='bg__dotted'>
+            <div className={`${styles.assetManager}`}>
+              <FakeImage width='100px' height='100px' fillColor='black' borderRadius='50%' />
+              <div>
+                <div>
+                  <div className='fs-28' style={{ fontWeight: "semi-bold" }}>Managed by
+                    <a href="https://google.com" target="_blank" rel="noreferrer">
+                      {assetManager.substring(0, 5)}...
+                    </a>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <div >Last active:    </div>
+                    <div style={{ fontWeight: "bold" }}>18 days ago </div>
+                  </div>
+                  <div>
+                    <div >Fund's allocation:   </div>
+                    <div style={{ fontWeight: "bold" }}> 60%</div>
+                  </div>
+                </div>
               </div>
-              <div className='fs-14' style={{ marginTop: '5px' }}>Airdrop rate:</div>
             </div>
           </div>
-          <button data-color="secondary">Buy Shares</button>
-          <button data-color="white">Reedem Funds</button>
+
+          <Tabs activeTab='2'>
+            <Tab label='Mint shares' id='1' >
+              <div className={` bg__dotted`}>
+                <div className={`${styles.mint}`}>
+
+                  <div className='fs-14' style={{ fontWeight: "bold" }}>
+                    <div>
+                      {acccountAddress.substring(0, 7)}...
+                    </div>
+                    <div className='fs-14 '>
+                      &nbsp;&nbsp;&nbsp;{isAllowedDepositor ? "allowed depositor" : "not allowed to mint"}
+                    </div>
+                  </div>
+                  <div>
+                  </div>
+                  <div>
+                    <form
+                      onSubmit={(e: React.SyntheticEvent) => {
+                        e.preventDefault();
+                        const target = e.target as typeof e.target & {
+                          amount: { value: string };
+                        };
+                        const amount = target.amount.value; // typechecks!
+                        console.log(amount)
+                        const newAmount = parseFloat(amount) * 1000000000000000000
+                        console.log(newAmount.toString())
+                        console.log(newAmount)
+
+                        let Tab: string[] = [];
+                        Tab.push(hexToDecimalString(vaultAddress))
+                        Tab.push(hexToDecimalString(denominationAssetAddress))
+                        Tab.push(newAmount.toString())
+                        Tab.push("0")
+                        let TabA: string[] = [];
+                        TabA.push(hexToDecimalString(comptroller))
+                        TabA.push((newAmount.toString()))
+                        TabA.push("0")
+                        console.log(Tab)
+                        console.log(TabA)
+                        if (!accountInterface.address) {
+                          console.log("no account detected")
+                        }
+                        else {
+                          console.log("connected")
+                          multicall(Tab, TabA)
+                        }
+                      }}
+                    >
+                      <div>
+                        <label>
+                          ETH AMOUNT:
+                          <input type="string" name="amount" />
+                        </label>
+                      </div>
+                      <div>
+                        <input type="submit" value="Log in" />
+                      </div>
+                    </form>
+                  </div>
+
+                  <div>
+                    you'll receive
+                  </div>
+
+                </div>
+              </div>
+            </Tab>
+            <Tab label='Sell Shares' id='2'>
+
+
+
+            </Tab>
+          </Tabs>
+
         </div>
         {/* Right Side */}
         <div className='bg__dotted'>
           <div className='d-flex justify-content-space-between'>
-            <div>Share price
+            <div>{symbol} price
               <div style={{
                 display: 'flex',
                 alignItems: 'baseline',
                 gap: '16px'
               }}>
-                <span className='fs-48'> $0.58 </span>
-                <span className='fs-18 text-success'> +1.34% </span>
-                <span className='fs-14'> past 1D </span>
+                <span className='fs-28'> {sharePrice} {denominationAsset}</span>
+                <span className='fs-24 text-success'> +1.34% </span>
               </div>
             </div>
             <div className='border-radius-5' style={{
@@ -383,7 +680,7 @@ const vault: NextPage = () => {
           </div>
           <div>
             {/* <Chart<any> type='line' data={data} /> */}
-            <Line data={data} options={options}></Line>
+            <Line data={data} options={options} ></Line>
           </div>
         </div>
       </div>
@@ -394,38 +691,147 @@ const vault: NextPage = () => {
       }}>
         <Tabs activeTab='6'>
           <Tab label='Portfolio' id='1'>
-            <div className={`${styles.portfolioTable} bg__dotted`}>
+            {trackedAssetsLen > 0 ?
+
+              <div className={`${styles.portfolioTable} bg__dotted`}>
+                <table cellSpacing="0" cellPadding="0">
+                  <thead>
+                    <tr>
+                      <th>Assets</th>
+                      <th>Balance</th>
+                      <th>Value</th>
+
+                      <th>Allocation</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {trackedAssets.map((p, index) => (
+                      <tr key={index}>
+                        <td>
+                          <FakeImage width='50px' height='50px' fillColor='var(--color-secondary)' borderRadius='50%'></FakeImage>
+                          <div>
+                            <span> {p.coinName} </span>
+                            <span> {p.coinSymbol} </span>
+                          </div>
+                        </td>
+                        <td> {p.balance} {p.coinSymbol}</td>
+                        <td>{p.value} {denominationAsset}</td>
+                        <td>{p.allocation}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              :
+              <div className={`${styles.portfolioTable} bg__dotted`}>
+                <table cellSpacing="0" cellPadding="0">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr key={1}>
+                      <td> .</td>
+                      <td> .</td>
+                      <td> Fetching Portofolio, please wait..</td>
+
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            }
+          </Tab>
+          <Tab label='Fees' id='2'>
+            <div className={`${styles.feesTable} bg__dotted`} >
               <table cellSpacing="0" cellPadding="0">
                 <thead>
                   <tr>
-                    <th>Assets</th>
-                    <th>Balance</th>
-                    <th>Price</th>
-                    <th>Value</th>
-                    <th>Allocation</th>
+                    <th>Fee Type</th>
+                    <th>Fee Value</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {portfolioData.map((p, index) => (
-                    <tr key={index}>
-                      <td>
-                        <FakeImage width='50px' height='50px' fillColor='var(--color-secondary)' borderRadius='50%'></FakeImage>
-                        <div>
-                          <span> {p.coinName} </span>
-                          <span> {p.coinFullName} </span>
-                        </div>
-                      </td>
-                      <td> ${p.balance}</td>
-                      <td>{p.price}</td>
-                      <td>{p.value}</td>
-                      <td>{p.allocationPercentage}%</td>
-                    </tr>
-                  ))}
+                  <tr key={1}>
+                    <td>
+                      Entrance Fee
+                    </td>
+                    <td>
+                      <div>
+                        <div> {entranceFee}%</div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr key={2}>
+                    <td>
+                      Exit Fee
+                    </td>
+                    <td>
+                      <div>
+                        <div> {exitFee}%</div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr key={3}>
+                    <td>
+                      Performance Fee
+                    </td>
+                    <td>
+                      <div>
+                        <div> {performanceFee}%</div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr key={4}>
+                    <td>
+                      Management Fee
+                    </td>
+                    <td>
+                      <div>
+                        <div> {managementFee}%</div>
+                      </div>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </Tab>
-          <Tab label='Financials' id='2'>
+          <Tab label='Policies' id='3'>
+            <div className={`bg__dotted ${styles.policiesTabContent}`}>
+              {isPublic ?
+                <div>
+                  <div className='fs-24 fw-600'>{name} is a public fund</div>
+                </div>
+                :
+                <div>
+                  <div className='fs-24 fw-600'>{name} is a private fund</div>
+
+                </div>
+              }
+              <div>
+                <div className='fs-24 fw-600'>Deposit Limits</div>
+                <div className='fs-20 fw-600'>minimum : {minAmount} {denominationAsset}</div>
+                <div className='fs-20 fw-600'>maximum : {maxAmount} {denominationAsset}</div>
+              </div>
+              <div>
+                <div className='fs-24 fw-600'>Timelock</div>
+                <div className='fs-20 fw-600'>After minting shares, you'll have to wait : {timeLock} seconds before you can sell it</div>
+              </div>
+              <div>
+                <div className='fs-24 fw-600'>Allowed Asset to Track</div>
+
+              </div>
+              <div>
+                <div className='fs-24 fw-600'>Allowed Protocol to interact with</div>
+
+              </div>
+            </div>
+          </Tab>
+          <Tab label='Financials' id='4'>
             <div className={`bg__dotted ${styles.financialTabContent}`}>
               <div>
                 <div className='fs-24 fw-600'>General Information</div>
@@ -457,61 +863,7 @@ const vault: NextPage = () => {
               </div>
             </div>
           </Tab>
-          <Tab label='Fees' id='3'>
-            <div className={`${styles.feesTable} bg__dotted`} >
-              <table cellSpacing="0" cellPadding="0">
-                <thead>
-                  <tr>
-                    <th>Fee Type</th>
-                    <th>Settings</th>
-                    <th> </th>
-                    <th>Unpaid Fees</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {feesData.map((f, index) => (
-                    <tr key={index}>
-                      <td>
-                        {f.feesType}
-                      </td>
-                      <td>
-                        <div>
-                          <div>Rate</div>
-                          <div>{f.settingsPercentage} %</div>
-                        </div>
-                      </td>
-                      <td>
-                        <div>
-                          <div>Rate</div>
-                          <div>{f.ratePercentage} %</div>
-                        </div>
-                      </td>
-                      <td>{f.unpaidFeesPercentage} %</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </Tab>
-          <Tab label='Policies' id='4'>
-            <div className={`bg__dotted ${styles.policiesTabContent}`}>
-              <div>
-                <div className='fs-24 fw-600'>Limit Wallets Permitted To Deposit</div>
-                <div>
-                  <button data-color="primary">0x123...ab</button>
-                  <button data-color="primary">0x123...ab</button>
-                  <button data-color="primary">0x123...ab</button>
-                  <button data-color="primary">0x123...ab</button>
-                </div>
-                <div>view more</div>
-              </div>
-              <div>
-                <div className='fs-24 fw-600'>Deposit Limits</div>
-                <div>minimum : 300 MGTY</div>
-                <div>maximum : no</div>
-              </div>
-            </div>
-          </Tab>
+
           <Tab label='Depositors' id='5'>
             <div className={`${styles.depositorsTable} bg__dotted`}>
               <table cellSpacing="0" cellPadding="0">
@@ -573,17 +925,7 @@ const vault: NextPage = () => {
               </div>
             </div>
           </Tab>
-          <Tab label='Fidelity' id='7'>
-            <div className={`bg__dotted ${styles.fidelityTabContent}`}>
-              <div>
-                <div className='fs-24 fw-600'>General Informations</div>
-                <div>
-                  <div className='fw-600'>Airdrops accross the time</div>
-                  <div>5%</div>
-                </div>
-              </div>
-            </div>
-          </Tab>
+
         </Tabs>
       </div>
     </div>

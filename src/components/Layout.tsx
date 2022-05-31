@@ -1,26 +1,53 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import { getStarknet } from '../starknetWrapper'
+import { useAppSelector, useAppDispatch } from '../app/hooks'
+import {
+  setAccount,
+  selectCount,
+  increment,
+} from '../app/counterSlice'
+import { IncrementCounter } from "./IncrementCounter";
+
 
 
 const Layout = (props: PropsWithChildren<unknown>) => {
+  const dispatch = useAppDispatch()
+  let count = useAppSelector(selectCount)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  let [address, setAddress] = useState("connect wallet");
+
+
+  useEffect(() => {
+    const connectWalletOnPageLoad = async () => {
+      if (localStorage?.getItem('isWalletConnected') === 'true') {
+        onClick()
+      }
+    }
+    connectWalletOnPageLoad()
+  }, [])
+
+  const onClick = () => {
+    const starkNet = getStarknet()
+    let mod = true
+    if (localStorage?.getItem('isWalletConnected') === 'true') {
+      mod = false
+    }
+    starkNet.enable({ showModal: mod }).then(value => {
+      setAddress(JSON.stringify(value))
+      localStorage.setItem('isWalletConnected', "true")
+      dispatch(increment())
+      console.log(starkNet.account)
+      setIsConnected(true)
+    })
+  }
 
   function ConnectWallet() {
-    let [address, setAddress] = useState("connect wallet");
 
-    const onClick = () => {
-      const starkNet = getStarknet()
-      starkNet.enable({ showModal: true }).then(value => {
-        setAddress(JSON.stringify(value))
-        console.log(starkNet.account)
-        setIsConnected(true)
-      })
-    }
     return (
       <div className="App">
-        <button data-color="secondary" style={{ display: 'flex', margin: '12px auto' }} onClick={onClick}> {address}</button>
+        <button data-color="secondary" style={{ display: 'flex', margin: '12px auto' }} onClick={onClick}> connect</button>
       </div>
     );
   }
@@ -47,7 +74,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
 
             </>}
             {!isSidebarOpen && isConnected && <>
-              <div className="fs-16 fw-700">Hello Jake21</div>
+              <div className="fs-16 fw-700">Hello {address.substring(2, 7)}..</div>
               <div className="fs-12">Your account is verified</div>
 
               <div className="fs-14 fw-600" style={{ marginTop: '43px', marginBottom: '13px' }}>Statistics</div>
