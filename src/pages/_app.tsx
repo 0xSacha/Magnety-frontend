@@ -19,9 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <title>StarkNet ❤️ React</title>
         </NextHead>
         <Layout>
-
           <Component {...pageProps} />
-
         </Layout>
       </StarknetProvider>
     </Provider>

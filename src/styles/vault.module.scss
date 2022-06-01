@@ -115,6 +115,8 @@
         >div{
         display: flex;
         flex-direction: row;
+        gap: 10px;
+        align-items: center;
         }
     }
 
@@ -136,7 +138,7 @@
                 width: 100%;
             }
             button{
-                width: 193px;
+                width: 100px;
                 font-size: 22px;
             }
         }
@@ -195,6 +197,51 @@
 
 
 .portfolioTable{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    table{
+        width: 100%;
+        thead{
+            background: var(--color-secondary);
+            tr{
+                th{
+                    padding: 7px 0px 7px 25px;
+                    text-align: start;
+                    color: #000;
+                }
+            }
+        }
+        tbody{
+            tr{
+                td{
+                    border-bottom: 1px solid var(--color-secondary);
+                    padding: 22px 0px 22px 25px;
+                    text-align: start;
+                }
+                td:first-child{
+                    display: flex;
+                    align-items: center;
+                    gap: 17px;
+                    >div:last-child{
+                        display: flex;
+                        flex-direction: column;
+                        >span:first-child{
+                            font-weight: 600;
+                            line-height: 19px;
+                        }
+                        >span:last-child{
+                            line-height: 19px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+}
+
+.sellShareTab{
     border: 1px solid var(--color-secondary);
     border-radius: 15px;
     overflow: hidden;

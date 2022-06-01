@@ -18,6 +18,7 @@ import { getStarknet, AccountInterface } from "../starknetWrapper"
 import { contractAddress } from '~/registry/address';
 import { hexToDecimalString } from 'starknet/dist/utils/number';
 import { number } from 'starknet';
+import Ether from '../image/ETH.png';
 
 
 const { provider, account } = getStarknet()
@@ -131,6 +132,11 @@ type PortfolioData = {
   allocation: string,
 }[];
 
+type userShareData = {
+  tokenId: string,
+  shareAmount: string,
+}[];
+
 const vault: NextPage = () => {
   let count = useAppSelector(selectCount)
 
@@ -155,15 +161,25 @@ const vault: NextPage = () => {
   const [sharePrice, setSharePrice] = React.useState<string>("0");
   const [gav, setGav] = React.useState<string>("0");
   const [trackedAssets, setTrackedAssets] = React.useState<PortfolioData>([]);
+  const [userShareInfo, setUserShareInfo] = React.useState<userShareData>([]);
   const [trackedAssetsLen, setTrackedAssetsLen] = React.useState<number>(0);
   const [userBalance, setUserBalance] = React.useState<string>("0");
   const [isAllowedDepositor, setIsAllowedDepositor] = React.useState<string>("0");
-
-
+  const [userShareBalance, setUserShareBalance] = React.useState<string>("");
+  const [sellTokenId, setSellTokenId] = React.useState<string>("");
+  const [percentShare, setPercentShare] = React.useState<string>("");
 
   function shortStringFeltToStr(felt: bigint): string {
     const newStrB = Buffer.from(felt.toString(16), 'hex')
     return newStrB.toString()
+  }
+
+  function returnImagefromSymbol(symb: string) {
+    if (symb == "Ether") {
+      return (
+        <Image src={Ether} alt="eth" />
+      )
+    }
   }
 
   useEffect(() => {
@@ -355,6 +371,42 @@ const vault: NextPage = () => {
         }
         else {
           setIsAllowedDepositor("1")
+        }
+      }).catch(err => {
+        console.log(err);
+      });
+      const res3 = provider.callContract({ contractAddress: vaultAddress, entrypoint: "getBalanceOf", calldata: [hexToDecimalString(address_)] })
+      res3.then(value => {
+        const userShareBalance__ = (hexToDecimalString(value.result[0]))
+        console.log("usersharebalance")
+        console.log(userShareBalance__)
+        setUserShareBalance(userShareBalance__)
+        for (let pas = 0; pas < (parseFloat(userShareBalance__)); pas++) {
+          const res4 = provider.callContract({ contractAddress: vaultAddress, entrypoint: "tokenOfOwnerByIndex", calldata: [hexToDecimalString(address_), pas.toString(), "0"], })
+          res4.then(value => {
+            const tokenId = (hexToDecimalString(value.result[0]))
+            console.log("tokenId")
+            console.log(tokenId)
+            const res5 = provider.callContract({ contractAddress: vaultAddress, entrypoint: "sharesBalance", calldata: [tokenId, "0"], })
+            res5.then(value => {
+              const sharesBalance = (hexToDecimalString(value.result[0]))
+              console.log("share balance")
+              console.log(sharesBalance)
+              let userShareInfo__: userShareData = userShareInfo
+              userShareInfo__.push(
+                {
+                  tokenId: tokenId,
+                  shareAmount: sharesBalance,
+                }
+              )
+              console.log(userShareInfo__)
+              setUserShareInfo(userShareInfo__)
+            }).catch(err => {
+              console.log(err);
+            });
+          }).catch(err => {
+            console.log(err);
+          });
         }
       }).catch(err => {
         console.log(err);
@@ -644,9 +696,131 @@ const vault: NextPage = () => {
               </div>
             </Tab>
             <Tab label='Sell Shares' id='2'>
+              {sellTokenId == "" ?
+                <div className={` bg__dotted`}>
+                  <div className={`${styles.mint}`}>
 
+                    <div className='fs-14' style={{ fontWeight: "bold" }}>
+                      <div>
+                        {acccountAddress.substring(0, 7)}...
+                      </div>
+                      <div className='fs-14 '>
+                        &nbsp;&nbsp;&nbsp;{userShareBalance == "" ? "Fetching your shares" : userShareBalance == "0" ? "you don't have any shares" : "See below your shares"}
+                      </div>
+                    </div>
+                    {userShareInfo.map((p, index) => (
+                      <div>
+                        <div>
+                          tokenID : {p.tokenId}
+                        </div>
+                        <div>
+                          Share amount: {p.shareAmount}
+                        </div>
+                        <div>
+                          <button data-color="secondary" style={{ margin: '8px auto' }} onClick={() => setSellTokenId(p.tokenId)}>Sell</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                :
+                <div className={` bg__dotted`}>
+                  <div className={`${styles.mint}`}>
 
+                    <div className='fs-14' style={{ fontWeight: "bold" }}>
+                      <div>
+                        tokenID : {sellTokenId}
+                      </div>
+                      <div className='fs-14 '>
+                        &nbsp;&nbsp;&nbsp; You are allowed to sell this share
+                      </div>
+                    </div>
+                    <form
+                      onSubmit={(e: React.SyntheticEvent) => {
+                        e.preventDefault();
+                        const target = e.target as typeof e.target & {
+                          percent: { value: string };
+                        };
+                        const amount = target.percent.value; // typechecks!
+                        setPercentShare(amount)
+                      }}
+                    >
+                      <div>
+                        <label>
+                          <input type="string" name="percent" />
+                        </label>
+                      </div>
+                      <div>
+                        <input type="submit" value="Log in" />
+                      </div>
+                    </form>
+                    <div>
+                      {percentShare == "" ?
+                        <>
+                          You own {userShareInfo[parseFloat(sellTokenId)].shareAmount} shares, how many Shares do you want to sell
+                        </>
+                        :
+                        <>
+                          You selected {percentShare}%, which represents {parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100)} {symbol} or {parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)} {denominationAsset}
+                        </>
+                      }
 
+                    </div>
+                    <div>
+                      <div>
+                        Reedem funds with
+                      </div>
+                      <div>
+                        {trackedAssets.map((p, index) => (
+                          <div>
+                            <div>
+                              <button type="button" style={{ width: "50px" }}>
+                                {returnImagefromSymbol(p.coinSymbol)}
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <div>
+                        <div>
+
+                          <div className={`${styles.portfolioTable} bg__dotted`}>
+                            <table cellSpacing="0" cellPadding="0">
+                              <thead>
+                                <tr>
+                                  <th>Assets</th>
+                                  <th>Balance</th>
+                                  <th>Value</th>
+
+                                  <th>Allocation</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {trackedAssets.map((p, index) => (
+                                  <tr key={index}>
+                                    <td>
+                                      <FakeImage width='50px' height='50px' fillColor='var(--color-secondary)' borderRadius='50%'></FakeImage>
+                                      <div>
+                                        <span> {p.coinName} </span>
+                                        <span> {p.coinSymbol} </span>
+                                      </div>
+                                    </td>
+                                    <td> {p.balance} {p.coinSymbol}</td>
+                                    <td>{p.value} {denominationAsset}</td>
+                                    <td>{p.allocation}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
             </Tab>
           </Tabs>
 
