@@ -6,7 +6,7 @@ import Layout from '~/components/Layout'
 import React from 'react'
 import { Provider } from 'react-redux'
 import store from '../app/store'
-
+import { ChakraProvider } from '@chakra-ui/react'
 
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -19,7 +19,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           <title>StarkNet ❤️ React</title>
         </NextHead>
         <Layout>
-          <Component {...pageProps} />
+          <ChakraProvider>
+            <Component {...pageProps} />
+          </ChakraProvider>
         </Layout>
       </StarknetProvider>
     </Provider>
