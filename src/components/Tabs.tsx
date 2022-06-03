@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, ReactChild, ReactNode } from "react";
 import styles from "~/styles/tabs.module.scss";
+import { Button, ButtonGroup } from '@chakra-ui/react'
 
 type TabsProps = {
   activeTab: string;
@@ -19,10 +20,10 @@ const Tabs = (props: PropsWithChildren<TabsProps>) => {
       <div className={`${styles.tabContainer} ${props.customClass ?? ""}`}>
         <div className={`${styles.tabHeader}`}>
           {props.children.map((child, index) => (
-            <button
+            <Button
               key={index}
-              data-color={
-                child.props.id === activeTab ? "secondary" : "primary"
+              backgroundColor={
+                child.props.id === activeTab ? "#f6643c" : "#030135"
               }
               onClick={() =>
                 child.props.cbFn === undefined
@@ -31,7 +32,7 @@ const Tabs = (props: PropsWithChildren<TabsProps>) => {
               }
             >
               {child.props.label}
-            </button>
+            </Button>
           ))}
         </div>
         <div className={`${styles.tabContent}`}>
