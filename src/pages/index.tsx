@@ -1,5 +1,6 @@
 import { useStarknetCall } from '@starknet-react/core'
 import type { NextPage } from 'next'
+import Link from 'next/link'
 import { useMemo } from 'react'
 import { toBN } from 'starknet/dist/utils/number'
 import { ConnectWallet } from '~/components/ConnectWallet'
@@ -64,6 +65,15 @@ const Home: NextPage = () => {
       <p>fund Name: {fundNameVaue}</p>
       <h2>Recent Transactions</h2>
       <TransactionList />
+      <button>
+        <Link href={'/vault'}>Vault</Link>
+      </button>
+      <button>
+        <Link href={'/contract'}>Contract</Link>
+      </button>
+      <button>
+        <Link href={'/home'}>Home</Link>
+      </button>
     </div>
   )
 }

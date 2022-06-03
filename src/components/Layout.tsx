@@ -1,5 +1,6 @@
-import React, { PropsWithChildren, Props, useState } from "react";
+import React, { PropsWithChildren, useState } from "react";
 import Navbar from "./Navbar";
+import Profile from "./Profile";
 
 const Layout = (props: PropsWithChildren<unknown>) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -51,9 +52,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
 
             {
               isSidebarOpen && <>
-                <div className="fs-48">
-                  Hello This is Sidebar Content
-                </div>
+                  <Profile></Profile>
               </>
             }
           </div>
