@@ -1,0 +1,486 @@
+.pageContainer{
+    padding: 50px 75px 25px 75px;
+    .cardWrapper1, .cardWrapper2{
+        display: flex;
+        justify-content: space-between;
+        flex-basis: 100px;
+        gap: 20px;
+        >div:first-child{
+            width: 40%;
+            flex-shrink: 0;
+        }
+        >div:last-child{
+            display: flex;
+            flex-wrap: wrap;
+            flex-grow: 1;
+        }
+    }
+
+    .head{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        // gap: 6vw;
+        >div:first-child{
+            width: 50%;
+            
+        }
+    }
+    
+    .title{
+        margin-top: 30px ;
+        
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .description{
+        margin: 20px;
+        width: 85%;
+        display: flex;
+        flex-direction: column;
+
+        gap: 5px;
+        >div{
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            >span{
+                background-color: var(--color-primary);
+                border-radius: 5px;
+                padding: 10px;
+            }
+        }
+    }
+
+    .assetManager{
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        gap: 10px;
+        >div:last-child{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            >div{
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
+                >div{
+                    display: flex;
+                    flex-direction: row;
+                    gap: 5px;
+                }
+            }
+        }
+    }
+
+    .generalInformation{
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        justify-content: center;
+        background-color: var(--color-primary);
+        border-radius: 10px;
+        padding: 20px 40px;
+        box-shadow: 10px 5px 5px var(--color-secondary);
+        >div{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            >div:last-child{
+                font-weight:500;
+            }
+        }
+    }
+
+    .buysell{
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .mint{
+        display: flex;
+        padding: 20px 20px;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+        >div:first-child{
+            border-bottom: 1px solid var(--color-secondary);
+        }
+        >div{
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+        }
+    }
+
+    .cardWrapper2{
+        margin: 30px 0px;
+        box-shadow: 50px;
+        // height: 400px;
+        >div:first-child{
+            // left card
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            >div{
+                padding: 20px;
+                border-radius: 15px;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+            button{
+                width: 100px;
+               
+            }
+        }
+        >div:last-child{
+            border-radius: 15px;
+            display: block;
+            padding: 20px 40px;
+            >div:first-child{
+                height: 100px;
+            }
+            >div:last-child{
+                height: 260px;
+                canvas{
+                    // margin: auto;
+                    max-height: 100%;
+                }
+            }
+        }
+    }
+        
+}
+
+.modal {
+    font-size: 12px;
+    height: 500px;
+    background-color: var(--color-primary);
+    color: #ffffff;
+    border: #cfcece;
+    border: 1px solid var(--color-secondary);
+  }
+  .modal > .header {
+    width: 100%;
+    border-bottom: 1px solid var(--color-secondary);
+    font-size: 35px;
+    text-align: center;
+    padding: 10px 15px;
+  }
+  .modal > .content {
+    width: 100%;
+    padding: 20px 15px;
+    
+  }
+  .modal > .close {
+    cursor: pointer;
+    position: absolute;
+    display: block;
+    padding: 2px 5px;
+    line-height: 20px;
+    right: -10px;
+    top: -10px;
+    font-size: 24px;
+    background: var(--color-secondary);
+    border-radius: 18px;
+    border: 1px solid #cfcece;
+  }
+
+
+.portfolioTable{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    table{
+        width: 100%;
+        thead{
+            background: var(--color-secondary);
+            tr{
+                th{
+                    padding: 7px 0px 7px 25px;
+                    text-align: start;
+                    color: #000;
+                }
+            }
+        }
+        tbody{
+            tr{
+                td{
+                    border-bottom: 1px solid var(--color-secondary);
+                    padding: 22px 0px 22px 25px;
+                    text-align: start;
+                }
+                td:first-child{
+                    display: flex;
+                    align-items: center;
+                    gap: 17px;
+                    >div:last-child{
+                        display: flex;
+                        flex-direction: column;
+                        >span:first-child{
+                            font-weight: 600;
+                            line-height: 19px;
+                        }
+                        >span:last-child{
+                            line-height: 19px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+}
+
+.sellShareTab{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    table{
+        width: 100%;
+        thead{
+            background: var(--color-secondary);
+            tr{
+                th{
+                    padding: 7px 0px 7px 25px;
+                    text-align: start;
+                    color: #000;
+                }
+            }
+        }
+        tbody{
+            tr{
+                td{
+                    border-bottom: 1px solid var(--color-secondary);
+                    padding: 22px 0px 22px 25px;
+                    text-align: start;
+                }
+                td:first-child{
+                    display: flex;
+                    align-items: center;
+                    gap: 17px;
+                    >div:last-child{
+                        display: flex;
+                        flex-direction: column;
+                        >span:first-child{
+                            font-weight: 600;
+                            line-height: 19px;
+                        }
+                        >span:last-child{
+                            line-height: 19px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+}
+
+.feesTable{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+   
+    table{
+        width: 100%;
+        thead{
+            background: var(--color-secondary);
+            tr{
+                th{
+                    padding: 7px 0px 7px 25px;
+                    text-align: start;
+                    color: #000;
+                }
+            }
+        }
+        tbody{
+            tr{
+                td{
+                    padding: 23px 0px 26px 25px;
+                    border-bottom: 1px solid var(--color-secondary);
+                    text-align: start;
+                    div{
+                        display: flex;
+                        flex-direction: column;
+                        gap: 7px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.financialTabContent{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    // padding-bottom: 28px;
+    min-height: 382px;
+    >div{
+        padding: 22px 35px;
+        border-bottom: 1px solid var(--color-secondary);
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        >div{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            >div:first-child{
+                margin-left: 24px;
+            }
+            >div:last-child{
+                width: 200px;
+                text-align: start;
+                margin-right: 144px;
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+}
+
+.policiesTabContent{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    button{
+        min-width: 180px;
+        padding: 5px;
+        border-radius: 5px;
+        &:hover {
+            background-color: white;
+            color: black;
+        }
+    }
+    >div{
+        padding: 19px;
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+        border-bottom: 1px solid var(--color-secondary);
+        >div{
+            display: flex;
+            gap: 25px;
+        }
+    }
+}
+
+.depositorsTable{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    min-height: 434px;
+    table{
+        width: 100%;
+        thead{
+            background: var(--color-secondary);
+            tr{
+                th{
+                    padding: 12px 0px 12px 38px;
+                    text-align: start;
+                    color: #000;
+                }
+            }
+        }
+        tbody{
+            tr{
+                td{
+                    border-bottom: 1px solid var(--color-secondary);
+                    padding: 12px 0px 12px 38px;
+                    text-align: start;
+                    width: 1%;
+                    white-space: nowrap;
+                }
+            }
+        }
+    }
+}
+
+.activitiesContainer{
+    display: flex;
+    gap: 12px;
+    min-height: 434px;
+    >div:first-child{
+        border: 1px solid var(--color-secondary);
+        border-radius: 15px;
+        padding: 16px 24px 10px 13px;
+        width: 60%;
+        >div{
+            border: 1px solid var(--color-secondary);
+            border-radius: 15px;
+            padding: 12px 12px 13px 12px;
+            display: flex;
+            gap: 15%;
+            justify-content: space-between;
+            min-height: 232px;
+            >div:first-child{
+                padding-top: 8px;
+                padding-bottom: 16px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                flex-grow: 1;
+                >div:last-child{
+                    align-self: flex-end;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+            }
+            >div:last-child{
+                min-height: 100%;
+                width: 54%;
+                border-radius: 15px;
+                background-color: var(--color-primary);
+                padding: 33px 26px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+        }
+    }
+    >div:last-child{
+        border: 1px solid var(--color-secondary);
+        border-radius: 15px;
+        height: 280px;
+        flex-grow: 1;
+    }
+}
+
+.fidelityTabContent{
+    border: 1px solid var(--color-secondary);
+    border-radius: 15px;
+    overflow: hidden;
+    // padding-bottom: 28px;
+    min-height: 382px;
+    >div{
+        padding: 22px 35px;
+        border-bottom: 1px solid var(--color-secondary);
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        >div{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            >div:last-child{
+                width: 200px;
+                text-align: start;
+                margin-right: 144px;
+            }
+        }
+    }
+}

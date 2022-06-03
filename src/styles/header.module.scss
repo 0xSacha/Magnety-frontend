@@ -3,6 +3,7 @@
 .headerContainer {
   min-height: $headerHeight;
   width: 100%;
+  grid-column: 1/-1;
   display: flex;
   z-index: 1000;
   align-items: center;

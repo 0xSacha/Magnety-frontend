@@ -1,18 +1,30 @@
 import type { AppProps } from 'next/app'
 import NextHead from 'next/head'
-import { InjectedConnector, StarknetProvider } from '@starknet-react/core'
+import { StarknetProvider } from '@starknet-react/core'
 import '../global.scss'
+import Layout from '~/components/Layout'
+import React from 'react'
+import { Provider } from 'react-redux'
+import store from '../app/store'
+import { ChakraProvider } from '@chakra-ui/react'
+
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const connectors = [new InjectedConnector()]
+
 
   return (
-    <StarknetProvider autoConnect connectors={connectors}>
-      <NextHead>
-        <title>StarkNet ❤️ React</title>
-      </NextHead>
-      <Component {...pageProps} />
-    </StarknetProvider>
+    <Provider store={store}>
+      <StarknetProvider>
+        <NextHead>
+          <title>StarkNet ❤️ React</title>
+        </NextHead>
+        <Layout>
+          <ChakraProvider>
+            <Component {...pageProps} />
+          </ChakraProvider>
+        </Layout>
+      </StarknetProvider>
+    </Provider>
   )
 }
 

@@ -1,44 +1,7 @@
 @import "../variables.scss";
 
 .pageContent {
-  background-color: $primaryColor;
-  color: white;
-  position: relative;
-  overflow: hidden;
-}
-
-.pageWrapper {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-  position: absolute;
-  top: 0;
   padding: 21px 200px 20px 49px;
-  box-sizing: border-box;
-}
-
-.pageBackdrop {
-  height: 100%;
-  width: 100%;
-  max-height: 100%;
-  max-width: 100%;
-  --dot1Color: #f6643c;
-  --dot2Color: #ffffff;
-  background: radial-gradient(
-      circle 30vh at 55vw 30vh,
-      var(--dot2Color) 80%,
-      transparent
-    ),
-    radial-gradient(
-      circle 50vh at 25vw -10vh,
-      var(--dot1Color) 80%,
-      transparent
-    );
-  // background-size: 100px 100px;
-  filter: blur(20px);
-  -webkit-filter: blur(20px);
-  opacity: 0.5;
 }
 
 .formContainer {
@@ -46,7 +9,7 @@
   border-radius: 30px;
   margin: 40px 0;
   .header {
-    font-weight: 700px;
+    font-weight: 700;
     font-size: 35px;
   }
   .formGroup {
@@ -109,3 +72,24 @@
     }
   }
 }
+
+.asset_container{
+  display: flex;
+  gap: 20px;  
+  flex-wrap: wrap;
+  .asset_button{
+    width: 100px;
+    height: fit-content;
+    min-height: 100px;
+    position: relative;
+    &.asset_selected{
+      >span.asset_selected_checkmark{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 24px;
+      }
+    }
+  }
+}
+
