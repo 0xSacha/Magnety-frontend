@@ -72,3 +72,24 @@
     }
   }
 }
+
+.asset_container{
+  display: flex;
+  gap: 20px;  
+  flex-wrap: wrap;
+  .asset_button{
+    width: 100px;
+    height: fit-content;
+    min-height: 100px;
+    position: relative;
+    &.asset_selected{
+      >span.asset_selected_checkmark{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 24px;
+      }
+    }
+  }
+}
+

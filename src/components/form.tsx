@@ -48,7 +48,7 @@ function Home() {
                     <div className="form-row">
                         <div className="form-group col">
                             <label>Title</label>
-                            <select name="title" {...register('title')} className={`form-control ${errors.title ? 'is-invalid' : ''}`}>
+                            <select {...register('title')} className={`form-control ${errors.title ? 'is-invalid' : ''}`}>
                                 <option value=""></option>
                                 <option value="Mr">Mr</option>
                                 <option value="Mrs">Mrs</option>
@@ -59,41 +59,41 @@ function Home() {
                         </div>
                         <div className="form-group col-5">
                             <label>First Name</label>
-                            <input name="firstName" type="text" {...register('firstName')} className={`form-control ${errors.firstName ? 'is-invalid' : ''}`} />
+                            <input type="text" {...register('firstName')} className={`form-control ${errors.firstName ? 'is-invalid' : ''}`} />
                             <div className="invalid-feedback">{errors.firstName?.message}</div>
                         </div>
                         <div className="form-group col-5">
                             <label>Last Name</label>
-                            <input name="lastName" type="text" {...register('lastName')} className={`form-control ${errors.lastName ? 'is-invalid' : ''}`} />
+                            <input type="text" {...register('lastName')} className={`form-control ${errors.lastName ? 'is-invalid' : ''}`} />
                             <div className="invalid-feedback">{errors.lastName?.message}</div>
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group col">
                             <label>Date of Birth</label>
-                            <input name="dob" type="date" {...register('dob')} className={`form-control ${errors.dob ? 'is-invalid' : ''}`} />
+                            <input type="date" {...register('dob')} className={`form-control ${errors.dob ? 'is-invalid' : ''}`} />
                             <div className="invalid-feedback">{errors.dob?.message}</div>
                         </div>
                         <div className="form-group col">
                             <label>Email</label>
-                            <input name="email" type="text" {...register('email')} className={`form-control ${errors.email ? 'is-invalid' : ''}`} />
+                            <input type="text" {...register('email')} className={`form-control ${errors.email ? 'is-invalid' : ''}`} />
                             <div className="invalid-feedback">{errors.email?.message}</div>
                         </div>
                     </div>
                     <div className="form-row">
                         <div className="form-group col">
                             <label>Password</label>
-                            <input name="password" type="password" {...register('password')} className={`form-control ${errors.password ? 'is-invalid' : ''}`} />
+                            <input type="password" {...register('password')} className={`form-control ${errors.password ? 'is-invalid' : ''}`} />
                             <div className="invalid-feedback">{errors.password?.message}</div>
                         </div>
                         <div className="form-group col">
                             <label>Confirm Password</label>
-                            <input name="confirmPassword" type="password" {...register('confirmPassword')} className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`} />
+                            <input type="password" {...register('confirmPassword')} className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`} />
                             <div className="invalid-feedback">{errors.confirmPassword?.message}</div>
                         </div>
                     </div>
                     <div className="form-group form-check">
-                        <input name="acceptTerms" type="checkbox" {...register('acceptTerms')} id="acceptTerms" className={`form-check-input ${errors.acceptTerms ? 'is-invalid' : ''}`} />
+                        <input type="checkbox" {...register('acceptTerms')} id="acceptTerms" className={`form-check-input ${errors.acceptTerms ? 'is-invalid' : ''}`} />
                         <label htmlFor="acceptTerms" className="form-check-label">Accept Terms & Conditions</label>
                         <div className="invalid-feedback">{errors.acceptTerms?.message}</div>
                     </div>

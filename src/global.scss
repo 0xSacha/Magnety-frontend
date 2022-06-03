@@ -165,6 +165,14 @@ button {
     --text: var(--color-secondary, black);
     --bg: white;
   }
+  &[data-color="transparent"]{
+    --text: 'black';
+    --bg: hsl(0deg 0% 85% / 90%);
+    &:hover{
+      --hover-bg: hsl(0deg 0% 85% / 75%);
+      --hover-text: 'white';
+    }
+  }
 }
 
 /* Scrollbar */
@@ -183,4 +191,13 @@ button {
 }
 ::-webkit-scrollbar-thumb:hover {
   border-radius: 10px;
+}
+
+// remove drag effect on images
+img{
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
 }
