@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { NextPage } from 'next';
+import Link from 'next/link'
 import styles from '~/styles/vault.module.scss';
 import FakeImage from "~/components/FakeImage";
 import Image from "next/image";
@@ -93,10 +94,10 @@ const data: ChartData<"line", (number | ScatterDataPoint | null)[], unknown> = {
     {
       label: "Dataset",
       data: chartData,
-      fill: false,
+      fill: true,
       backgroundColor: "rgba(75,192,192,0.2)",
       borderColor: "rgba(75,192,192,1)",
-      tension: 0.1,
+      tension: 0.3,
     },
     {
       label: 'Initial',
@@ -104,7 +105,7 @@ const data: ChartData<"line", (number | ScatterDataPoint | null)[], unknown> = {
       borderDash: [5, 5],
       borderColor: "rgba(75,192,192,0.5)",
       pointRadius: 0,
-      pointHoverRadius: 0
+      pointHoverRadius: 0,
     },
     {
       label: 'Current',
@@ -139,7 +140,7 @@ const options = {
   },
   elements: {
     point: {
-      radius: 1,
+      radius: 2,
     },
   },
   plugins: {
@@ -178,11 +179,11 @@ const vault: NextPage = () => {
   let count = useAppSelector(selectCount)
 
   const router = useRouter()
-  var { vad } = router.query
+  var { vad } = router.query /* vault address*/
   var addressdata = VDatabase["default"];
   if (vad !== undefined) {
     /* vad = contractAddress.StakingVault */
-    addressdata = VDatabase[String(vad)];
+    addressdata = VDatabase[String(vad)];  /* replace with get vault vaultaddress*/
   }
 
 
@@ -309,8 +310,8 @@ const vault: NextPage = () => {
       )
     }
   }
-  function returnFundImage() {
 
+  function returnFundImage() {
     return (
       <FakeImage fillColor='black' borderRadius='50%' />
     )
@@ -842,9 +843,11 @@ const vault: NextPage = () => {
               <div>
                 <div>
                   <div className='fs-28' style={{ fontWeight: "semi-bold" }}>Managed by
-                    <a href={"../user/"+assetManager} rel="noreferrer">
-                      {assetManager.substring(0, 5)}...
-                    </a>
+                    <Link href={"../user/"+assetManager}>
+                      <a>
+                        {assetManager.substring(0, 5)}...
+                      </a>
+                    </Link>
                   </div>
                 </div>
                 <div>
@@ -891,7 +894,8 @@ const vault: NextPage = () => {
                           {denominationAsset}
                         </Text>
                         <div style={{ width: "30px" }}>
-                          {returnImagefromSymbol(denominationAsset)}
+                          {/* {returnImagefromSymbol(denominationAsset)} */}
+                          <img src={`require(../../image/${denominationAsset}.png)`} />
                         </div>
                       </Flex>}
                     <Flex flexDir={'column'}>
@@ -1111,7 +1115,8 @@ const vault: NextPage = () => {
           </div>
           <div>
             {/* <Chart<any> type='line' data={data} /> */}
-            <Line data={data} options={options} ></Line>
+            <Line id="graph" data={data} options={options} ></Line>
+            
           </div>
         </div>
       </div>
