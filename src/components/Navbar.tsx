@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "../styles/header.module.scss";
 import Image from 'next/image'
 import { useRouter } from "next/router";
+import Link from 'next/link'
 
 type HeaderListItem = {
   label: string;
@@ -53,8 +54,8 @@ export default () => {
     return (
       <>
         <div className={`${styles.headerContainer}`}>
-          <div style={{marginLeft: '17px'}} onClick={() => router.replace('/')}>
-            <Image src="/logo1.svg" alt="A" width={'32px'} height={'46px'}/>
+          <div style={{marginLeft: '17px'}}>
+            <Link href="/"><img style={{cursor:"pointer"}} src="/logo1.svg" alt="A" width={'32px'} height={'46px'}/></Link>
           </div>
           <div className={styles.divider}></div>
           {/* Mainnet Dropdown */}
@@ -84,9 +85,11 @@ export default () => {
           {/* Navbar Links */}
           <ul>
             {NAVBAR_ITEMS.map((item, index) => (
-              <li key={index} onClick={(event) => item.onClick(event)} className={item.customClass ?? ''}>
-                {item.label}
-              </li>
+              <Link href={"/"+item.label.toLowerCase()}>
+                <li key={index} /* onClick={(event) => item.onClick(event)} */ className={item.customClass ?? ''}>
+                  {item.label}
+                </li>
+              </Link>
             ))}
           </ul>
         </div>
