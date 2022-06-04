@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Provider store={store}>
       <StarknetProvider>
         <NextHead>
-          <title>StarkNet ❤️ React</title>
+          <title>Magnety Finance</title>
         </NextHead>
         <Layout>
           <ChakraProvider>

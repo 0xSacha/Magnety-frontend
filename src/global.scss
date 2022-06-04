@@ -11,6 +11,7 @@
 
 body {
   font-family: "Inter", sans-serif;
+  background-color: $primaryColor !important;
 }
 
 * {
@@ -29,13 +30,14 @@ div.page {
   max-height: 100vh;
   .page__content {
     height: 100%;
+    padding-top: $headerHeight;
     box-sizing: border-box;
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
   }
   .page__wrapper {
-    background-color: $primaryColor;
+    background-color: #040a14; /*TODO  : choose with sacha !!*/
     box-sizing: border-box;
     color: white;
     position: relative;
@@ -44,14 +46,21 @@ div.page {
   .page__backdrop {
     --dot1Color: #f6643c;
     --dot2Color: #ffffff;
-    background: radial-gradient(
+    --dot3Color: #030135;
+    background: 
+      radial-gradient(
+        circle 50vh at 25vw -10vh,
+        var(--dot1Color) 80%,
+        transparent
+      ),
+      radial-gradient(
         circle 30vh at 55vw 30vh,
         var(--dot2Color) 80%,
         transparent
       ),
       radial-gradient(
-        circle 50vh at 25vw -10vh,
-        var(--dot1Color) 80%,
+        circle 70vh at 30vw 45vh,
+        var(--dot3Color) 80%,
         transparent
       );
     filter: blur(20px);
@@ -63,6 +72,7 @@ div.page {
   }
   .page__sidebar_wrapper {
     position: relative;
+    margin-top: $headerHeight;
     .page__sidebar_backdrop{
       position: absolute;
       inset: 0;

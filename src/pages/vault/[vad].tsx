@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/router'
 import { NextPage } from 'next';
 import styles from '~/styles/vault.module.scss';
 import FakeImage from "~/components/FakeImage";
 import Image from "next/image";
-import { useAppSelector } from '../app/hooks'
+import { useAppSelector } from '../../app/hooks'
 import {
   selectCount,
-} from '../app/counterSlice'
+} from '../../app/counterSlice'
 import 'chart.js/auto';
 import { Chart, Line } from 'react-chartjs-2';
 import { Button, ButtonGroup } from '@chakra-ui/react'
@@ -44,11 +45,11 @@ import { ChartData, ScatterDataPoint, ChartOptions, CoreChartOptions, ElementCha
 import { _DeepPartialObject } from 'chart.js/types/utils';
 import Tabs from '~/components/Tabs';
 import Tab from '~/components/Tab';
-import { getStarknet, AccountInterface } from "../starknetWrapper"
+import { getStarknet, AccountInterface } from "../../starknetWrapper"
 import { contractAddress } from '~/registry/address';
 import { hexToDecimalString } from 'starknet/dist/utils/number';
 import { number } from 'starknet';
-import Ether from '../image/ETH.png';
+import Ether from '../../image/ETH.png';
 import { Flex, Spacer } from '@chakra-ui/react'
 import { Slider as MultiSlider } from 'react-multi-thumb-slider';
 import { MaterialSlider } from 'react-multi-thumb-slider';
@@ -78,14 +79,6 @@ const randomChartData = (n: number, startAt: number = 0, maxChanges: number = 10
   })]
 }
 
-
-
-
-const vaultAddress = contractAddress.StakingVault
-const comptroller = contractAddress.Comptroller
-const valueIntepretor = contractAddress.valueInterpretor
-const feeManager = contractAddress.FeeManager
-const policyManager = contractAddress.PolicyManager
 
 
 const numberOfData = 200;
@@ -179,10 +172,27 @@ type userShareData = {
 }[];
 
 
+import VDatabase from "./vaults.json"
 
 const vault: NextPage = () => {
   let count = useAppSelector(selectCount)
 
+  const router = useRouter()
+  var { vad } = router.query
+  var addressdata = VDatabase["default"];
+  if (vad !== undefined) {
+    /* vad = contractAddress.StakingVault */
+    addressdata = VDatabase[String(vad)];
+  }
+
+
+  /* TODO : check if address is correct else use stakingvault address ! */
+
+  const vaultAddress = contractAddress.StakingVault
+  const comptroller = contractAddress.Comptroller
+  const valueIntepretor = contractAddress.valueInterpretor
+  const feeManager = contractAddress.FeeManager
+  const policyManager = contractAddress.PolicyManager
 
   const [name, setName] = React.useState<string>("name");
   const [symbol, setSymbol] = React.useState<string>("symbol");
@@ -218,6 +228,7 @@ const vault: NextPage = () => {
   const [sellValue, setSellValue] = React.useState<any>(0)
   const [onChange, setOnChange] = React.useState<boolean>(true)
 
+  const [onPopUp, setonPopUp] = React.useState<boolean>(false)
 
 
 
@@ -746,20 +757,40 @@ const vault: NextPage = () => {
 
   return (<>
     <div className={`${styles.pageContainer}`}>
+      {onPopUp ?
+        <div style={{position: "absolute", backgroundColor:"black", width:"50%", marginLeft:"25%", display:"flex", flexDirection : "column", padding:"30px"}}>
+          <button onClick={() => setonPopUp(false)}>Close</button>
+          <p className='fs-35'>Edit Your Vault Description</p>
+          <p className='fs-22'>Description :</p>
+          <input></input>
+          <p className='fs-22'>Tags :</p>
+          <input></input>
+          <p className='fs-22'>Image :</p>
+          <input></input>
+          <button>Validate</button>
+        </div>
+      :
+        <></>
+      }
       <div className={`${styles.head}`}>
         <div>
           <div className={`${styles.title}`}>
-            <FakeImage width='120px' height='120px' fillColor='black' borderRadius='50%' />
+            {/* <FakeImage width='120px' height='120px' fillColor='black' borderRadius='50%' /> */}
+            <div style={{ width: '120px', height: '120px', borderRadius: '50%', overflow: 'hidden', backgroundColor: "black" }}>
+              <img src={addressdata.photo_link} style={{ objectFit: "cover" }} />
+            </div>
             <span className='fs-48' style={{ fontWeight: "bold" }}> {name} </span>
+            <button style={{cursor:"pointer"}} onClick={() => setonPopUp(true)}>EDIT</button >
           </div>
 
           <div className={`${styles.description}`}>
-            <span className='fs-22' style={{ fontWeight: "400" }}> Magnety Staking Vault receive 16% of total protocol platform fees and 15% of the total supply through liquidity mining</span>
+            <span className='fs-22' style={{ fontWeight: "400" }}>{addressdata.description}</span>
             <div>
-              <span className='fs-20' style={{ fontWeight: "400" }}> #DeFi </span>
-              <span className='fs-20' style={{ fontWeight: "400" }}> #HodL </span>
-              <span className='fs-20' style={{ fontWeight: "400" }}> #ETH </span>
-              <span className='fs-20' style={{ fontWeight: "400" }}> #StarknetGems </span>
+              {[...Array(Object.keys(addressdata.tags).length)].map((e, i) => {
+                return (
+                  <span className='fs-20' style={{ fontWeight: "400" }}>{"#" + addressdata.tags[i]}</span>
+                )
+              })}
             </div>
           </  div>
         </div>
@@ -811,7 +842,7 @@ const vault: NextPage = () => {
               <div>
                 <div>
                   <div className='fs-28' style={{ fontWeight: "semi-bold" }}>Managed by
-                    <a href="https://google.com" target="_blank" rel="noreferrer">
+                    <a href={"../user/"+assetManager} rel="noreferrer">
                       {assetManager.substring(0, 5)}...
                     </a>
                   </div>
