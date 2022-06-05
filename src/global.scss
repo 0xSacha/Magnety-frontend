@@ -45,17 +45,11 @@ div.page {
   }
   .page__backdrop {
     --dot1Color: #f6643c;
-    --dot2Color: #ffffff;
     --dot3Color: #030135;
     background: 
       radial-gradient(
         circle 50vh at 25vw -10vh,
         var(--dot1Color) 80%,
-        transparent
-      ),
-      radial-gradient(
-        circle 30vh at 55vw 30vh,
-        var(--dot2Color) 80%,
         transparent
       ),
       radial-gradient(

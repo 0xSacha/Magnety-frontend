@@ -193,7 +193,23 @@ const Contract: NextPage = () => {
     })
   }
 
+
   function addNewProtocolMult(idTab: number[]) {
+    setAllowedProtocol((state) => {
+      const index = state.findIndex((x) => x == idTab[0]);
+      let interTab = state
+      for (let pas = 0; pas < idTab.length; pas++) {
+        interTab.push(idTab[pas])
+      }
+    state = 
+      index === -1
+      ? 
+        interTab
+      : [...state.slice(0, index), ...state.slice(index + idTab.length)];
+  return state;
+})
+
+
     setAllowedProtocol([]);
     idTab.forEach(id=>{
       addNewProtocol(id);
@@ -245,70 +261,6 @@ const Contract: NextPage = () => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     let tab: any[] = [];
     console.log(formData);
-    // tab.push(hexToDecimalString(deployedVaultAddress))
-    // tab.push(strToShortStringFelt(formData.name).toString())
-    // tab.push(strToShortStringFelt(formData.symbol).toString())
-    // tab.push(hexToDecimalString(Asset[denominationAsset].address))
-    // tabUint.push(formData.maximum_position.toString())
-    // tabUint.push('0')
-    // tab.push(tabUint)
-    // tabUint = []
-    // if (typeof formData.entrance_fees == "undefined") {
-    //   tabFee.push('0')
-    // }
-    // else {
-    //   tabFee.push(formData.entrance_fees)
-    // }
-    // if (typeof formData.exit_fees == "undefined") {
-    //   tabFee.push('0')
-    // }
-    // else {
-    //   tabFee.push(formData.exit_fees)
-    // }
-    // if (typeof formData.yearly_management_fees == "undefined") {
-    //   tabFee.push('0')
-    // }
-    // else {
-    //   tabFee.push(formData.yearly_management_fees)
-    // }
-    // if (typeof formData.performance_fees == "undefined") {
-    //   tabFee.push('0')
-    // }
-    // else {
-    //   tabFee.push(formData.performance_fees)
-    // }
-    // tab.push(tabFee)
-    // tab.push(trackedAsset)
-    // tab.push(allowedProtocol)
-
-    // var min = parseFloat(formData.minimum);
-    // min = min * 1000000000000000000
-    // tabUint.push(min.toString())
-    // tabUint.push('0')
-    // tab.push(tabUint)
-    // tabUint = []
-
-    // var max = parseFloat(formData.maximum);
-    // max = max * 1000000000000000000
-    // tabUint.push(max.toString())
-    // tabUint.push('0')
-    // tab.push(tabUint)
-    // tabUint = []
-
-    // if (typeof formData.harvest_lockup_time == "undefined") {
-    //   tab.push('0')
-    // }
-    // else {
-    //   tab.push(formData.harvest_lockup_time)
-    // }
-
-    // if (typeof formData.fund_type == "undefined") {
-    //   tab.push('1')
-    // }
-    // else {
-    //   tab.push('0')
-    // }
-
     tab.push(hexToDecimalString(deployedVaultAddress));
     tab.push(strToShortStringFelt(formData.name).toString());
     tab.push(strToShortStringFelt(formData.symbol).toString());
@@ -366,6 +318,9 @@ const Contract: NextPage = () => {
     _tabB.push(amountToInvest.toString());
     _tabB.push("0");
 
+    console.log("args here")
+    console.log(tab)
+    console.log(_tabA)
     console.log(_tabB);
     if (!account.address) {
       console.log("no account detected");
@@ -634,25 +589,9 @@ const Contract: NextPage = () => {
     },
   ];
 
-  // <button
-  //               type="button"
-  //               onClick={() => addNewProtocol(0)}
-  //               style={{ width: "100px" }}
-  //             >
-  //               <Image src={alphaRoad} alt="btc" />
-  //               <div>Swap</div>
-  //             </button>
-  //             <button
-  //               type="button"
-  //               onClick={() => addNewProtocolMult([1, 2])}
-  //               style={{ width: "100px" }}
-  //             >
-  //               <Image src={alphaRoad} alt="eth" />
-  //               <div>Liquidity</div>
-  //             </button>
   const protocalList = [
-    { values: [0], path: alphaRoad, alt: "btc", label: 'Swap' },
-    { values: [1, 2], path: alphaRoad, alt: "eth", label: 'Liquidity' },
+    { values: [0], path: alphaRoad, alt: "arfS", label: 'Swap' },
+    { values: [1, 2], path: alphaRoad, alt: "arfL", label: 'Liquidity' },
   ]
 
   const dominationAssetsList = [
@@ -697,10 +636,7 @@ const Contract: NextPage = () => {
           ))}
           <div>
             <div>
-              Choose your denomination Asset f
-              {hexToDecimalString(
-                "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7"
-              )}
+              Choose your denomination Asset 
             </div>
             <div className={styles.asset_container}>
               { dominationAssetsList.map((item, index)=> (

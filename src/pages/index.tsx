@@ -8,6 +8,8 @@ import { useCounterContract } from '~/hooks/counter'
 import { InitializeFund } from '~/components/InitializeFund'
 import { useVaultContract } from '~/hooks/vault'
 import { getSelectorFromName } from '../starknetWrapper'
+import clientPromise from '../lib/mongodb'
+
 
 const Home: NextPage = () => {
   const { contract: counter } = useCounterContract()
@@ -31,19 +33,6 @@ const Home: NextPage = () => {
       return value.toString(10)
     }
   }, [fundName])
-
-  // const { data: sharesTotalSupply } = useStarknetCall({
-  //   contract: vaultLib,
-  //   method: 'sharesTotalSupply',
-  //   args: [],
-  // })
-
-  // const sharesTotalSupplyValue = useMemo(() => {
-  //   if (sharesTotalSupply && sharesTotalSupply.length > 0) {
-  //     const value = toBN(counterResult[0])
-  //     return value.toString(10)
-  //   }
-  // }, [sharesTotalSupply])
 
   const counterValue = useMemo(() => {
     if (counterResult && counterResult.length > 0) {
