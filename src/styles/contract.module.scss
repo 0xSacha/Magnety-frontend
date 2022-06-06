@@ -77,6 +77,33 @@
   display: flex;
   gap: 20px;  
   flex-wrap: wrap;
+  padding: 2%;
+  overflow-y: scroll;
+  max-height: 120px;
+  .asset_button{
+    width: 80px;
+    height: fit-content;
+    min-height: 60px;
+    position: relative;
+    &.asset_selected{
+      >span.asset_selected_checkmark{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 24px;
+      }
+    }
+  }
+}
+
+.asset_container_2{
+  display: flex;
+  gap: 20px;  
+  width: 100%;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  max-height: 120px;
+  padding: 2%;
   .asset_button{
     width: 100px;
     height: fit-content;
@@ -85,7 +112,7 @@
     &.asset_selected{
       >span.asset_selected_checkmark{
         position: absolute;
-        top: 0;
+        top: -55px;
         right: 0;
         width: 24px;
       }
