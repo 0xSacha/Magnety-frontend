@@ -135,15 +135,16 @@ let width, height, gradient;
 function getGradient(ctx, chartArea) {
   const chartWidth = chartArea.right - chartArea.left;
   const chartHeight = chartArea.bottom - chartArea.top;
+  
   if (gradient === null || width !== chartWidth || height !== chartHeight) {
     // Create the gradient because this is either the first render
     // or the size of the chart has changed
     width = chartWidth;
     height = chartHeight;
     gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-    gradient.addColorStop(0, "blue");
-    gradient.addColorStop(0.5, "green");
-    gradient.addColorStop(1, "pink");
+    gradient.addColorStop(0, "transparent");
+    gradient.addColorStop(0.9, "green");
+    gradient.addColorStop(1, "green");
   }
 
   return gradient;
@@ -155,8 +156,7 @@ const data: ChartData<"line", (number | ScatterDataPoint | null)[], unknown> = {
       label: "Dataset",
       data: chartData,
       fill: true,
-      backgroundColor: "green",
-      borderColor: function(context) {
+      backgroundColor: function(context) {
         const chart = context.chart;
         const {ctx, chartArea} = chart;
 
@@ -166,6 +166,7 @@ const data: ChartData<"line", (number | ScatterDataPoint | null)[], unknown> = {
         }
         return getGradient(ctx, chartArea);
       },
+      borderColor: "green",
       tension: 0.3,
     },
     {
@@ -217,8 +218,9 @@ const options = {
   },
   plugins: {
     legend: {
-      display: false,
+      display: true,
     },
+    
   },
 };
 
@@ -1219,9 +1221,9 @@ const vault: NextPage = () => {
                  <Tab fontSize={"1xl"} fontWeight={"bold"}>Holdings</Tab>   
                  <Tab fontSize={"1xl"} fontWeight={"bold"}>Fees</Tab>
                  <Tab fontSize={"1xl"} fontWeight={"bold"}>Policies</Tab>
-                 <Tab fontSize={"1xl"} fontWeight={"bold"}>Depositors</Tab>
-                 <Tab fontSize={"1xl"} fontWeight={"bold"}>Activity</Tab>
                  <Tab fontSize={"1xl"} fontWeight={"bold"}>Financial</Tab>
+                 <Tab fontSize={"1xl"} fontWeight={"bold"}>Activity</Tab>
+                 <Tab fontSize={"1xl"} fontWeight={"bold"}>Depositors</Tab>
                  <Tab fontSize={"1xl"} fontWeight={"bold"}>Social</Tab>
                 </Flex>
                 </TabList>
@@ -1377,6 +1379,177 @@ const vault: NextPage = () => {
                 
                 
 
+                </TabPanel>
+                <TabPanel>
+                <div className={`${styles.feesTable} bg__dotted`}>
+                <table cellSpacing="0" cellPadding="0">
+                  <thead>
+                    <tr>
+                      <th>Fee Type</th>
+                      <th>Fee Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr key={1}>
+                      <td>Entrance Fee</td>
+                      <td>
+                        <div>
+                          <div> {entranceFee}%</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr key={2}>
+                      <td>Exit Fee</td>
+                      <td>
+                        <div>
+                          <div> {exitFee}%</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr key={3}>
+                      <td>Performance Fee</td>
+                      <td>
+                        <div>
+                          <div> {performanceFee}%</div>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr key={4}>
+                      <td>Management Fee</td>
+                      <td>
+                        <div>
+                          <div> {managementFee}%</div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+                </TabPanel>
+                <TabPanel>
+                <div className={`bg__dotted ${styles.policiesTabContent}`}>
+                {isPublic ? (
+                  <div>
+                    <div className="fs-24 fw-600">{name} is a public fund</div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="fs-24 fw-600">{name} is a private fund</div>
+                  </div>
+                )}
+                <div>
+                  <div className="fs-24 fw-600">Deposit Limits</div>
+                  <div className="fs-20 fw-600">
+                    minimum : {minAmount} {denominationAsset}
+                  </div>
+                  <div className="fs-20 fw-600">
+                    maximum : {maxAmount} {denominationAsset}
+                  </div>
+                </div>
+                <div>
+                  <div className="fs-24 fw-600">Timelock</div>
+                  <div className="fs-20 fw-600">
+                    After minting shares, you'll have to wait : {timeLock}{" "}
+                    seconds before you can sell it
+                  </div>
+                </div>
+                <div>
+                  <div className="fs-24 fw-600">Allowed Asset to Track</div>
+                </div>
+                <div>
+                  <div className="fs-24 fw-600">
+                    Allowed Protocol to interact with
+                  </div>
+                </div>
+              </div>
+                </TabPanel>
+                <TabPanel>
+                <div className={`bg__dotted ${styles.financialTabContent}`}>
+                <div>
+                  <div className="fs-24 fw-600">General Information</div>
+                  <div>
+                    <div className="fw-600">General Assets Vault (GAV)</div>
+                    <div>
+                      <span className="fw-700">1,993,516.452 MGTY</span>
+                      <span>$1,993,516.452</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <div className="fw-600">Net Assets Valut (NAV)</div>
+                    <div>
+                      <span className="fw-700">1,993,516.452 MGTY</span>
+                      <span>$1,993,516.452</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div className="fs-24 fw-600">Financial Metrics</div>
+                  <div>
+                    <div className="fw-600">Return Month-to-Date</div>
+                    <div>
+                      <span className="text-success">+0.5%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                </TabPanel>
+                <TabPanel>
+                <div className={`${styles.depositorsTable} bg__dotted`}>
+                <table cellSpacing="0" cellPadding="0">
+                  <thead>
+                    <tr>
+                      <th>Depositor</th>
+                      <th>Since</th>
+                      <th>Number of Shares</th>
+                      <th>Percentage</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {depositorsData.map((d, index) => (
+                      <tr key={index}>
+                        <td>{d.depositor}</td>
+                        <td>{d.Since}</td>
+                        <td>{d.numberOfShares}</td>
+                        <td>{d.percentage} %</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+                </TabPanel>
+                <TabPanel>
+                <div className={`${styles.activitiesContainer}`}>
+                <div className="bg__dotted">
+                  <div>
+                    <div>
+                      <div>
+                        <div className="fs-12">29 Apr 2022 01:22</div>
+                        <div className="fs-24 fw-600">Deposit</div>
+                      </div>
+                      <div>
+                        <FakeImage
+                          height="50px"
+                          width="50px"
+                          borderRadius="50%"
+                          fillColor="black"
+                        />
+                        <div>
+                          <div className="fs-20 fw-700">Vault name</div>
+                          <div className="fs-12">0x4s21...1452</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div>Amount</div>
+                      <div>Shares received</div>
+                      <div>Depositor</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg__dotted"></div>
+              </div>
                 </TabPanel>
                 </TabPanels>
                 </Box>
