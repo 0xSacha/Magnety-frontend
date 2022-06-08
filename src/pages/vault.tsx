@@ -9,7 +9,37 @@ import {
 } from '../app/counterSlice'
 import 'chart.js/auto';
 import { Chart, Line } from 'react-chartjs-2';
-
+import { Button, ButtonGroup } from '@chakra-ui/react'
+import { Select } from '@chakra-ui/react'
+import {
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Text,
+  Center
+} from '@chakra-ui/react'
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+} from '@chakra-ui/react'
+import {
+  RangeSlider,
+  RangeSliderTrack,
+  RangeSliderFilledTrack,
+  RangeSliderThumb,
+} from '@chakra-ui/react'
+import {
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
+  Box,
+  SliderMark,
+} from '@chakra-ui/react'
 import { ChartData, ScatterDataPoint, ChartOptions, CoreChartOptions, ElementChartOptions, PluginChartOptions, DatasetChartOptions, ScaleChartOptions, LineControllerChartOptions } from 'chart.js/auto';
 import { _DeepPartialObject } from 'chart.js/types/utils';
 import Tabs from '~/components/Tabs';
@@ -19,7 +49,9 @@ import { contractAddress } from '~/registry/address';
 import { hexToDecimalString } from 'starknet/dist/utils/number';
 import { number } from 'starknet';
 import Ether from '../image/ETH.png';
-
+import { Flex, Spacer } from '@chakra-ui/react'
+import { Slider as MultiSlider } from 'react-multi-thumb-slider';
+import { MaterialSlider } from 'react-multi-thumb-slider';
 
 const { provider, account } = getStarknet()
 
@@ -130,12 +162,23 @@ type PortfolioData = {
   balance: string,
   value: string,
   allocation: string,
+  selected: boolean,
+  address: string,
+}[];
+
+type SellShareData = {
+  symbol: string,
+  percent: string,
+  address: string,
 }[];
 
 type userShareData = {
   tokenId: string,
   shareAmount: string,
+  pricePurchased: string,
 }[];
+
+
 
 const vault: NextPage = () => {
   let count = useAppSelector(selectCount)
@@ -162,24 +205,105 @@ const vault: NextPage = () => {
   const [gav, setGav] = React.useState<string>("0");
   const [trackedAssets, setTrackedAssets] = React.useState<PortfolioData>([]);
   const [userShareInfo, setUserShareInfo] = React.useState<userShareData>([]);
+  const [sellShareTab, setSellShareTab] = React.useState<SellShareData>([]);
+
+  const [sellList, setSellList] = React.useState<userShareData>([]);
   const [trackedAssetsLen, setTrackedAssetsLen] = React.useState<number>(0);
   const [userBalance, setUserBalance] = React.useState<string>("0");
   const [isAllowedDepositor, setIsAllowedDepositor] = React.useState<string>("0");
   const [userShareBalance, setUserShareBalance] = React.useState<string>("");
   const [sellTokenId, setSellTokenId] = React.useState<string>("");
-  const [percentShare, setPercentShare] = React.useState<string>("");
+  const [percentShare, setPercentShare] = React.useState<string>("0");
+  const [buyValue, setBuyValue] = React.useState<any>(0)
+  const [sellValue, setSellValue] = React.useState<any>(0)
+  const [onChange, setOnChange] = React.useState<boolean>(true)
 
+
+
+
+  const handleChange3 = (value) => setSellValue(value)
+
+  const addPercent = (symbol: string, address: string, index: number) => {
+    console.log("current sell share tab")
+    console.log(sellShareTab)
+
+    let currentSaleTabe = sellShareTab
+
+    let newElem = {
+      symbol: symbol,
+      percent: sellValue,
+      address: address,
+    }
+
+    for (let pas = 0; pas < currentSaleTabe.length; pas++) {
+      if (newElem.symbol == currentSaleTabe[pas].symbol) {
+        let currentTab: PortfolioData = trackedAssets
+        currentTab[index].selected = false
+        setOnChange(!onChange)
+        return
+      }
+    }
+    currentSaleTabe.push(newElem)
+    setSellShareTab(currentSaleTabe)
+    console.log("new sell share tab")
+    console.log(sellShareTab)
+
+    let currentTab: PortfolioData = trackedAssets
+    currentTab[index].selected = false
+    setOnChange(!onChange)
+
+  }
+
+  const clearSellTab = () => {
+    setSellShareTab([])
+  }
+
+
+
+  const handleSelected = (index: number) => {
+    let currentTab: PortfolioData = trackedAssets
+    for (let pas = 0; pas < trackedAssets.length; pas++) {
+      if (index == pas) {
+        currentTab[pas].selected = true
+      }
+      else {
+        currentTab[pas].selected = false
+      }
+    }
+    setTrackedAssets(currentTab)
+
+    setOnChange(!onChange)
+  }
+
+
+
+
+  const handleChange = (value) => setBuyValue(value)
+  const handleChange2 = (value) => setPercentShare(value)
   function shortStringFeltToStr(felt: bigint): string {
     const newStrB = Buffer.from(felt.toString(16), 'hex')
     return newStrB.toString()
   }
 
+
+
+
+
+
+
   function returnImagefromSymbol(symb: string) {
-    if (symb == "Ether") {
+    if (symb == "Ether" || symb == "ETH" || symb == "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7") {
       return (
         <Image src={Ether} alt="eth" />
       )
     }
+  }
+  function returnFundImage() {
+
+    return (
+      <FakeImage fillColor='black' borderRadius='50%' />
+    )
+
   }
 
   useEffect(() => {
@@ -392,15 +516,25 @@ const vault: NextPage = () => {
               const sharesBalance = (hexToDecimalString(value.result[0]))
               console.log("share balance")
               console.log(sharesBalance)
-              let userShareInfo__: userShareData = userShareInfo
-              userShareInfo__.push(
-                {
-                  tokenId: tokenId,
-                  shareAmount: sharesBalance,
-                }
-              )
-              console.log(userShareInfo__)
-              setUserShareInfo(userShareInfo__)
+
+              const res6 = provider.callContract({ contractAddress: vaultAddress, entrypoint: "sharePricePurchased", calldata: [tokenId, "0"] })
+              res6.then(value => {
+                const __sharePricePurchased = (hexToDecimalString(value.result[0]))
+                const _sharePricePurchased = parseFloat(__sharePricePurchased) / 1000000000000000000
+                const sharePricePurchased = _sharePricePurchased.toString()
+                let userShareInfo__: userShareData = userShareInfo
+                userShareInfo__.push(
+                  {
+                    tokenId: tokenId,
+                    shareAmount: sharesBalance,
+                    pricePurchased: sharePricePurchased
+                  }
+                )
+                console.log(userShareInfo__)
+                setUserShareInfo(userShareInfo__)
+              }).catch(err => {
+                console.log(err);
+              });
             }).catch(err => {
               console.log(err);
             });
@@ -456,6 +590,8 @@ const vault: NextPage = () => {
                       balance: coinBalance_,
                       value: coinPrice_,
                       allocation: coinAllocation_,
+                      selected: false,
+                      address: address_,
                     }
                   )
                   console.log(portfolioData2)
@@ -520,6 +656,72 @@ const vault: NextPage = () => {
     }
   ];
 
+  const handleMintShare = () => {
+
+    const newAmount = parseFloat(buyValue) * 1000000000000000000
+
+    let Tab: string[] = [];
+    Tab.push(hexToDecimalString(vaultAddress))
+    Tab.push(hexToDecimalString(denominationAssetAddress))
+    Tab.push(newAmount.toString())
+    Tab.push("0")
+
+    let TabA: string[] = [];
+    TabA.push(hexToDecimalString(comptroller))
+    TabA.push((newAmount.toString()))
+    TabA.push("0")
+
+    if (!accountInterface.address) {
+      console.log("no account detected")
+    }
+    else {
+      console.log("connected")
+      multicall(Tab, TabA)
+    }
+  };
+
+  const handleSellShare = () => {
+
+    let Tab: string[] = [];
+    Tab.push(hexToDecimalString(vaultAddress))
+    Tab.push(sellTokenId)
+    Tab.push("0")
+    Tab.push(percentShare)
+    Tab.push("0")
+    Tab.push(sellShareTab.length.toString())
+    sellShareTab.forEach(element => {
+      Tab.push(hexToDecimalString(element.address))
+    });
+    Tab.push(sellShareTab.length.toString())
+    sellShareTab.forEach(element => {
+      Tab.push(hexToDecimalString(element.percent))
+    });
+    console.log(Tab)
+
+    if (!accountInterface.address) {
+      console.log("no account detected")
+    }
+    else {
+      console.log("connected")
+      multicall2(Tab)
+    }
+  };
+
+  const multicall2 = async (_tab: any[]) => {
+    console.log("invoke")
+    let tx1 = await accountInterface.execute(
+      [
+        {
+          contractAddress: comptroller,
+          entrypoint: 'sell_share',
+          calldata: _tab,
+        }
+      ]
+    );
+    console.log(tx1)
+    // return (tx1)
+  };
+
   const multicall = async (_tab: any[], _tabA: any[]) => {
     console.log("invoke")
     console.log(denominationAssetAddress)
@@ -552,7 +754,7 @@ const vault: NextPage = () => {
           </div>
 
           <div className={`${styles.description}`}>
-            <span className='fs-22' style={{ fontWeight: "400" }}> Magnety Staking Vault receive 16% of total protocol platform fees, funds are used buy Starknet BlueChip</span>
+            <span className='fs-22' style={{ fontWeight: "400" }}> Magnety Staking Vault receive 16% of total protocol platform fees and 15% of the total supply through liquidity mining</span>
             <div>
               <span className='fs-20' style={{ fontWeight: "400" }}> #DeFi </span>
               <span className='fs-20' style={{ fontWeight: "400" }}> #HodL </span>
@@ -630,9 +832,9 @@ const vault: NextPage = () => {
 
           <Tabs activeTab='2'>
             <Tab label='Mint shares' id='1' >
-              <div className={` bg__dotted`}>
-                <div className={`${styles.mint}`}>
+              <div className={` bg__dotted`} style={{ minHeight: "300px" }}>
 
+                <div className={`${styles.mint}`}>
                   <div className='fs-14' style={{ fontWeight: "bold" }}>
                     <div>
                       {acccountAddress.substring(0, 7)}...
@@ -641,63 +843,62 @@ const vault: NextPage = () => {
                       &nbsp;&nbsp;&nbsp;{isAllowedDepositor ? "allowed depositor" : "not allowed to mint"}
                     </div>
                   </div>
-                  <div>
-                  </div>
-                  <div>
-                    <form
-                      onSubmit={(e: React.SyntheticEvent) => {
-                        e.preventDefault();
-                        const target = e.target as typeof e.target & {
-                          amount: { value: string };
-                        };
-                        const amount = target.amount.value; // typechecks!
-                        console.log(amount)
-                        const newAmount = parseFloat(amount) * 1000000000000000000
-                        console.log(newAmount.toString())
-                        console.log(newAmount)
-
-                        let Tab: string[] = [];
-                        Tab.push(hexToDecimalString(vaultAddress))
-                        Tab.push(hexToDecimalString(denominationAssetAddress))
-                        Tab.push(newAmount.toString())
-                        Tab.push("0")
-                        let TabA: string[] = [];
-                        TabA.push(hexToDecimalString(comptroller))
-                        TabA.push((newAmount.toString()))
-                        TabA.push("0")
-                        console.log(Tab)
-                        console.log(TabA)
-                        if (!accountInterface.address) {
-                          console.log("no account detected")
-                        }
-                        else {
-                          console.log("connected")
-                          multicall(Tab, TabA)
-                        }
-                      }}
-                    >
-                      <div>
-                        <label>
-                          ETH AMOUNT:
-                          <input type="string" name="amount" />
-                        </label>
-                      </div>
-                      <div>
-                        <input type="submit" value="Log in" />
-                      </div>
-                    </form>
-                  </div>
-
-                  <div>
-                    you'll receive
-                  </div>
-
                 </div>
+
+                <Flex direction={"column"} gap={"20px"} alignItems={"center"}>
+                  <Flex justifyContent={'space-between'} alignItems='center' backgroundColor={"blackAlpha.400"} width={'70%'}
+                    borderRadius={'20px'} padding={'10px'}>
+                    <NumberInput height={'50px'} variant={'unstyled'} fontFamily={'IBM Plex Mono, sans-serif'} padding={"10px 10px"}
+                      alignSelf={"center"} value={buyValue} onChange={handleChange} defaultValue={"0"}>
+                      <NumberInputField />
+                      <NumberInputStepper>
+                      </NumberInputStepper>
+                    </NumberInput>
+                    {denominationAsset != "deno" &&
+                      <Flex alignItems={"center"} >
+                        <Text fontSize={"1xl"} fontWeight={"bold"}>
+                          {denominationAsset}
+                        </Text>
+                        <div style={{ width: "30px" }}>
+                          {returnImagefromSymbol(denominationAsset)}
+                        </div>
+                      </Flex>}
+                    <Flex flexDir={'column'}>
+                      <Text marginLeft={'30px'} color={"whiteAlpha.500"} fontSize={'sm'}>Balance : ~{parseFloat(userBalance).toPrecision(2)}</Text>
+                    </Flex>
+                  </Flex>
+                  <Flex justifyContent={'space-between'} alignItems='center' backgroundColor={"blackAlpha.400"} width={'70%'}
+                    borderRadius={'20px'} padding={'10px'} paddingRight={'30px'}>
+                    <Text height={'50px'} variant={'unstyled'} fontFamily={'IBM Plex Mono, sans-serif'} padding={"10px 10px"}
+                      alignSelf={"center"} width={"50%"}>
+                      {((parseFloat(buyValue) / parseFloat(sharePrice)) - ((parseFloat(buyValue) / parseFloat(sharePrice)) * parseFloat(entranceFee))) == NaN ? 0
+                        : ((parseFloat(buyValue) / parseFloat(sharePrice)) - ((parseFloat(buyValue) / parseFloat(sharePrice)) * parseFloat(entranceFee)))}
+                    </Text>
+                    {denominationAsset != "deno" &&
+                      <Flex alignItems={"center"} gap={"2px"}>
+                        <Text fontSize={"1xl"} fontWeight={"bold"}>
+                          {symbol}
+                        </Text>
+
+                        <FakeImage height='30px' width='30px' borderRadius='50%' fillColor='black' />
+
+                      </Flex>
+                    }
+                    <Flex flexDir={'column'}>
+                      <Text color={"whiteAlpha.500"} fontSize={'sm'}>  NFTs : ~{parseFloat(userShareBalance)}</Text>
+                    </Flex>
+                  </Flex>
+
+                  <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => handleMintShare()} size='md'> Mint</Button>
+
+                </Flex>
+
+
               </div>
             </Tab>
             <Tab label='Sell Shares' id='2'>
               {sellTokenId == "" ?
-                <div className={` bg__dotted`}>
+                <div className={` bg__dotted`} style={{ minHeight: "300px" }}>
                   <div className={`${styles.mint}`}>
 
                     <div className='fs-14' style={{ fontWeight: "bold" }}>
@@ -705,24 +906,28 @@ const vault: NextPage = () => {
                         {acccountAddress.substring(0, 7)}...
                       </div>
                       <div className='fs-14 '>
-                        &nbsp;&nbsp;&nbsp;{userShareBalance == "" ? "Fetching your shares" : userShareBalance == "0" ? "you don't have any shares" : "See below your shares"}
+                        &nbsp;&nbsp;&nbsp;{userShareBalance == "" ? "Fetching your shares" : userShareBalance == '0' ? "you don't have any shares" : "See below your shares"}
                       </div>
                     </div>
-                    {userShareInfo.map((p, index) => (
-                      <div>
+                    {userShareInfo.length != 0 &&
+                      userShareInfo.map((p, index) => (
                         <div>
-                          tokenID : {p.tokenId}
+                          <div>
+                            tokenID : {p.tokenId}
+                          </div>
+                          <div>
+                            Share amount: {p.shareAmount}
+                          </div>
+                          <div>
+                            <Button backgroundColor={"#f6643c"} style={{ margin: '8px auto' }} onClick={() => setSellTokenId(p.tokenId)}>Sell</Button>
+                          </div>
                         </div>
-                        <div>
-                          Share amount: {p.shareAmount}
-                        </div>
-                        <div>
-                          <button data-color="secondary" style={{ margin: '8px auto' }} onClick={() => setSellTokenId(p.tokenId)}>Sell</button>
-                        </div>
-                      </div>
-                    ))}
+                      ))
+                    }
+
                   </div>
                 </div>
+
                 :
                 <div className={` bg__dotted`}>
                   <div className={`${styles.mint}`}>
@@ -731,37 +936,33 @@ const vault: NextPage = () => {
                       <div>
                         tokenID : {sellTokenId}
                       </div>
-                      <div className='fs-14 '>
-                        &nbsp;&nbsp;&nbsp; You are allowed to sell this share
-                      </div>
+                      {/* <div className='fs-14 '>
+                        &nbsp;&nbsp;&nbsp; 
+                      </div> */}
                     </div>
-                    <form
-                      onSubmit={(e: React.SyntheticEvent) => {
-                        e.preventDefault();
-                        const target = e.target as typeof e.target & {
-                          percent: { value: string };
-                        };
-                        const amount = target.percent.value; // typechecks!
-                        setPercentShare(amount)
-                      }}
+                    <Text>You are allowed to sell this share</Text>
+                    <Text>Selling {(parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100)).toPrecision(5)} {symbol} Shares</Text>
+                    <Slider
+                      flex='1'
+                      focusThumbOnChange={false}
+                      value={parseFloat(percentShare)}
+                      onChange={handleChange2}
+                      width={"80%"}
+                      colorScheme='#f6643c'
                     >
-                      <div>
-                        <label>
-                          <input type="string" name="percent" />
-                        </label>
-                      </div>
-                      <div>
-                        <input type="submit" value="Log in" />
-                      </div>
-                    </form>
+                      <SliderTrack>
+                        <SliderFilledTrack />
+                      </SliderTrack>
+                      <SliderThumb fontSize='sm' boxSize='32px' children={parseFloat(percentShare)} />
+                    </Slider>
                     <div>
-                      {percentShare == "" ?
+                      {percentShare == "0" ?
                         <>
-                          You own {userShareInfo[parseFloat(sellTokenId)].shareAmount} shares, how many Shares do you want to sell
+                          ~ {userShareInfo[parseFloat(sellTokenId)].shareAmount} shares available
                         </>
                         :
                         <>
-                          You selected {percentShare}%, which represents {parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100)} {symbol} or {parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)} {denominationAsset}
+                          ~ {(((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) - ((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) * (((parseFloat(sharePrice) - parseFloat(userShareInfo[parseFloat(sellTokenId)].pricePurchased)) / (parseFloat(sharePrice))) * (parseFloat(performanceFee) / 100)))) - (((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) - ((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) * (((parseFloat(sharePrice) - parseFloat(userShareInfo[parseFloat(sellTokenId)].pricePurchased)) / (parseFloat(sharePrice))) * (parseFloat(performanceFee) / 100)))) * (parseFloat(exitFee) / 100))).toPrecision(2)} {denominationAsset} including Performance and exit fees
                         </>
                       }
 
@@ -770,54 +971,79 @@ const vault: NextPage = () => {
                       <div>
                         Reedem funds with
                       </div>
-                      <div>
-                        {trackedAssets.map((p, index) => (
-                          <div>
-                            <div>
-                              <button type="button" style={{ width: "50px" }}>
-                                {returnImagefromSymbol(p.coinSymbol)}
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <div>
+                      {onChange == true ?
                         <div>
+                          {trackedAssets.map((p, index) => (
+                            <div>
+                              <div>
+                                <button type="button" style={{ width: "50px" }} onClick={() => handleSelected(index)}>
+                                  {console.log(index)}
+                                  {returnImagefromSymbol(p.coinSymbol)}
 
-                          <div className={`${styles.portfolioTable} bg__dotted`}>
-                            <table cellSpacing="0" cellPadding="0">
-                              <thead>
-                                <tr>
-                                  <th>Assets</th>
-                                  <th>Balance</th>
-                                  <th>Value</th>
+                                </button>
+                                {
 
-                                  <th>Allocation</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {trackedAssets.map((p, index) => (
-                                  <tr key={index}>
-                                    <td>
-                                      <FakeImage width='50px' height='50px' fillColor='var(--color-secondary)' borderRadius='50%'></FakeImage>
-                                      <div>
-                                        <span> {p.coinName} </span>
-                                        <span> {p.coinSymbol} </span>
-                                      </div>
-                                    </td>
-                                    <td> {p.balance} {p.coinSymbol}</td>
-                                    <td>{p.value} {denominationAsset}</td>
-                                    <td>{p.allocation}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
+                                }
+                                {p.selected == true &&
+                                  <Flex direction={"row"}>
+                                    <NumberInput size='md' maxW={24} defaultValue={15} min={10} value={sellValue
+                                    } onChange={handleChange3}>
+                                      <NumberInputField />
+                                      <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                      </NumberInputStepper>
+                                    </NumberInput>
+                                    <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => addPercent(p.coinSymbol, p.address, index)} > Set</Button>
+                                  </Flex>
+                                }
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      </div>
+                        :
+                        <div>
+                          {trackedAssets.map((p, index) => (
+                            <div>
+                              <div>
+                                <button type="button" style={{ width: "50px" }} onClick={() => handleSelected(index)}>
+                                  {returnImagefromSymbol(p.coinSymbol)}
+                                </button>
+                                {p.selected == true &&
+                                  <Flex direction={"row"}>
+                                    <NumberInput size='md' maxW={24} defaultValue={100} min={1} value={sellValue
+                                    } onChange={handleChange3}>
+                                      <NumberInputField />
+                                      <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                      </NumberInputStepper>
+                                    </NumberInput>
+                                    <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => addPercent(p.coinSymbol, p.address, index)}> Set</Button>
+                                  </Flex>
+                                }
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      }
+
+
                     </div>
+                    <Flex>
+                      <Text>Sum must be 100% : </Text>
+                      {sellShareTab.map((p, index) => (
+                        <Text>
+                          {console.log(index)}
+                          {console.log(sellShareTab)}
+                          {p.percent}% {p.symbol} {index == sellShareTab.length - 1 ? "" : "+"}
+                        </Text>
+                      ))}
+                    </Flex>
+
+                    <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => handleSellShare()} size='md'> Sell</Button>
+
+
                   </div>
                 </div>
               }
@@ -874,7 +1100,6 @@ const vault: NextPage = () => {
                       <th>Assets</th>
                       <th>Balance</th>
                       <th>Value</th>
-
                       <th>Allocation</th>
                     </tr>
                   </thead>
