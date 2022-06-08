@@ -105,13 +105,13 @@ const Layout = (props: PropsWithChildren<unknown>) => {
               </>
             }
           </div>
-          <div className="page__sidebar_toggler">
+          {/* <div className="page__sidebar_toggler">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             >
             </button>
             {!isSidebarOpen && <>Expand to edit and see all your personnal informations</>}
-          </div>
+          </div> */}
         </div>
       </div>
     </>
