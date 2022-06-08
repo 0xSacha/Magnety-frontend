@@ -44,17 +44,11 @@ div.page {
     overflow: hidden;
   }
   .page__backdrop {
-    --dot1Color: #f6643c;
-    --dot3Color: #030135;
+    --dot1Color: #f6643caf;
     background: 
       radial-gradient(
-        circle 50vh at 25vw -10vh,
-        var(--dot1Color) 80%,
-        transparent
-      ),
-      radial-gradient(
-        circle 70vh at 30vw 45vh,
-        var(--dot3Color) 80%,
+        circle 80vh at 40vw 20vh,
+        var(--dot1Color) 30%,
         transparent
       );
     filter: blur(20px);
@@ -173,7 +167,7 @@ button {
     --text: 'black';
     --bg: hsl(0deg 0% 85% / 90%);
     &:hover{
-      --hover-bg: hsl(0deg 0% 85% / 75%);
+      --hover-bg: rgba(255, 0, 238, 0.75);
       --hover-text: 'white';
     }
   }

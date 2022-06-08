@@ -11,6 +11,7 @@
   "dependencies": {
     "@argent/get-starknet": "^3.0",
     "@chakra-ui/core": "^0.8.0",
+    "@chakra-ui/icons": "^2.0.2",
     "@chakra-ui/react": "^2.1.2",
     "@emotion/core": "10.1.1",
     "@emotion/react": "^11",
@@ -36,6 +37,7 @@
     "react-chartjs-2": "^4.1.0",
     "react-dom": "^18.1.0",
     "react-hook-form": "^7.31.3",
+    "react-icons": "^4.4.0",
     "react-loader-spinner": "^6.0.0-0",
     "react-multi-thumb-slider": "^1.0.14",
     "react-redux": "^8.0.2",

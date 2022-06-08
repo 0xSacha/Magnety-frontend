@@ -616,11 +616,11 @@ const Contract: NextPage = () => {
 
   return (
     <div className={`${styles.pageContent}`}>
-      <div className={`${styles.formContainer} bg__dotted`}>
+      {/* <div className={`${styles.formContainer} bg__dotted`}>
         <Flex direction={"column"} gap={"10px"}>
-          {/* <Text fontWeight={"700"} fontSize={"35px"}>
+          <Text fontWeight={"700"} fontSize={"35px"}>
             Deploy your fund
-          </Text> */}
+          </Text>
 
           {!deployedVaultAddress && (
             <Button
@@ -656,9 +656,9 @@ const Contract: NextPage = () => {
                 </a>
               </div>
             )}
-          </div>
+          </div>vcvbccccvcxf
         </div>
-      </div>
+      </div> */}
       <div
         className={` bg__dotted`}
         style={{ padding: "6%", borderRadius: "20px" }}
