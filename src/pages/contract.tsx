@@ -6,6 +6,36 @@ import TargetSource from "../abi/Vault.json";
 import { hexToDecimalString } from "starknet/dist/utils/number";
 import { getStarknet } from "../starknetWrapper";
 import { contractAddress } from "~/registry/address";
+import {
+  Button,
+  ButtonGroup,
+  Flex,
+  Text,
+  Input,
+  Select,
+  Box,
+} from "@chakra-ui/react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import {
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderMark,
+} from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+} from "@chakra-ui/react";
+import {
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+} from "@chakra-ui/react";
 
 import Image from "next/image";
 import { Abi, CompiledContract, json } from "starknet";
@@ -25,6 +55,7 @@ import ethtst from "../image/ETH-TST.png";
 import ethbtc from "../image/ETH-BTC.png";
 import { compileString } from "sass";
 import { useRouter } from "next/router";
+import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 
 type FieldType = {
   name: string;
@@ -45,7 +76,6 @@ type FormInputTextFieldProps = {
 
 const FormInputTextField = (props: FormInputTextFieldProps) => {
   const [enabled, setEnabled] = React.useState<boolean>(false);
-
   const handleForm = (e: React.FormEvent<HTMLInputElement>): void => {
     props.onChange(e.currentTarget.name, e.currentTarget.value);
   };
@@ -172,6 +202,7 @@ const comptroller =
 const Contract: NextPage = () => {
   const [formData, setFormData] = React.useState<any>({});
   const [denominationAsset, setDenominationAsset] = React.useState<number>(0);
+  const [onPopUp, setonPopUp] = React.useState<boolean>(false);
   const [trackedAsset, setTrackedAsset] = React.useState<number[]>([]);
   const [allowedProtocol, setAllowedProtocol] = React.useState<number[]>([]);
   const { library } = useStarknet();
@@ -183,28 +214,28 @@ const Contract: NextPage = () => {
   // const { invoked } = useStarknetInvoke({ contract: comptroller, method: 'activateVault' })
 
   function addNewAsset(id: number) {
+    console.log(trackedAsset);
     setTrackedAsset((state) => {
       const index = state.findIndex((x) => x == id);
+      console.log(state);
       state =
         index === -1
           ? [...state, id]
           : [...state.slice(0, index), ...state.slice(index + 1)];
       return state;
-    })
+    });
   }
 
   function addNewProtocolMult(idTab: number[]) {
-    setAllowedProtocol([]);
-    idTab.forEach(id=>{
-      addNewProtocol(id);
-    })
-  }
-
-  function addNewProtocol(id: number) {
+    console.log(allowedProtocol);
     setAllowedProtocol((state) => {
-      state = [...state, id];
+      const index = state.findIndex((x) => x == idTab[0]);
+      state =
+        index === -1
+          ? [...state, ...idTab]
+          : [...state.slice(0, index), ...state.slice(index + idTab.length)];
       return state;
-    })
+    });
   }
 
   function strToShortStringFelt(str: string): bigint {
@@ -219,96 +250,34 @@ const Contract: NextPage = () => {
 
   const multicall = async (_tab: any[], _tabA: any[], _tabB: any[]) => {
     console.log("invoke");
-    let tx1 = await account.execute(
-      [
+    try {
+      await account.execute([
         {
-          contractAddress: '0x031ed52f5b1ea0dc84172a99fad44d202beaa528e8629d0a1f0d4a8b163a71b1',
-          entrypoint: 'initializeFund',
+          contractAddress:
+            "0x031ed52f5b1ea0dc84172a99fad44d202beaa528e8629d0a1f0d4a8b163a71b1",
+          entrypoint: "initializeFund",
           calldata: _tab,
         },
         {
           contractAddress: Asset[denominationAsset].address.toString(),
-          entrypoint: 'approve',
+          entrypoint: "approve",
           calldata: _tabA,
         },
         {
           contractAddress: comptroller,
-          entrypoint: 'activateVault',
+          entrypoint: "activateVault",
           calldata: _tabB,
-        }
-      ]
-    );
-    console.log(tx1)
-    // return (tx1)
+        },
+      ]);
+    } catch (error) {
+      setonPopUp(true);
+      console.error(error);
+    }
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     let tab: any[] = [];
     console.log(formData);
-    // tab.push(hexToDecimalString(deployedVaultAddress))
-    // tab.push(strToShortStringFelt(formData.name).toString())
-    // tab.push(strToShortStringFelt(formData.symbol).toString())
-    // tab.push(hexToDecimalString(Asset[denominationAsset].address))
-    // tabUint.push(formData.maximum_position.toString())
-    // tabUint.push('0')
-    // tab.push(tabUint)
-    // tabUint = []
-    // if (typeof formData.entrance_fees == "undefined") {
-    //   tabFee.push('0')
-    // }
-    // else {
-    //   tabFee.push(formData.entrance_fees)
-    // }
-    // if (typeof formData.exit_fees == "undefined") {
-    //   tabFee.push('0')
-    // }
-    // else {
-    //   tabFee.push(formData.exit_fees)
-    // }
-    // if (typeof formData.yearly_management_fees == "undefined") {
-    //   tabFee.push('0')
-    // }
-    // else {
-    //   tabFee.push(formData.yearly_management_fees)
-    // }
-    // if (typeof formData.performance_fees == "undefined") {
-    //   tabFee.push('0')
-    // }
-    // else {
-    //   tabFee.push(formData.performance_fees)
-    // }
-    // tab.push(tabFee)
-    // tab.push(trackedAsset)
-    // tab.push(allowedProtocol)
-
-    // var min = parseFloat(formData.minimum);
-    // min = min * 1000000000000000000
-    // tabUint.push(min.toString())
-    // tabUint.push('0')
-    // tab.push(tabUint)
-    // tabUint = []
-
-    // var max = parseFloat(formData.maximum);
-    // max = max * 1000000000000000000
-    // tabUint.push(max.toString())
-    // tabUint.push('0')
-    // tab.push(tabUint)
-    // tabUint = []
-
-    // if (typeof formData.harvest_lockup_time == "undefined") {
-    //   tab.push('0')
-    // }
-    // else {
-    //   tab.push(formData.harvest_lockup_time)
-    // }
-
-    // if (typeof formData.fund_type == "undefined") {
-    //   tab.push('1')
-    // }
-    // else {
-    //   tab.push('0')
-    // }
-
     tab.push(hexToDecimalString(deployedVaultAddress));
     tab.push(strToShortStringFelt(formData.name).toString());
     tab.push(strToShortStringFelt(formData.symbol).toString());
@@ -316,24 +285,23 @@ const Contract: NextPage = () => {
     tab.push(formData.maximum_position.toString());
     tab.push("0");
     tab.push("4");
-
     tab.push(formData.entrance_fees ?? "0");
     tab.push(formData.exit_fees ?? "0");
     tab.push(formData.yearly_management_fees ?? "0");
     tab.push(formData.performance_fees ?? "0");
 
     tab.push(trackedAsset.length.toString());
-    trackedAsset.forEach(track=>{
+    trackedAsset.forEach((track) => {
       tab.push(hexToDecimalString(Asset[track].address));
-    })
+    });
 
     tab.push(allowedProtocol.length.toString());
-    allowedProtocol.forEach(value=>{
+    allowedProtocol.forEach((value) => {
       let integrationArgs = Integration[value].integration;
       tab.push(integrationArgs[0]);
       tab.push(integrationArgs[1]);
       tab.push("0");
-    })
+    });
 
     var min = parseFloat(formData.minimum);
     min = min * 1000000000000000000;
@@ -366,6 +334,9 @@ const Contract: NextPage = () => {
     _tabB.push(amountToInvest.toString());
     _tabB.push("0");
 
+    console.log("args here");
+    console.log(tab);
+    console.log(_tabA);
     console.log(_tabB);
     if (!account.address) {
       console.log("no account detected");
@@ -394,7 +365,9 @@ const Contract: NextPage = () => {
 
   const [deployedVaultAddress, setDeployedVaultAddress] = useState<string>("");
 
-  const [deployedVaultHash, setDeployedVaultHash] = useState<string | undefined>("");
+  const [deployedVaultHash, setDeployedVaultHash] = useState<
+    string | undefined
+  >("");
 
   const [compiledTarget, setCompiledTarget] = useState<CompiledContract>();
 
@@ -412,7 +385,7 @@ const Contract: NextPage = () => {
   }, []);
 
   const onDeploy = async () => {
-    if(deploying) return;
+    if (deploying) return;
     setDeploying(true);
     const _deployTarget = async () => {
       const deployment = await deployTarget({
@@ -428,14 +401,14 @@ const Contract: NextPage = () => {
         // console.log("redirect");
         setDeployedVaultHash(deployment.deployTransactionHash);
         await library
-        .waitForTransaction(deployment.deployTransactionHash)
-        .then(() => settxAccepted(1));
-        router.push("/vault?address="+deployment.address);
+          .waitForTransaction(deployment.deployTransactionHash)
+          .then(() => settxAccepted(1));
+        router.push("/vault?address=" + deployment.address);
         setDeploying(false);
       }
     };
     await _deployTarget();
-    console.log("deployed")
+    console.log("deployed");
   };
 
   const targetLink =
@@ -450,39 +423,6 @@ const Contract: NextPage = () => {
     const compiled = json.parse(await raw.text());
     return compiled;
   };
-
-  const FIELDS0 = (
-    <div>
-      <button type="button" onClick={onDeploy}>
-        {deploying ? 'Deploying...' : 'Deploy Vault'}
-      </button>
-      <div>
-        {deployedVaultAddress && (
-          <div>
-            Vault contract:{" "}
-            <a href={targetLink} target="_blank">
-              {deployedVaultAddress}
-            </a>
-          </div>
-        )}
-        {deployedVaultHash && (
-          <div>
-            TX:{" "}
-            <a href={targetLink2} target="_blank">
-              {deployedVaultHash}
-            </a>
-            <div>
-              {txAccepted ? (
-                <div>Accepted on L2 </div>
-              ) : (
-                <div>Waiting for Tx to be Accepted on Starknet</div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
 
   const FIELDS1: FormInputTextFieldProps[] = [
     {
@@ -634,26 +574,10 @@ const Contract: NextPage = () => {
     },
   ];
 
-  // <button
-  //               type="button"
-  //               onClick={() => addNewProtocol(0)}
-  //               style={{ width: "100px" }}
-  //             >
-  //               <Image src={alphaRoad} alt="btc" />
-  //               <div>Swap</div>
-  //             </button>
-  //             <button
-  //               type="button"
-  //               onClick={() => addNewProtocolMult([1, 2])}
-  //               style={{ width: "100px" }}
-  //             >
-  //               <Image src={alphaRoad} alt="eth" />
-  //               <div>Liquidity</div>
-  //             </button>
   const protocalList = [
-    { values: [0], path: alphaRoad, alt: "btc", label: 'Swap' },
-    { values: [1, 2], path: alphaRoad, alt: "eth", label: 'Liquidity' },
-  ]
+    { values: [0], path: alphaRoad, alt: "arfS", label: "Swap" },
+    { values: [1, 2], path: alphaRoad, alt: "arfL", label: "Liquidity" },
+  ];
 
   const dominationAssetsList = [
     { value: 1, path: btc, alt: "btc" },
@@ -670,166 +594,594 @@ const Contract: NextPage = () => {
     { value: 7, path: ethbtc, alt: "ethbtc" },
   ];
 
+  function validateName(value) {
+    let error;
+    if (!value) {
+      error = "Name is required";
+    } else if (value.toLowerCase() !== "naruto") {
+      error = "Jeez! You're not a fan 😱";
+    }
+    return error;
+  }
+
+  function validateSymbol(value) {
+    let error;
+    if (!value) {
+      error = "Symbol is required";
+    } else if (value.length > 10) {
+      error = "too long 😱";
+    }
+    return error;
+  }
+
   return (
     <div className={`${styles.pageContent}`}>
-      <div className="fs-35"> Create</div>
-      <form
-        onSubmit={(e) => {
-          onSubmit(e);
-        }}
-        method="post"
-      >
-        <div className={`${styles.formContainer} bg__dotted`}>
-          <div className={styles.header}>Deploy your fund contract</div>
-          {FIELDS0}
-        </div>
-        <div className={`${styles.formContainer} bg__dotted`}>
-          <div className={styles.header}>Fund information</div>
+      <div className={`${styles.formContainer} bg__dotted`}>
+        <Flex direction={"column"} gap={"10px"}>
+          {/* <Text fontWeight={"700"} fontSize={"35px"}>
+            Deploy your fund
+          </Text> */}
 
-          {FIELDS1.map((item, index) => (
-            <FormInputTextField
-              key={index}
-              fiels={item.fiels}
-              infoMessages={item.infoMessages}
-              formGroupClass={item.formGroupClass}
-              onChange={item.onChange}
-            />
-          ))}
-          <div>
-            <div>
-              Choose your denomination Asset f
-              {hexToDecimalString(
-                "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7"
+          {!deployedVaultAddress && (
+            <Button
+              type="button"
+              onClick={onDeploy}
+              backgroundColor={"#f6643c"}
+              color={"white"}
+              width={"150px"}
+            >
+              {deploying ? (
+                <Text fontWeight={"300"} fontSize={"20px"}>
+                  ⏳⌛
+                </Text>
+              ) : (
+                <Text fontWeight={"300"} fontSize={"20px"}>
+                  🧲 Deploy 🧲
+                </Text>
               )}
-            </div>
-            <div className={styles.asset_container}>
-              { dominationAssetsList.map((item, index)=> (
-                <button 
-                  key={index} 
-                  data-color="transparent" 
-                  type="button" 
-                  onClick={() => setDenominationAsset(item.value)}
-                  className={`${styles.asset_button} ${
-                    denominationAsset == item.value ? styles.asset_selected : ""
-                  }`}
-                >
-                  <Image src={item.path} alt={item.alt} />
-                  {denominationAsset == item.value && <>
-                    <span className={styles.asset_selected_checkmark}>
-                      <Image src={'/checkmark-circle-outline.svg'} alt={item.alt} width='24px' height='24px'/>
-                    </span>
-                  </>}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className={`${styles.formContainer} bg__dotted`}>
-          <div className={styles.header}>Depositor policies</div>
-
-          {FIELDS2.map((item, index) => (
-            <FormInputTextField
-              key={index}
-              fiels={item.fiels}
-              infoMessages={item.infoMessages}
-              formGroupClass={item.formGroupClass}
-              onChange={item.onChange}
-            />
-          ))}
-        </div>
-        <div className={`${styles.formContainer} bg__dotted`}>
-          <div className={styles.header}>Asset manager policies</div>
+            </Button>
+          )}
+        </Flex>
+        <div>
           <div>
-            <div>Select Protocol you want to use</div>
-            <div className={styles.asset_container}>
-              {protocalList.map((item, index)=>(
-                <button
-                  key={index}
-                  type="button"
-                  data-color="transparent"
-                  onClick={()=> addNewProtocolMult(item.values)}
-                  className={`${styles.asset_button} ${
-                    allowedProtocol.includes(item.values[0]) ? styles.asset_selected : ""
-                  }`}
+            {deployedVaultAddress && (
+              <div>
+                Fund Address:{" "}
+                <a
+                  href={targetLink}
+                  target="_blank"
+                  style={{ textDecoration: "underline orange" }}
                 >
-                  <Image src={item.path} alt={item.alt} />
-                  {allowedProtocol.includes(item.values[0]) && <>
-                    <span className={styles.asset_selected_checkmark}>
-                      <Image src={'/checkmark-circle-outline.svg'} alt={item.alt} width='24px' height='24px'/>
-                    </span>
-                  </>}
-                  <div>{item.label}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-          {FIELDS5.map((item, index) => (
-            <FormInputTextField
-              key={index}
-              fiels={item.fiels}
-              infoMessages={item.infoMessages}
-              formGroupClass={item.formGroupClass}
-              onChange={item.onChange}
-            />
-          ))}
-          <div>
-            <div>Select the Assets you want to use</div>
-            <div className={styles.asset_container}>
-              {assetsList.map((item, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  data-color="transparent"
-                  onClick={() => addNewAsset(item.value)}
-                  className={`${styles.asset_button} ${
-                    trackedAsset.includes(item.value) ? styles.asset_selected : ""
-                  }`}
-                >
-                  <Image src={item.path} alt={item.alt} />
-                  {trackedAsset.includes(item.value) && <>
-                    <span className={styles.asset_selected_checkmark}>
-                      <Image src={'/checkmark-circle-outline.svg'} alt={item.alt} width='24px' height='24px'/>
-                    </span>
-                  </>}
-                </button>
-              ))}
-            </div>
+                  {deployedVaultAddress}
+                </a>
+              </div>
+            )}
           </div>
         </div>
-        <div className={`${styles.formContainer} bg__dotted`}>
-          <div className={styles.header}>Fees</div>
+      </div>
+      <div
+        className={` bg__dotted`}
+        style={{ padding: "6%", borderRadius: "20px" }}
+      >
+        <Text fontWeight={"500"} fontSize={"4xl"} marginLeft={"20px"} marginBottom={"20px"}>
+          Identification 🧬
+        </Text>
+        <Formik
+          initialValues={{
+            name: "Sasuke",
+            symbol: "dod",
+            description: "This is not required, you can change it at anytime",
+            type: "Public",
+            min: 0.000001,
+            max: 20,
+            lockup: "3",
+            limit: "10",
+            entranceFees: "0%",
+            exitFees: "0%",
+            managementFees: "0%",
+            performanceFees: "0%",
+          }}
+          onSubmit={(values, actions) => {
+            setTimeout(() => {
+              alert(JSON.stringify(values, null, 8));
+              actions.setSubmitting(false);
+            }, 1000);
+          }}
+        >
+          {(props) => (
+            <Form>
+              <Flex direction={"column"} gap={"20px"}>
+                <Flex direction={"row"} gap={"20px"}>
+                  <Field name="name" validate={validateName}>
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={form.errors.name && form.touched.name}
+                        isRequired
+                      >
+                        <FormLabel htmlFor="name">Fund Name</FormLabel>
+                        <Input {...field} id="name" placeholder="name" />
+                        <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
+                  <Field name="symbol" validate={validateSymbol}>
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={form.errors.symbol && form.touched.symbol}
+                        isRequired
+                      >
+                        <FormLabel htmlFor="symbol">Fund Symbol</FormLabel>
+                        <Input {...field} id="symbol" placeholder="symbol" />
+                        <FormErrorMessage>
+                          {form.errors.symbol}
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
+                </Flex>
+                <Field name="description">
+                  {({ field, form }) => (
+                    <FormControl
+                      isInvalid={form.errors.symbol && form.touched.symbol}
+                    >
+                      <FormLabel htmlFor="description">
+                        Fund Description
+                      </FormLabel>
+                      <Input
+                        {...field}
+                        id="description"
+                        placeholder="description"
+                      />
+                      <FormErrorMessage>
+                        {form.errors.description}
+                      </FormErrorMessage>
+                    </FormControl>
+                  )}
+                </Field>
 
-          {FIELDS4.map((item, index) => (
-            <FormInputTextField
-              key={index}
-              fiels={item.fiels}
-              infoMessages={item.infoMessages}
-              formGroupClass={item.formGroupClass}
-              onChange={item.onChange}
-            />
-          ))}
-        </div>
-        <div className={`${styles.formContainer} bg__dotted`}>
-          <div className={styles.header}>Feed your fund</div>
+                <div>
+                  <Text fontWeight={"600"} marginBottom={"10px"}>
+                    Denomination Asset
+                  </Text>
+                  <div className={styles.asset_container}>
+                    {dominationAssetsList.map((item, index) => (
+                      <Button
+                        key={index}
+                        type="button"
+                        onClick={() => setDenominationAsset(item.value)}
+                        className={`${styles.asset_button} ${
+                          denominationAsset == item.value
+                            ? styles.asset_selected
+                            : ""
+                        }`}
+                      >
+                        <Image src={item.path} alt={item.alt} />
+                        {denominationAsset == item.value && (
+                          <>
+                            <span className={styles.asset_selected_checkmark}>
+                              <Image
+                                src={"/checkmark-circle-outline.svg"}
+                                alt={item.alt}
+                                width="24px"
+                                height="24px"
+                              />
+                            </span>
+                          </>
+                        )}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
 
-          {FIELDS3.map((item, index) => (
-            <FormInputTextField
-              key={index}
-              fiels={item.fiels}
-              infoMessages={item.infoMessages}
-              formGroupClass={item.formGroupClass}
-              onChange={item.onChange}
-            />
-          ))}
+                <div>
+                <Text fontWeight={"500"} fontSize={"4xl"} marginTop={"40px"} marginLeft={"20px"} marginBottom={"20px"}>
+          Accessibility 🤚
+        </Text>
+                  <Flex direction={"row"} gap={"20px"}>
+                    <Box width={"40%"}>
+                      <Field name="type">
+                        {({ field, form }) => (
+                          <FormControl isRequired>
+                            <FormLabel htmlFor="type">Type of Fund </FormLabel>
+                            <Select {...field} id="type">
+                              {/* <option>Public</option> */}
+                              <option>Private</option>
+                              <option>Public</option>
+                            </Select>
+                          </FormControl>
+                        )}
+                      </Field>
+                    </Box>
+                    <Flex direction={"row"} gap={"20px"}>
+                      <Field name="min">
+                        {({ field, form }) => (
+                          <FormControl>
+                            <FormLabel htmlFor="min">
+                              Minimum Investment (
+                              {Asset[denominationAsset].id.toString()}){" "}
+                            </FormLabel>
+                            <NumberInput
+                              onChange={(v) => {
+                                props.setFieldValue("min", v);
+                              }}
+                              id="min"
+                              isRequired
+                            >
+                              <NumberInputField />
+                              <NumberInputStepper>
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                              </NumberInputStepper>
+                            </NumberInput>
+                          </FormControl>
+                        )}
+                      </Field>
+
+                      <Field name="max">
+                        {({ field, form }) => (
+                          <FormControl>
+                            <FormLabel htmlFor="max">
+                              Maximum Investment (
+                              {Asset[denominationAsset].id.toString()})
+                            </FormLabel>
+                            <NumberInput
+                              onChange={(v) => {
+                                props.setFieldValue("max", v);
+                              }}
+                              id="max"
+                              isRequired
+                            >
+                              <NumberInputField />
+                              <NumberInputStepper>
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                              </NumberInputStepper>
+                            </NumberInput>
+                          </FormControl>
+                        )}
+                      </Field>
+                    </Flex>
+                  </Flex>
+                </div>
+                <div>
+                  <Text fontWeight={"600"} marginBottom={"10px"}>
+                    Harvest Lockup (Hours)
+                  </Text>
+                  <Flex direction={"row"} gap="50px">
+                    <Text>3 hours min</Text>
+
+                    <Slider
+                      flex="1"
+                      focusThumbOnChange={false}
+                      value={parseFloat(props.values.lockup)}
+                      onChange={(v) => {
+                        props.setFieldValue("lockup", v);
+                      }}
+                      min={3}
+                      max={168}
+                      step={1}
+                    >
+                      <SliderTrack bg="red.100">
+                        <SliderFilledTrack bg="tomato" />
+                      </SliderTrack>
+                      <SliderThumb
+                        fontSize="sm"
+                        boxSize="32px"
+                        children={parseFloat(props.values.lockup)}
+                        bgColor={"#f6643c"}
+                      />
+                    </Slider>
+                    <Text>1 week max</Text>
+                  </Flex>
+                </div>
+                <Text fontWeight={"500"} fontSize={"4xl"} marginTop={"40px"} marginLeft={"20px"} marginBottom={"20px"}>
+          Integration 🧩
+        </Text>
+                <Flex direction={"row"} gap={"10%"} justifyContent={"center"}>
+                  <Box width={"40%"}  flexDirection={"column"} display={"flex"} alignItems={"center"}>
+                    <Text fontWeight={"600"} marginBottom={"10px"}>
+                      Allowed Protocols
+                    </Text>
+
+                    <div className={styles.asset_container_2}>
+                      {protocalList.map((item, index) => (
+                        <Button
+                          key={index}
+                          type="button"
+                          data-color="transparent"
+                          onClick={() => addNewProtocolMult(item.values)}
+                          className={`${styles.asset_button} ${
+                            allowedProtocol.includes(item.values[0])
+                              ? styles.asset_selected
+                              : ""
+                          }`}
+                        >
+                          <Flex direction={"column"}>
+                            <div>
+                              <Image src={item.path} alt={item.alt} />
+                              {allowedProtocol.includes(item.values[0]) && (
+                                <>
+                                  <span
+                                    className={styles.asset_selected_checkmark}
+                                  >
+                                    <Image
+                                      src={"/checkmark-circle-outline.svg"}
+                                      alt={item.alt}
+                                      width="24px"
+                                      height="24px"
+                                    />
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                            <div>{item.label}</div>
+                          </Flex>
+                         
+                        </Button>
+                      ))}
+                    </div>
+                  </Box>
+                  <Box maxWidth={"40%"} display={"flex"} flexDirection={"column"} alignItems={"center"}>
+                    <Text fontWeight={"600"} marginBottom={"10px"}>
+                      Allowed Assets
+                    </Text>
+                    <div className={styles.asset_container}>
+                      {assetsList.map((item, index) => (
+                        <Button
+                          key={index}
+                          
+                          type="button"
+                          data-color="transparent"
+                          onClick={() => addNewAsset(item.value)}
+                          className={`${styles.asset_button} ${
+                            trackedAsset.includes(item.value)
+                              ? styles.asset_selected
+                              : ""
+                          }`}
+                        >
+                          <Image src={item.path} alt={item.alt} />
+                          {trackedAsset.includes(item.value) && (
+                            <>
+                              <span className={styles.asset_selected_checkmark}>
+                                <Image
+                                  src={"/checkmark-circle-outline.svg"}
+                                  alt={item.alt}
+                                  width="24px"
+                                  height="24px"
+                                />
+                              </span>
+                            </>
+                          )}
+                        </Button>
+                      ))}
+                    </div>
+                  </Box>
+                </Flex>
+                <div>
+                  <Text fontWeight={"600"} marginBottom={"10px"}>
+                    Maximum position/assets to track
+                  </Text>
+                  <Flex direction={"row"} gap="50px">
+                    <Text>1 Min</Text>
+
+                    <Slider
+                      flex="1"
+                      focusThumbOnChange={false}
+                      value={parseFloat(props.values.limit)}
+                      onChange={(v) => {
+                        props.setFieldValue("limit", v);
+                      }}
+                      min={1}
+                      max={1000}
+                      step={1}
+                    >
+                      <SliderTrack bg="red.100">
+                        <SliderFilledTrack bg="tomato" />
+                      </SliderTrack>
+                      <SliderThumb
+                        fontSize="sm"
+                        boxSize="32px"
+                        children={parseFloat(props.values.limit)}
+                        bgColor={"#f6643c"}
+                      />
+                    </Slider>
+                    <Text>1000 max</Text>
+                  </Flex>
+                </div>
+                <Text fontWeight={"500"} fontSize={"4xl"} marginTop={"40px"} marginLeft={"20px"} marginBottom={"20px"}>
+          Monetisation 💰
+        </Text>
+        <Flex direction={"row"} alignItems={"center"} justifyContent={"center"} gap={"10%"}>
+          <Box width={"40%"}><Flex direction={"column"}>
+                  <Text fontWeight={"600"} marginBottom={"10px"}>
+                    Entrance Fees
+                  </Text>
+                  <Flex direction={"row"} gap="50px">
+                    <Text> 0%</Text>
+
+                    <Slider
+                      flex="1"
+                      focusThumbOnChange={false}
+                      value={parseFloat(props.values.entranceFees)}
+                      onChange={(v) => {
+                        props.setFieldValue("entranceFees", v);
+                      }}
+                      min={0}
+                      max={10}
+                      step={1}
+                    >
+                      <SliderTrack bg="red.100">
+                        <SliderFilledTrack bg="tomato" />
+                      </SliderTrack>
+                      <SliderThumb
+                        fontSize="sm"
+                        boxSize="32px"
+                        children={parseFloat(props.values.entranceFees)}
+                        bgColor={"#f6643c"}
+                      />
+                    </Slider>
+                    <Text>10%</Text>
+                  </Flex>
+                </Flex></Box>
+          <Box width={"40%"}><Flex direction={"column"}>
+                  <Text fontWeight={"600"} marginBottom={"10px"}>
+                  Exit Fees
+                  </Text>
+                  <Flex direction={"row"} gap="50px">
+                    <Text>0%</Text>
+
+                    <Slider
+                      flex="1"
+                      focusThumbOnChange={false}
+                      value={parseFloat(props.values.exitFees)}
+                      onChange={(v) => {
+                        props.setFieldValue("exitFees", v);
+                      }}
+                      min={0}
+                      max={10}
+                      step={1}
+                    >
+                      <SliderTrack bg="red.100">
+                        <SliderFilledTrack bg="tomato" />
+                      </SliderTrack>
+                      <SliderThumb
+                        fontSize="sm"
+                        boxSize="32px"
+                        children={parseFloat(props.values.exitFees)}
+                        bgColor={"#f6643c"}
+                      />
+                    </Slider>
+                    <Text>10%</Text>
+                  </Flex>
+                </Flex></Box>
+        </Flex>
+        <Flex direction={"row"} alignItems={"center"} justifyContent={"center"} gap={"10%"}>
+          <Box width={"40%"}><Flex direction={"column"}>
+                  <Text fontWeight={"600"} marginBottom={"10px"}>
+                    Management Fees
+                  </Text>
+                  <Flex direction={"row"} gap="50px">
+                    <Text> 0%</Text>
+
+                    <Slider
+                      flex="1"
+                      focusThumbOnChange={false}
+                      value={parseFloat(props.values.managementFees)}
+                      onChange={(v) => {
+                        props.setFieldValue("managementFees", v);
+                      }}
+                      min={0}
+                      max={20}
+                      step={1}
+                    >
+                      <SliderTrack bg="red.100">
+                        <SliderFilledTrack bg="tomato" />
+                      </SliderTrack>
+                      <SliderThumb
+                        fontSize="sm"
+                        boxSize="32px"
+                        children={parseFloat(props.values.managementFees)}
+                        bgColor={"#f6643c"}
+                      />
+                    </Slider>
+                    <Text>20%</Text>
+                  </Flex>
+                </Flex></Box>
+          <Box width={"40%"}><Flex direction={"column"}>
+                  <Text fontWeight={"600"} marginBottom={"10px"}>
+                  Perfomance Fees
+                  </Text>
+                  <Flex direction={"row"} gap="50px">
+                    <Text>0%</Text>
+
+                    <Slider
+                      flex="1"
+                      focusThumbOnChange={false}
+                      value={parseFloat(props.values.performanceFees)}
+                      onChange={(v) => {
+                        props.setFieldValue("performanceFees", v);
+                      }}
+                      min={0}
+                      max={20}
+                      step={1}
+                    >
+                      <SliderTrack bg="red.100">
+                        <SliderFilledTrack bg="tomato" />
+                      </SliderTrack>
+                      <SliderThumb
+                        fontSize="sm"
+                        boxSize="32px"
+                        children={parseFloat(props.values.performanceFees)}
+                        bgColor={"#f6643c"}
+                      />
+                    </Slider>
+                    <Text>20%</Text>
+                  </Flex>
+                </Flex></Box>
+        </Flex>
+        <Text fontWeight={"500"} fontSize={"4xl"} marginTop={"40px"} marginLeft={"20px"} marginBottom={"20px"}>
+          Feed your Fund 🍔
+        </Text>
+              </Flex>
+              <Button
+                mt={4}
+                colorScheme="teal"
+                isLoading={props.isSubmitting}
+                type="submit"
+              >
+                Submit
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </div>
+      
+      {onPopUp ? (
+        <div
+          style={{
+            position: "absolute",
+            backgroundColor: "black",
+            width: "50%",
+            marginLeft: "25%",
+            display: "flex",
+            flexDirection: "column",
+            padding: "30px",
+          }}
+        >
+          <button onClick={() => setonPopUp(false)}>Close</button>
+          <p className="fs-35">Edit Your Vault Description</p>
+          <p className="fs-22">Description :</p>
+          <input></input>
+          <p className="fs-22">Tags :</p>
+          <input></input>
+          <p className="fs-22">Image :</p>
+          <input></input>
+          <button>Validate</button>
         </div>
-        <button
+      ) : (
+        <></>
+      )}
+      <div className={`${styles.formContainer} bg__dotted`}>
+        <div className={styles.header}>Feed your fund</div>
+        {FIELDS3.map((item, index) => (
+          <FormInputTextField
+            key={index}
+            fiels={item.fiels}
+            infoMessages={item.infoMessages}
+            formGroupClass={item.formGroupClass}
+            onChange={item.onChange}
+          />
+        ))}
+        <Button
           data-color="secondary"
           type="submit"
           style={{ display: "block", marginLeft: "auto" }}
+          backgroundColor={"#f6643c"}
+          color={"white"}
         >
-          Go!
-        </button>
-      </form>
+          Create your fund
+        </Button>
+      </div>
     </div>
   );
 };

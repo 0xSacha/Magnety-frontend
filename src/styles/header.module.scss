@@ -2,12 +2,14 @@
 
 .headerContainer {
   min-height: $headerHeight;
+  margin-bottom: -$headerHeight;
   width: 100%;
   grid-column: 1/-1;
   display: flex;
   z-index: 1000;
   align-items: center;
-  background-color: $primaryColor;
+  background-color: rgba(3, 1, 53, 0.8); /*$primaryColor*/
+  backdrop-filter: blur(5px);
   line-height: 19px;
   box-sizing: border-box;
   border-bottom: 1px solid #0b0951;
