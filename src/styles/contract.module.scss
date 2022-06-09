@@ -85,6 +85,7 @@
     height: fit-content;
     min-height: 60px;
     position: relative;
+    background-color: #0f0b1f69;
     &.asset_selected{
       >span.asset_selected_checkmark{
         position: absolute;
@@ -107,6 +108,7 @@
   .asset_button{
     width: 100px;
     height: fit-content;
+    background-color: #0f0b1f69;
     min-height: 100px;
     position: relative;
     &.asset_selected{

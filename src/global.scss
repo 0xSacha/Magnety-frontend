@@ -3,7 +3,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 :root {
-  --color-primary: #030135;
+  --color-primary: #0f0b1f;
   --color-secondary: #f6643c;
   --color-danger: #91141d;
   --color-success: #0dab45;
@@ -137,41 +137,39 @@ div.page {
   background-image: url("/bg.svg");
 }
 
-button {
-  --text: #ffffff;
-  --bg: var(--color-primary, black);
-  color: var(--text);
-  background-color: var(--bg);
-  padding: 8px 12px;
-  border-width: 0px;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  &:hover {
-    background-color: var(--hover-bg, var(--text));
-    color: var(--hover-text, var(--bg));
-  }
-  &[data-color="primary"] {
-    --text: #ffffff;
-    --bg: var(--color-primary, black);
-  }
-  &[data-color="secondary"] {
-    --text: #ffffff;
-    --bg: var(--color-secondary, black);
-  }
-  &[data-color="white"] {
-    --text: var(--color-secondary, black);
-    --bg: white;
-  }
-  &[data-color="transparent"]{
-    --text: 'black';
-    --bg: hsl(0deg 0% 85% / 90%);
-    &:hover{
-      --hover-bg: rgba(255, 0, 238, 0.75);
-      --hover-text: 'white';
-    }
-  }
-}
+// button {
+//   color: var(--text);
+//   background-color: var(--bg);
+//   padding: 8px 12px;
+//   border-width: 0px;
+//   border-radius: 10px;
+//   font-size: 16px;
+//   cursor: pointer;
+//   &:hover {
+//     background-color: #f6643c;
+//     color: #ffffff;
+//   }
+//   &[data-color="primary"] {
+//     --text: #ffffff;
+//     --bg: var(--color-primary, black);
+//   }
+//   &[data-color="secondary"] {
+//     --text: #ffffff;
+//     --bg: var(--color-secondary, black);
+//   }
+//   &[data-color="white"] {
+//     --text: var(--color-secondary, black);
+//     --bg: white;
+//   }
+//   &[data-color="transparent"]{
+//     --text: 'black';
+//     --bg: hsl(0deg 0% 85% / 90%);
+//     &:hover{
+//       --hover-bg: rgba(255, 0, 238, 0.75);
+//       --hover-text: 'white';
+//     }
+//   }
+// }
 
 /* Scrollbar */
 ::-webkit-scrollbar {

@@ -659,38 +659,47 @@ const Contract: NextPage = () => {
           </div>vcvbccccvcxf
         </div>
       </div> */}
-      <div
-        className={` bg__dotted`}
-        style={{ padding: "6%", borderRadius: "20px" }}
+
+      <Formik
+        initialValues={{
+          name: "Sasuke",
+          symbol: "dod",
+          description: "This is not required, you can change it at anytime",
+          type: "Public",
+          min: 0.000001,
+          max: 20,
+          lockup: "3",
+          limit: "10",
+          entranceFees: "0%",
+          exitFees: "0%",
+          managementFees: "0%",
+          performanceFees: "0%",
+        }}
+        onSubmit={(values, actions) => {
+          setTimeout(() => {
+            alert(JSON.stringify(values, null, 8));
+            actions.setSubmitting(false);
+          }, 1000);
+        }}
       >
-        <Text fontWeight={"500"} fontSize={"4xl"} marginLeft={"20px"} marginBottom={"20px"}>
-          Identification 🧬
-        </Text>
-        <Formik
-          initialValues={{
-            name: "Sasuke",
-            symbol: "dod",
-            description: "This is not required, you can change it at anytime",
-            type: "Public",
-            min: 0.000001,
-            max: 20,
-            lockup: "3",
-            limit: "10",
-            entranceFees: "0%",
-            exitFees: "0%",
-            managementFees: "0%",
-            performanceFees: "0%",
-          }}
-          onSubmit={(values, actions) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 8));
-              actions.setSubmitting(false);
-            }, 1000);
-          }}
-        >
-          {(props) => (
-            <Form>
+        {(props) => (
+          <Form>
+            <Flex direction={"column"} gap={"20px"}>
+
+           
+            <div
+              className={` bg__dotted`}
+              style={{ padding: "6%", borderRadius: "20px" }}
+            >
               <Flex direction={"column"} gap={"20px"}>
+                <Text
+                  fontWeight={"500"}
+                  fontSize={"4xl"}
+                  marginLeft={"20px"}
+                  marginBottom={"20px"}
+                >
+                  Identification 🧬
+                </Text>
                 <Flex direction={"row"} gap={"20px"}>
                   <Field name="name" validate={validateName}>
                     {({ field, form }) => (
@@ -748,6 +757,7 @@ const Contract: NextPage = () => {
                       <Button
                         key={index}
                         type="button"
+                        backgroundColor={"#0f0b1f"}
                         onClick={() => setDenominationAsset(item.value)}
                         className={`${styles.asset_button} ${
                           denominationAsset == item.value
@@ -772,11 +782,23 @@ const Contract: NextPage = () => {
                     ))}
                   </div>
                 </div>
-
+              </Flex>
+            </div>
+            <div
+              className={` bg__dotted`}
+              style={{ padding: "6%", borderRadius: "20px" }}
+            >
+              <Flex direction={"column"} gap={"20px"}>
                 <div>
-                <Text fontWeight={"500"} fontSize={"4xl"} marginTop={"40px"} marginLeft={"20px"} marginBottom={"20px"}>
-          Accessibility 🤚
-        </Text>
+                  <Text
+                    fontWeight={"500"}
+                    fontSize={"4xl"}
+                   
+                    marginLeft={"20px"}
+                    marginBottom={"20px"}
+                  >
+                    Accessibility 🤚
+                  </Text>
                   <Flex direction={"row"} gap={"20px"}>
                     <Box width={"40%"}>
                       <Field name="type">
@@ -874,11 +896,29 @@ const Contract: NextPage = () => {
                     <Text>1 week max</Text>
                   </Flex>
                 </div>
-                <Text fontWeight={"500"} fontSize={"4xl"} marginTop={"40px"} marginLeft={"20px"} marginBottom={"20px"}>
-          Integration 🧩
-        </Text>
+              </Flex>
+            </div>
+            <div
+              className={` bg__dotted`}
+              style={{ padding: "6%", borderRadius: "20px" }}
+            >
+              <Flex direction={"column"} gap={"20px"}>
+                <Text
+                  fontWeight={"500"}
+                  fontSize={"4xl"}
+                
+                  marginLeft={"20px"}
+                  marginBottom={"20px"}
+                >
+                  Integration 🧩
+                </Text>
                 <Flex direction={"row"} gap={"10%"} justifyContent={"center"}>
-                  <Box width={"40%"}  flexDirection={"column"} display={"flex"} alignItems={"center"}>
+                  <Box
+                    width={"40%"}
+                    flexDirection={"column"}
+                    display={"flex"}
+                    alignItems={"center"}
+                  >
                     <Text fontWeight={"600"} marginBottom={"10px"}>
                       Allowed Protocols
                     </Text>
@@ -888,6 +928,7 @@ const Contract: NextPage = () => {
                         <Button
                           key={index}
                           type="button"
+                          backgroundColor={"#0f0b1"}
                           data-color="transparent"
                           onClick={() => addNewProtocolMult(item.values)}
                           className={`${styles.asset_button} ${
@@ -916,12 +957,16 @@ const Contract: NextPage = () => {
                             </div>
                             <div>{item.label}</div>
                           </Flex>
-                         
                         </Button>
                       ))}
                     </div>
                   </Box>
-                  <Box maxWidth={"40%"} display={"flex"} flexDirection={"column"} alignItems={"center"}>
+                  <Box
+                    maxWidth={"40%"}
+                    display={"flex"}
+                    flexDirection={"column"}
+                    alignItems={"center"}
+                  >
                     <Text fontWeight={"600"} marginBottom={"10px"}>
                       Allowed Assets
                     </Text>
@@ -929,7 +974,7 @@ const Contract: NextPage = () => {
                       {assetsList.map((item, index) => (
                         <Button
                           key={index}
-                          
+                          backgroundColor={"#0f0b1"}
                           type="button"
                           data-color="transparent"
                           onClick={() => addNewAsset(item.value)}
@@ -988,141 +1033,186 @@ const Contract: NextPage = () => {
                     <Text>1000 max</Text>
                   </Flex>
                 </div>
-                <Text fontWeight={"500"} fontSize={"4xl"} marginTop={"40px"} marginLeft={"20px"} marginBottom={"20px"}>
-          Monetisation 💰
-        </Text>
-        <Flex direction={"row"} alignItems={"center"} justifyContent={"center"} gap={"10%"}>
-          <Box width={"40%"}><Flex direction={"column"}>
-                  <Text fontWeight={"600"} marginBottom={"10px"}>
-                    Entrance Fees
-                  </Text>
-                  <Flex direction={"row"} gap="50px">
-                    <Text> 0%</Text>
-
-                    <Slider
-                      flex="1"
-                      focusThumbOnChange={false}
-                      value={parseFloat(props.values.entranceFees)}
-                      onChange={(v) => {
-                        props.setFieldValue("entranceFees", v);
-                      }}
-                      min={0}
-                      max={10}
-                      step={1}
-                    >
-                      <SliderTrack bg="red.100">
-                        <SliderFilledTrack bg="tomato" />
-                      </SliderTrack>
-                      <SliderThumb
-                        fontSize="sm"
-                        boxSize="32px"
-                        children={parseFloat(props.values.entranceFees)}
-                        bgColor={"#f6643c"}
-                      />
-                    </Slider>
-                    <Text>10%</Text>
-                  </Flex>
-                </Flex></Box>
-          <Box width={"40%"}><Flex direction={"column"}>
-                  <Text fontWeight={"600"} marginBottom={"10px"}>
-                  Exit Fees
-                  </Text>
-                  <Flex direction={"row"} gap="50px">
-                    <Text>0%</Text>
-
-                    <Slider
-                      flex="1"
-                      focusThumbOnChange={false}
-                      value={parseFloat(props.values.exitFees)}
-                      onChange={(v) => {
-                        props.setFieldValue("exitFees", v);
-                      }}
-                      min={0}
-                      max={10}
-                      step={1}
-                    >
-                      <SliderTrack bg="red.100">
-                        <SliderFilledTrack bg="tomato" />
-                      </SliderTrack>
-                      <SliderThumb
-                        fontSize="sm"
-                        boxSize="32px"
-                        children={parseFloat(props.values.exitFees)}
-                        bgColor={"#f6643c"}
-                      />
-                    </Slider>
-                    <Text>10%</Text>
-                  </Flex>
-                </Flex></Box>
-        </Flex>
-        <Flex direction={"row"} alignItems={"center"} justifyContent={"center"} gap={"10%"}>
-          <Box width={"40%"}><Flex direction={"column"}>
-                  <Text fontWeight={"600"} marginBottom={"10px"}>
-                    Management Fees
-                  </Text>
-                  <Flex direction={"row"} gap="50px">
-                    <Text> 0%</Text>
-
-                    <Slider
-                      flex="1"
-                      focusThumbOnChange={false}
-                      value={parseFloat(props.values.managementFees)}
-                      onChange={(v) => {
-                        props.setFieldValue("managementFees", v);
-                      }}
-                      min={0}
-                      max={20}
-                      step={1}
-                    >
-                      <SliderTrack bg="red.100">
-                        <SliderFilledTrack bg="tomato" />
-                      </SliderTrack>
-                      <SliderThumb
-                        fontSize="sm"
-                        boxSize="32px"
-                        children={parseFloat(props.values.managementFees)}
-                        bgColor={"#f6643c"}
-                      />
-                    </Slider>
-                    <Text>20%</Text>
-                  </Flex>
-                </Flex></Box>
-          <Box width={"40%"}><Flex direction={"column"}>
-                  <Text fontWeight={"600"} marginBottom={"10px"}>
-                  Perfomance Fees
-                  </Text>
-                  <Flex direction={"row"} gap="50px">
-                    <Text>0%</Text>
-
-                    <Slider
-                      flex="1"
-                      focusThumbOnChange={false}
-                      value={parseFloat(props.values.performanceFees)}
-                      onChange={(v) => {
-                        props.setFieldValue("performanceFees", v);
-                      }}
-                      min={0}
-                      max={20}
-                      step={1}
-                    >
-                      <SliderTrack bg="red.100">
-                        <SliderFilledTrack bg="tomato" />
-                      </SliderTrack>
-                      <SliderThumb
-                        fontSize="sm"
-                        boxSize="32px"
-                        children={parseFloat(props.values.performanceFees)}
-                        bgColor={"#f6643c"}
-                      />
-                    </Slider>
-                    <Text>20%</Text>
-                  </Flex>
-                </Flex></Box>
-        </Flex>
-        <Text fontWeight={"500"} fontSize={"4xl"} marginTop={"40px"} marginLeft={"20px"} marginBottom={"20px"}>
-          Feed your Fund 🍔
-        </Text>
               </Flex>
+            </div>
+            <div
+              className={` bg__dotted`}
+              style={{ padding: "6%", borderRadius: "20px" }}
+            >
+              <Flex direction={"column"} gap={"20px"}>
+                <Text
+                  fontWeight={"500"}
+                  fontSize={"4xl"}
+                
+                  marginLeft={"20px"}
+                  marginBottom={"20px"}
+                >
+                  Monetisation 💰
+                </Text>
+                <Flex
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"10%"}
+                >
+                  <Box width={"40%"}>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"600"} marginBottom={"10px"}>
+                        Entrance Fees
+                      </Text>
+                      <Flex direction={"row"} gap="50px">
+                        <Text> 0%</Text>
+
+                        <Slider
+                          flex="1"
+                          focusThumbOnChange={false}
+                          value={parseFloat(props.values.entranceFees)}
+                          onChange={(v) => {
+                            props.setFieldValue("entranceFees", v);
+                          }}
+                          min={0}
+                          max={10}
+                          step={1}
+                        >
+                          <SliderTrack bg="red.100">
+                            <SliderFilledTrack bg="tomato" />
+                          </SliderTrack>
+                          <SliderThumb
+                            fontSize="sm"
+                            boxSize="32px"
+                            children={parseFloat(props.values.entranceFees)}
+                            bgColor={"#f6643c"}
+                          />
+                        </Slider>
+                        <Text>10%</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                  <Box width={"40%"}>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"600"} marginBottom={"10px"}>
+                        Exit Fees
+                      </Text>
+                      <Flex direction={"row"} gap="50px">
+                        <Text>0%</Text>
+
+                        <Slider
+                          flex="1"
+                          focusThumbOnChange={false}
+                          value={parseFloat(props.values.exitFees)}
+                          onChange={(v) => {
+                            props.setFieldValue("exitFees", v);
+                          }}
+                          min={0}
+                          max={10}
+                          step={1}
+                        >
+                          <SliderTrack bg="red.100">
+                            <SliderFilledTrack bg="tomato" />
+                          </SliderTrack>
+                          <SliderThumb
+                            fontSize="sm"
+                            boxSize="32px"
+                            children={parseFloat(props.values.exitFees)}
+                            bgColor={"#f6643c"}
+                          />
+                        </Slider>
+                        <Text>10%</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                </Flex>
+                <Flex
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"10%"}
+                >
+                  <Box width={"40%"}>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"600"} marginBottom={"10px"}>
+                        Management Fees
+                      </Text>
+                      <Flex direction={"row"} gap="50px">
+                        <Text> 0%</Text>
+
+                        <Slider
+                          flex="1"
+                          focusThumbOnChange={false}
+                          value={parseFloat(props.values.managementFees)}
+                          onChange={(v) => {
+                            props.setFieldValue("managementFees", v);
+                          }}
+                          min={0}
+                          max={20}
+                          step={1}
+                        >
+                          <SliderTrack bg="red.100">
+                            <SliderFilledTrack bg="tomato" />
+                          </SliderTrack>
+                          <SliderThumb
+                            fontSize="sm"
+                            boxSize="32px"
+                            children={parseFloat(props.values.managementFees)}
+                            bgColor={"#f6643c"}
+                          />
+                        </Slider>
+                        <Text>20%</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                  <Box width={"40%"}>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"600"} marginBottom={"10px"}>
+                        Perfomance Fees
+                      </Text>
+                      <Flex direction={"row"} gap="50px">
+                        <Text>0%</Text>
+
+                        <Slider
+                          flex="1"
+                          focusThumbOnChange={false}
+                          value={parseFloat(props.values.performanceFees)}
+                          onChange={(v) => {
+                            props.setFieldValue("performanceFees", v);
+                          }}
+                          min={0}
+                          max={20}
+                          step={1}
+                        >
+                          <SliderTrack bg="red.100">
+                            <SliderFilledTrack bg="tomato" />
+                          </SliderTrack>
+                          <SliderThumb
+                            fontSize="sm"
+                            boxSize="32px"
+                            children={parseFloat(props.values.performanceFees)}
+                            bgColor={"#f6643c"}
+                          />
+                        </Slider>
+                        <Text>20%</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                </Flex>
+              </Flex>
+            </div>
+            <div
+              className={` bg__dotted`}
+              style={{ padding: "6%", borderRadius: "20px" }}
+            >
+              <Flex direction={"column"} gap={"20px"}>
+                <Text
+                  fontWeight={"500"}
+                  fontSize={"4xl"}
+                 
+                  marginLeft={"20px"}
+                  marginBottom={"20px"}
+                >
+                  Feed your Fund 🍔
+                </Text>
+              </Flex>
+
               <Button
                 mt={4}
                 colorScheme="teal"
@@ -1131,59 +1221,39 @@ const Contract: NextPage = () => {
               >
                 Submit
               </Button>
-            </Form>
-          )}
-        </Formik>
-      </div>
-      
-      {onPopUp ? (
-        <div
-          style={{
-            position: "absolute",
-            backgroundColor: "black",
-            width: "50%",
-            marginLeft: "25%",
-            display: "flex",
-            flexDirection: "column",
-            padding: "30px",
-          }}
-        >
-          <button onClick={() => setonPopUp(false)}>Close</button>
-          <p className="fs-35">Edit Your Vault Description</p>
-          <p className="fs-22">Description :</p>
-          <input></input>
-          <p className="fs-22">Tags :</p>
-          <input></input>
-          <p className="fs-22">Image :</p>
-          <input></input>
-          <button>Validate</button>
-        </div>
-      ) : (
-        <></>
-      )}
-      <div className={`${styles.formContainer} bg__dotted`}>
-        <div className={styles.header}>Feed your fund</div>
-        {FIELDS3.map((item, index) => (
-          <FormInputTextField
-            key={index}
-            fiels={item.fiels}
-            infoMessages={item.infoMessages}
-            formGroupClass={item.formGroupClass}
-            onChange={item.onChange}
-          />
-        ))}
-        <Button
-          data-color="secondary"
-          type="submit"
-          style={{ display: "block", marginLeft: "auto" }}
-          backgroundColor={"#f6643c"}
-          color={"white"}
-        >
-          Create your fund
-        </Button>
-      </div>
+            </div>
+            </Flex>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
 
 export default Contract;
+
+// {onPopUp ? (
+//   <div
+//     style={{
+//       position: "absolute",
+//       backgroundColor: "black",
+//       width: "50%",
+//       marginLeft: "25%",
+//       display: "flex",
+//       flexDirection: "column",
+//       padding: "30px",
+//     }}
+//   >
+//     <button onClick={() => setonPopUp(false)}>Close</button>
+//     <p className="fs-35">Edit Your Vault Description</p>
+//     <p className="fs-22">Description :</p>
+//     <input></input>
+//     <p className="fs-22">Tags :</p>
+//     <input></input>
+//     <p className="fs-22">Image :</p>
+//     <input></input>
+//     <button>Validate</button>
+//   </div>
+// ) : (
+//   <></>
+// )}

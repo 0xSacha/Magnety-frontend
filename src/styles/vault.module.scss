@@ -1,6 +1,10 @@
-.lineairesimple {
-    background: linear-gradient(blue, pink);
-  }
+.buttonStyle1{
+    *:after {
+        box-shadow: none;
+        width: 80px;
+     }
+     width: 566px;
+}
 
 .pageContainer{
     padding: 50px 75px 25px 75px;

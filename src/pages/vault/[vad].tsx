@@ -7,15 +7,16 @@ import FakeImage from "~/components/FakeImage";
 import Image from "next/image";
 import { useAppSelector } from "../../app/hooks";
 import { selectCount } from "../../app/counterSlice";
-import "chart.js/auto";
-import { Chart, Line } from "react-chartjs-2";
-import { Button, ButtonGroup } from "@chakra-ui/react";
+// import "chart.js/auto";
+// import { Chart, Line } from "react-chartjs-2";
+import { background, Button, ButtonGroup } from "@chakra-ui/react";
 import { Select } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Icon } from "@chakra-ui/react";
 import { BsShare } from "react-icons/bs";
 import { GiPayMoney } from "react-icons/gi";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 import {
   NumberInput,
@@ -143,8 +144,7 @@ function getGradient(ctx, chartArea) {
     height = chartHeight;
     gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
     gradient.addColorStop(0, "transparent");
-    gradient.addColorStop(0.9, "green");
-    gradient.addColorStop(1, "green");
+    gradient.addColorStop(1, "#02c77a");
   }
 
   return gradient;
@@ -166,28 +166,28 @@ const data: ChartData<"line", (number | ScatterDataPoint | null)[], unknown> = {
         }
         return getGradient(ctx, chartArea);
       },
-      borderColor: "green",
+      borderColor: "#02c77a",
       tension: 0.3,
     },
-    {
-      label: "Initial",
-      data: [...times(numberOfData, (i) => chartData[0])],
-      borderDash: [5, 5],
-      borderColor: "rgba(75,192,192,0.5)",
-      pointRadius: 0,
-      pointHoverRadius: 0,
-    },
-    {
-      label: "Current",
-      data: [...times(numberOfData, (i) => chartData[chartData.length - 1])],
-      borderDash: [5, 5],
-      borderColor:
-        chartData[chartData.length - 1] > chartData[0]
-          ? "#17a54380"
-          : "#ff000080",
-      pointRadius: 0,
-      pointHoverRadius: 0,
-    },
+    // {
+    //   label: "Initial",
+    //   data: [...times(numberOfData, (i) => chartData[0])],
+    //   borderDash: [5, 5],
+    //   borderColor: "rgba(75,192,192,0.5)",
+    //   pointRadius: 0,
+    //   pointHoverRadius: 0,
+    // },
+    // {
+    //   label: "Current",
+    //   data: [...times(numberOfData, (i) => chartData[chartData.length - 1])],
+    //   borderDash: [5, 5],
+    //   borderColor:
+    //     chartData[chartData.length - 1] > chartData[0]
+    //       ? "#17a54380"
+    //       : "#ff000080",
+    //   pointRadius: 0,
+    //   pointHoverRadius: 0,
+    // },
   ],
 };
 
@@ -195,16 +195,19 @@ const options = {
   responsive: true,
   scales: {
     x: {
+      reverse: true,
       ticks: {
-        display: false,
+        display: true,
       },
       grid: {
         display: false,
       },
     },
     y: {
+      reversed: true,
       ticks: {
-        display: false,
+        display: true,
+       
       },
       grid: {
         display: false,
@@ -218,7 +221,7 @@ const options = {
   },
   plugins: {
     legend: {
-      display: true,
+      display: false,
     },
     
   },
@@ -903,6 +906,42 @@ const vault: NextPage = () => {
     },
   ];
 
+  const data = [
+    { date: "2019-10-20T04:00:00Z", sharePrice: 0.002 },
+    { date: "2019-10-20T05:00:00Z", sharePrice: 0.003 },
+    { date: "2019-10-20T06:00:00Z", sharePrice: 0.002 },
+    { date: "2019-10-20T07:00:00Z", sharePrice: 0.004 },
+    { date: "2019-10-21T10:00:00Z", sharePrice: 0.005 },
+    { date: "2019-10-21T23:00:00Z", sharePrice: 0.006 },
+    { date: "2019-10-22T00:00:00Z", sharePrice: 0.004 },
+    { date: "2019-10-20T06:00:00Z", sharePrice: 0.012 },
+    { date: "2019-10-20T07:00:00Z", sharePrice: 0.014 },
+    { date: "2019-10-21T10:00:00Z", sharePrice: 0.006 },
+    { date: "2019-10-21T23:00:00Z", sharePrice: 0.002 },
+    { date: "2019-10-22T00:00:00Z", sharePrice: 0.0001 },
+    { date: "2019-10-20T07:00:00Z", sharePrice: -0.014 },
+    { date: "2019-10-21T10:00:00Z", sharePrice: -0.006 },
+    { date: "2019-10-21T23:00:00Z", sharePrice: 0.002 },
+    { date: "2019-10-22T00:00:00Z", sharePrice: 0.0001 }
+  ];
+
+  const gradientOffset = () => {
+    const dataMax = Math.max(...data.map((i) => i.sharePrice));
+    const dataMin = Math.min(...data.map((i) => i.sharePrice));
+  
+    if (dataMax <= 0) {
+      return 0;
+    }
+    if (dataMin >= 0) {
+      return 1;
+    }
+  
+    return dataMax / (dataMax - dataMin);
+  };
+  
+  const off = gradientOffset();
+
+
   const handleMintShare = () => {
     const newAmount = parseFloat(buyValue) * 1000000000000000000;
 
@@ -1061,7 +1100,7 @@ const vault: NextPage = () => {
                   />
                 </Box>
                 <Flex direction={"column"}>
-                  <Text fontSize={"6xl"} color={"green"}>
+                  <Text fontSize={"6xl"} color={"#02c77a"}>
                     +46%
                   </Text>
                   <Text
@@ -1238,22 +1277,47 @@ const vault: NextPage = () => {
                         {" "}
                         {denominationAsset} {sharePrice}
                       </Text>
-                      <Text fontSize={"4xl"} color={"green"}> +1.34% </Text>
+                      <Text fontSize={"4xl"} color={"#02c77a"}> +1.34% </Text>
                     </Flex>
+                    <Flex direction={'row'} alignItems={"center"} gap={"1rem"}>
 
-                    <Stack direction={"row"}>
-                      <Button>1D</Button>
-                      <Button>1W</Button>
-                      <Button>1M</Button>
-                      <Button>3M</Button>
-                      <Button>6M</Button>
-                      <Button>1Y</Button>
-                    </Stack>
+                    
+                    <Select>
+                              <option>Share price</option>
+                              <option>Gross Asset value</option>
+                      </Select>
+                    <Flex direction={"row"} gap={"1px"}>
+                      <Button borderRadius={"25% 0% 0% 25%"} backgroundColor={" #030135"}>1D</Button>
+                      <Button borderRadius={"0px"} backgroundColor={" #030135"}>1W</Button>
+                      <Button  borderRadius={"0px"} backgroundColor={" #030135"}>1M</Button>
+                      <Button    borderRadius={"0px"} backgroundColor={" #030135"}>3M</Button>
+                      <Button  borderRadius={"0px"} backgroundColor={" #030135"}>6M</Button>
+                      <Button   borderRadius={"0% 25% 25% 0%"} backgroundColor={" #030135"}>1Y</Button>
+                    </Flex>
+                    </Flex>
                   </Flex>
-                  <Box width={"80%"} alignSelf={"center"}>
+                  {/* <Box width={"80%"} alignSelf={"center"}> */}
                     {/* <Chart<any> type='line' data={data} /> */}
-                    <Line id="graph" data={data} options={options}></Line>
-                  </Box>
+                    {/* <Line id="graph" data={data} options={options}></Line> */}
+                    <ResponsiveContainer width='100%' aspect={6.0/3.0}>
+                    <AreaChart
+          data={data}
+          
+        >
+          <XAxis dataKey="date" />
+          <YAxis dataKey="sharePrice"/>
+          <Tooltip />
+          <defs>
+            <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
+              <stop offset={0.4} stopColor="green" stopOpacity={1} />
+              <stop offset={0.4} stopColor="red" stopOpacity={1} />
+              {console.log(off)}
+            </linearGradient>
+          </defs>
+          <Area type="monotone" dataKey="sharePrice" stroke="#000" fill="url(#splitColor)" />
+           </AreaChart>
+          </ResponsiveContainer>
+                  {/* </Box> */}
                 </Flex>
                 </TabPanel>
                 <TabPanel>
@@ -1559,249 +1623,6 @@ const vault: NextPage = () => {
             </Box>
           </Box>
         </Flex>
-        {/* Tabs */}
-        {/* <div
-          style={{
-            minHeight: "500px",
-            maxHeight: "80vh",
-          }}
-        >
-          <Tabs activeTab="6">
-            <Tab label="Portfolio" id="1">
-              {trackedAssetsLen > 0 ? (
-                <div className={`${styles.portfolioTable} bg__dotted`}>
-                  <table cellSpacing="0" cellPadding="0">
-                    <thead>
-                      <tr>
-                        <th>Assets</th>
-                        <th>Balance</th>
-                        <th>Value</th>
-                        <th>Allocation</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {trackedAssets.map((p, index) => (
-                        <tr key={index}>
-                          <td>
-                            <FakeImage
-                              width="50px"
-                              height="50px"
-                              fillColor="var(--color-secondary)"
-                              borderRadius="50%"
-                            ></FakeImage>
-                            <div>
-                              <span> {p.coinName} </span>
-                              <span> {p.coinSymbol} </span>
-                            </div>
-                          </td>
-                          <td>
-                            {" "}
-                            {p.balance} {p.coinSymbol}
-                          </td>
-                          <td>
-                            {p.value} {denominationAsset}
-                          </td>
-                          <td>{p.allocation}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className={`${styles.portfolioTable} bg__dotted`}>
-                  <table cellSpacing="0" cellPadding="0">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr key={1}>
-                        <td> .</td>
-                        <td> .</td>
-                        <td> Fetching Portofolio, please wait..</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </Tab>
-            <Tab label="Fees" id="2">
-              <div className={`${styles.feesTable} bg__dotted`}>
-                <table cellSpacing="0" cellPadding="0">
-                  <thead>
-                    <tr>
-                      <th>Fee Type</th>
-                      <th>Fee Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr key={1}>
-                      <td>Entrance Fee</td>
-                      <td>
-                        <div>
-                          <div> {entranceFee}%</div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr key={2}>
-                      <td>Exit Fee</td>
-                      <td>
-                        <div>
-                          <div> {exitFee}%</div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr key={3}>
-                      <td>Performance Fee</td>
-                      <td>
-                        <div>
-                          <div> {performanceFee}%</div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr key={4}>
-                      <td>Management Fee</td>
-                      <td>
-                        <div>
-                          <div> {managementFee}%</div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </Tab>
-            <Tab label="Policies" id="3">
-              <div className={`bg__dotted ${styles.policiesTabContent}`}>
-                {isPublic ? (
-                  <div>
-                    <div className="fs-24 fw-600">{name} is a public fund</div>
-                  </div>
-                ) : (
-                  <div>
-                    <div className="fs-24 fw-600">{name} is a private fund</div>
-                  </div>
-                )}
-                <div>
-                  <div className="fs-24 fw-600">Deposit Limits</div>
-                  <div className="fs-20 fw-600">
-                    minimum : {minAmount} {denominationAsset}
-                  </div>
-                  <div className="fs-20 fw-600">
-                    maximum : {maxAmount} {denominationAsset}
-                  </div>
-                </div>
-                <div>
-                  <div className="fs-24 fw-600">Timelock</div>
-                  <div className="fs-20 fw-600">
-                    After minting shares, you'll have to wait : {timeLock}{" "}
-                    seconds before you can sell it
-                  </div>
-                </div>
-                <div>
-                  <div className="fs-24 fw-600">Allowed Asset to Track</div>
-                </div>
-                <div>
-                  <div className="fs-24 fw-600">
-                    Allowed Protocol to interact with
-                  </div>
-                </div>
-              </div>
-            </Tab>
-            <Tab label="Financials" id="4">
-              <div className={`bg__dotted ${styles.financialTabContent}`}>
-                <div>
-                  <div className="fs-24 fw-600">General Information</div>
-                  <div>
-                    <div className="fw-600">General Assets Vault (GAV)</div>
-                    <div>
-                      <span className="fw-700">1,993,516.452 MGTY</span>
-                      <span>$1,993,516.452</span>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div>
-                    <div className="fw-600">Net Assets Valut (NAV)</div>
-                    <div>
-                      <span className="fw-700">1,993,516.452 MGTY</span>
-                      <span>$1,993,516.452</span>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div className="fs-24 fw-600">Financial Metrics</div>
-                  <div>
-                    <div className="fw-600">Return Month-to-Date</div>
-                    <div>
-                      <span className="text-success">+0.5%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Tab>
-
-            <Tab label="Depositors" id="5">
-              <div className={`${styles.depositorsTable} bg__dotted`}>
-                <table cellSpacing="0" cellPadding="0">
-                  <thead>
-                    <tr>
-                      <th>Depositor</th>
-                      <th>Since</th>
-                      <th>Number of Shares</th>
-                      <th>Percentage</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {depositorsData.map((d, index) => (
-                      <tr key={index}>
-                        <td>{d.depositor}</td>
-                        <td>{d.Since}</td>
-                        <td>{d.numberOfShares}</td>
-                        <td>{d.percentage} %</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </Tab>
-            <Tab label="Activities" id="6">
-              <div className={`${styles.activitiesContainer}`}>
-                <div className="bg__dotted">
-                  <div>
-                    <div>
-                      <div>
-                        <div className="fs-12">29 Apr 2022 01:22</div>
-                        <div className="fs-24 fw-600">Deposit</div>
-                      </div>
-                      <div>
-                        <FakeImage
-                          height="50px"
-                          width="50px"
-                          borderRadius="50%"
-                          fillColor="black"
-                        />
-                        <div>
-                          <div className="fs-20 fw-700">Vault name</div>
-                          <div className="fs-12">0x4s21...1452</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <div>Amount</div>
-                      <div>Shares received</div>
-                      <div>Depositor</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg__dotted"></div>
-              </div>
-            </Tab>
-          </Tabs>
-        </div> */}
       </Box>
     </>
   );

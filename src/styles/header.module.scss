@@ -8,11 +8,11 @@
   display: flex;
   z-index: 1000;
   align-items: center;
-  background-color: rgba(3, 1, 53, 0.8); /*$primaryColor*/
+  background-color: #0f0b1f; /*$primaryColor*/
   backdrop-filter: blur(5px);
   line-height: 19px;
   box-sizing: border-box;
-  border-bottom: 1px solid #0b0951;
+  // border-bottom: 1px solid #0b0951;
   > ul {
     list-style: none;
     display: flex;
