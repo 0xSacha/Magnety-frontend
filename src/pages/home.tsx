@@ -60,9 +60,21 @@ const Home: NextPage = () => {
             Magnety is an asset management protocol allowing anyone to create
             and manage a hedge fund through Starknet & L1 DeFi ecosystem.
           </div>
-          <div style={{display: 'flex', gap: '24px', marginTop: '17px'}}>
-            <button className="fs-22" data-color="secondary" style={{height: '63px', width:'188px'}}>Create a vault</button>
-            <button className="fs-22" data-color="white" style={{height: '63px', width:'188px'}}>Explore vaults</button>
+          <div style={{ display: "flex", gap: "24px", marginTop: "17px" }}>
+            <button
+              className="fs-22"
+              data-color="secondary"
+              style={{ height: "63px", width: "188px" }}
+            >
+              Create a vault
+            </button>
+            <button
+              className="fs-22"
+              data-color="white"
+              style={{ height: "63px", width: "188px" }}
+            >
+              Explore vaults
+            </button>
           </div>
         </div>
         <div>

@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, ReactChild, ReactNode } from "react";
 import styles from "~/styles/tabs.module.scss";
-import { Button, ButtonGroup } from '@chakra-ui/react'
+import { Button, ButtonGroup } from "@chakra-ui/react";
 
 type TabsProps = {
   activeTab: string;
