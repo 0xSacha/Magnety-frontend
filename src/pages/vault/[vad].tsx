@@ -9,14 +9,27 @@ import { useAppSelector } from "../../app/hooks";
 import { selectCount } from "../../app/counterSlice";
 // import "chart.js/auto";
 // import { Chart, Line } from "react-chartjs-2";
-import { background, Button, ButtonGroup } from "@chakra-ui/react";
+import { background, Button, ButtonGroup, color } from "@chakra-ui/react";
 import { Select } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Icon } from "@chakra-ui/react";
 import { BsShare } from "react-icons/bs";
+import { BiArrowBack } from "react-icons/bi";
+
 import { GiPayMoney } from "react-icons/gi";
+import { MdManageSearch } from "react-icons/md";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import moment from "moment";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ReferenceLine,
+} from "recharts";
 
 import {
   NumberInput,
@@ -48,17 +61,7 @@ import {
   Box,
   SliderMark,
 } from "@chakra-ui/react";
-import {
-  ChartData,
-  ScatterDataPoint,
-  ChartOptions,
-  CoreChartOptions,
-  ElementChartOptions,
-  PluginChartOptions,
-  DatasetChartOptions,
-  ScaleChartOptions,
-  LineControllerChartOptions,
-} from "chart.js/auto";
+
 import { _DeepPartialObject } from "chart.js/types/utils";
 // import Tabs from "~/components/Tabs";
 // import Tab from "~/components/Tab";
@@ -71,160 +74,19 @@ import { Flex, Spacer } from "@chakra-ui/react";
 import { Slider as MultiSlider } from "react-multi-thumb-slider";
 import { MaterialSlider } from "react-multi-thumb-slider";
 
+import btc from "../../image/BTC.png";
+import eth from "../../image/ETH.png";
+import zkp from "../../image/ZKP.png";
+import tst from "../../image/TST.svg";
+import alphaRoad from "../../image/alphaRoad.jpg";
+import ethzkp from "../../image/ETH-ZKP.png";
+import btctst from "../../image/BTC-TST.png";
+import ethtst from "../../image/ETH-TST.png";
+import ethbtc from "../../image/ETH-BTC.png";
+
 const { provider, account } = getStarknet();
-
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-const times = (n: number, fn: (i: number) => any = (i: number) => i): any[] =>
-  Array.from({ length: n }, (_, x) => fn(x));
-
-const random = (lower: number, upper: number, isIncludeUpper = false) => {
-  const min = Math.min(lower, upper);
-  const max = Math.max(lower, upper);
-  return Math.round((Math.random() * (max - min) + min) * 100) / 100;
-};
-
-const randomChartData = (
-  n: number,
-  startAt: number = 0,
-  maxChanges: number = 10,
-  minimumValue: number = 0,
-  maximumValue: number = 100
-) => {
-  return [
-    ...times(n, (i) => {
-      if (current === undefined) {
-        current = startAt;
-      } else {
-        const min = random(
-          current,
-          Math.max(current - maxChanges, minimumValue),
-          true
-        );
-        const max = random(
-          current,
-          Math.min(current + maxChanges, maximumValue),
-          true
-        );
-        current = random(min, max, true);
-      }
-      return current;
-    }),
-  ];
-};
-
-const numberOfData = 200;
-const startAt = 20;
-let current: number;
-const chartLabels = [...times(numberOfData, (i) => MONTHS[i % MONTHS.length])];
-const chartData = randomChartData(numberOfData, startAt);
-
-let width, height, gradient;
-function getGradient(ctx, chartArea) {
-  const chartWidth = chartArea.right - chartArea.left;
-  const chartHeight = chartArea.bottom - chartArea.top;
-  
-  if (gradient === null || width !== chartWidth || height !== chartHeight) {
-    // Create the gradient because this is either the first render
-    // or the size of the chart has changed
-    width = chartWidth;
-    height = chartHeight;
-    gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-    gradient.addColorStop(0, "transparent");
-    gradient.addColorStop(1, "#02c77a");
-  }
-
-  return gradient;
-}
-const data: ChartData<"line", (number | ScatterDataPoint | null)[], unknown> = {
-  labels: chartLabels,
-  datasets: [
-    {
-      label: "Dataset",
-      data: chartData,
-      fill: true,
-      backgroundColor: function(context) {
-        const chart = context.chart;
-        const {ctx, chartArea} = chart;
-
-        if (!chartArea) {
-          // This case happens on initial chart load
-          return null;
-        }
-        return getGradient(ctx, chartArea);
-      },
-      borderColor: "#02c77a",
-      tension: 0.3,
-    },
-    // {
-    //   label: "Initial",
-    //   data: [...times(numberOfData, (i) => chartData[0])],
-    //   borderDash: [5, 5],
-    //   borderColor: "rgba(75,192,192,0.5)",
-    //   pointRadius: 0,
-    //   pointHoverRadius: 0,
-    // },
-    // {
-    //   label: "Current",
-    //   data: [...times(numberOfData, (i) => chartData[chartData.length - 1])],
-    //   borderDash: [5, 5],
-    //   borderColor:
-    //     chartData[chartData.length - 1] > chartData[0]
-    //       ? "#17a54380"
-    //       : "#ff000080",
-    //   pointRadius: 0,
-    //   pointHoverRadius: 0,
-    // },
-  ],
-};
-
-const options = {
-  responsive: true,
-  scales: {
-    x: {
-      reverse: true,
-      ticks: {
-        display: true,
-      },
-      grid: {
-        display: false,
-      },
-    },
-    y: {
-      reversed: true,
-      ticks: {
-        display: true,
-       
-      },
-      grid: {
-        display: false,
-      },
-    },
-  },
-  elements: {
-    point: {
-      radius: 2,
-    },
-  },
-  plugins: {
-    legend: {
-      display: false,
-    },
-    
-  },
+const databaseInfo = {
+  path: eth,
 };
 
 type PortfolioData = {
@@ -247,6 +109,12 @@ type userShareData = {
   tokenId: string;
   shareAmount: string;
   pricePurchased: string;
+}[];
+
+type DataChart = {
+  epoch: number;
+  sharePrice: number;
+  gav: number;
 }[];
 
 import VDatabase from "./vaults.json";
@@ -297,6 +165,11 @@ const vault: NextPage = () => {
   const [trackedAssets, setTrackedAssets] = React.useState<PortfolioData>([]);
   const [userShareInfo, setUserShareInfo] = React.useState<userShareData>([]);
   const [sellShareTab, setSellShareTab] = React.useState<SellShareData>([]);
+  const [chartData, setChartData] = React.useState<DataChart>([]);
+  const [dailyIncome, setDailyIncome] = React.useState<number>();
+  const [monthlyIncome, setMonthlyIncome] = React.useState<number>();
+  const [weeklyIncome, setWeeklyIncome] = React.useState<number>();
+  const [totalIncome, setTotalIncome] = React.useState<number>();
 
   const [sellList, setSellList] = React.useState<userShareData>([]);
   const [trackedAssetsLen, setTrackedAssetsLen] = React.useState<number>(0);
@@ -309,8 +182,12 @@ const vault: NextPage = () => {
   const [buyValue, setBuyValue] = React.useState<any>(0);
   const [sellValue, setSellValue] = React.useState<any>(0);
   const [onChange, setOnChange] = React.useState<boolean>(true);
+  let [timeframe, setTimeframe] = React.useState<number>(0);
+  let [chartSelected, setChartSelected] = React.useState<number>(1);
+  let [menuSelected, setMenuSelected] = React.useState<number>(0);
 
   const [onPopUp, setonPopUp] = React.useState<boolean>(false);
+  const handleInputChange = (value) => setChartSelected(value.target.value);
 
   const handleChange3 = (value) => setSellValue(value);
 
@@ -629,15 +506,23 @@ const vault: NextPage = () => {
     // });
   }, []);
 
+  const dateFormatter = (date) => {
+    // return moment(date).unix();
+    if (timeframe == 0) {
+      return moment(date).format("LT");
+    } else {
+      return moment(date).format("L");
+    }
+  };
+
   useEffect(() => {
     console.log("useEffectAddress");
     const { account } = getStarknet();
     setAccountInterface(account);
     console.log("accountInteface set");
     console.log(accountInterface);
-    const address_ = "";
-    // const address_ = account.address
-    // setAcccountAddress(address_)
+    const address_ = account.address;
+    setAcccountAddress(address_);
     if (address_ != "" && denominationAssetAddress != "deno") {
       const res1 = provider.callContract({
         contractAddress: denominationAssetAddress,
@@ -907,40 +792,392 @@ const vault: NextPage = () => {
   ];
 
   const data = [
-    { date: "2019-10-20T04:00:00Z", sharePrice: 0.002 },
-    { date: "2019-10-20T05:00:00Z", sharePrice: 0.003 },
-    { date: "2019-10-20T06:00:00Z", sharePrice: 0.002 },
-    { date: "2019-10-20T07:00:00Z", sharePrice: 0.004 },
-    { date: "2019-10-21T10:00:00Z", sharePrice: 0.005 },
-    { date: "2019-10-21T23:00:00Z", sharePrice: 0.006 },
-    { date: "2019-10-22T00:00:00Z", sharePrice: 0.004 },
-    { date: "2019-10-20T06:00:00Z", sharePrice: 0.012 },
-    { date: "2019-10-20T07:00:00Z", sharePrice: 0.014 },
-    { date: "2019-10-21T10:00:00Z", sharePrice: 0.006 },
-    { date: "2019-10-21T23:00:00Z", sharePrice: 0.002 },
-    { date: "2019-10-22T00:00:00Z", sharePrice: 0.0001 },
-    { date: "2019-10-20T07:00:00Z", sharePrice: -0.014 },
-    { date: "2019-10-21T10:00:00Z", sharePrice: -0.006 },
-    { date: "2019-10-21T23:00:00Z", sharePrice: 0.002 },
-    { date: "2019-10-22T00:00:00Z", sharePrice: 0.0001 }
+    {
+      date: "2022-06-09T00:00:00Z",
+      sharePrice: 0.02,
+      gav: 0.001,
+    },
+    {
+      date: "2022-06-09T01:00:00Z",
+      sharePrice: 0.012,
+      gav: 0.001,
+    },
+    {
+      date: "2022-06-09T02:00:00Z",
+      sharePrice: 0.033,
+      gav: 0.001,
+    },
+    {
+      date: "2022-06-09T03:00:00Z",
+      sharePrice: 0.042,
+      gav: 0.001,
+    },
+    {
+      date: "2022-06-09T04:00:00Z",
+      sharePrice: 0.002,
+      gav: 0.001,
+    },
+    {
+      date: "2022-06-09T05:00:00Z",
+      sharePrice: 0.003,
+      gav: 0.001,
+    },
+    {
+      date: "2022-06-09T06:00:00Z",
+      sharePrice: 0.002,
+      gav: 0.001,
+    },
+    {
+      date: "2022-06-09T07:00:00Z",
+      sharePrice: 0.004,
+      gav: 0.001,
+    },
+    {
+      date: "2022-06-09T08:00:00Z",
+      sharePrice: 0.005,
+      gav: 0.001,
+    },
+    {
+      date: "2022-06-09T09:00:00Z",
+      sharePrice: 0.006,
+      gav: 0.001,
+    },
+    {
+      date: "2022-06-09T10:00:00Z",
+      sharePrice: 0.004,
+      gav: 0.001,
+    },
+    {
+      date: "2022-06-09T11:00:00Z",
+      sharePrice: 0.012,
+      gav: 0.002,
+    },
+    {
+      date: "2022-06-09T12:00:00Z",
+      sharePrice: 0.014,
+      gav: 0.002,
+    },
+    {
+      date: "2022-06-09T13:00:00Z",
+      sharePrice: 0.006,
+      gav: 0.002,
+    },
+    {
+      date: "2022-06-09T14:00:00Z",
+      sharePrice: 0.182,
+      gav: 0.002,
+    },
+    {
+      date: "2022-06-09T15:00:00Z",
+      sharePrice: 0.0001,
+      gav: 0.002,
+    },
+    {
+      date: "2022-06-09T16:00:00Z",
+      sharePrice: 0.002,
+      gav: 0.002,
+    },
+    {
+      date: "2022-06-09T17:00:00Z",
+      sharePrice: 0.003,
+      gav: 0.002,
+    },
+    {
+      date: "2022-06-09T18:00:00Z",
+      sharePrice: 0.002,
+      gav: 0.002,
+    },
+    {
+      date: "2022-06-09T19:00:00Z",
+      sharePrice: 0.004,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-09T20:00:00Z",
+      sharePrice: 0.005,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-09T21:00:00Z",
+      sharePrice: 0.006,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-09T22:00:00Z",
+      sharePrice: 0.004,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-09T23:00:00Z",
+      sharePrice: 0.012,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-09T24:00:00Z",
+      sharePrice: 0.014,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T00:00:00Z",
+      sharePrice: 0.02,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T01:00:00Z",
+      sharePrice: 0.012,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T02:00:00Z",
+      sharePrice: 0.033,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T03:00:00Z",
+      sharePrice: 0.042,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T04:00:00Z",
+      sharePrice: 0.002,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T05:00:00Z",
+      sharePrice: 0.003,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T06:00:00Z",
+      sharePrice: 0.002,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T07:00:00Z",
+      sharePrice: 0.004,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T08:00:00Z",
+      sharePrice: 0.005,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T09:00:00Z",
+      sharePrice: 0.006,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T10:00:00Z",
+      sharePrice: 0.004,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T11:00:00Z",
+      sharePrice: 0.012,
+      gav: 0.003,
+    },
+    {
+      date: "2022-06-10T12:00:00Z",
+      sharePrice: 0.014,
+      gav: 0.004,
+    },
+    {
+      date: "2022-06-10T13:00:00Z",
+      sharePrice: 0.006,
+      gav: 0.004,
+    },
+    {
+      date: "2022-06-10T14:00:00Z",
+      sharePrice: 0.002,
+      gav: 0.004,
+    },
   ];
+
+  useEffect(() => {
+    setChartData([]);
+    let list = data;
+    let render: DataChart = [];
+    let tabEpoch: number[] = [];
+    //convert date in epoch
+    list.forEach((d) => {
+      tabEpoch.push(moment(d.date).valueOf()); // date -> epoch
+    });
+
+    if (list.length != 0) {
+      setTotalIncome(
+        ((list[list.length - 1].sharePrice - list[0].sharePrice) /
+          list[0].sharePrice) *
+          100
+      );
+    } else {
+      setTotalIncome(0);
+    }
+
+    let day_epoch = moment().subtract(1, "days").valueOf();
+    let now = moment().valueOf();
+    console.log(day_epoch);
+    console.log(now);
+    console.log(tabEpoch);
+    const closestD = tabEpoch.reduce((a, b) => {
+      return Math.abs(b - day_epoch) < Math.abs(a - day_epoch) ? b : a;
+    });
+    let closestIndexD = tabEpoch.indexOf(closestD);
+    let diffEpochD = Math.abs(day_epoch - closestD);
+    if (diffEpochD <= 3600000) {
+      setDailyIncome(
+        ((list[list.length - 1].sharePrice - list[closestIndexD].sharePrice) /
+          list[closestIndexD].sharePrice) *
+          100
+      );
+    } else {
+      setDailyIncome(0);
+    }
+    console.log("clothest index");
+    console.log(list[list.length - 1].sharePrice);
+    console.log(list[closestIndexD].sharePrice);
+
+    let week_epoch = moment().subtract(1, "weeks").valueOf();
+    const closestW = tabEpoch.reduce((a, b) => {
+      return Math.abs(b - week_epoch) < Math.abs(a - week_epoch) ? b : a;
+    });
+    let closestIndexW = tabEpoch.indexOf(closestW);
+    let diffEpochW = Math.abs(week_epoch - closestW);
+    if (diffEpochW <= 3600000) {
+      setWeeklyIncome(
+        ((list[list.length - 1].sharePrice - list[closestIndexW].sharePrice) /
+          list[closestIndexW].sharePrice) *
+          100
+      );
+    } else {
+      setWeeklyIncome(0);
+    }
+
+    let month_epoch = moment().subtract(1, "months").valueOf();
+    const closestM = tabEpoch.reduce((a, b) => {
+      return Math.abs(b - month_epoch) < Math.abs(a - month_epoch) ? b : a;
+    });
+    let closestIndexM = tabEpoch.indexOf(closestM);
+    let diffEpochM = Math.abs(month_epoch - closestM);
+    if (diffEpochM < 3600000) {
+      setMonthlyIncome(
+        ((list[list.length - 1].sharePrice - list[closestIndexM].sharePrice) /
+          list[closestIndexM].sharePrice) *
+          100
+      );
+    } else {
+      setMonthlyIncome(0);
+    }
+
+    if (timeframe == 0) {
+      if (diffEpochD >= 3600000) {
+        let elemAmount = Math.floor(diffEpochD / 3600000);
+        for (let pas = 0; pas < elemAmount; pas++) {
+          let _epoch = day_epoch + pas * 3600000;
+          let _sharePrice = 0;
+          let _gav = 0;
+          render.push({
+            epoch: _epoch,
+            sharePrice: _sharePrice,
+            gav: _gav,
+          });
+        }
+      }
+      for (let pas = closestIndexD; pas < tabEpoch.length; pas++) {
+        let _epoch = tabEpoch[pas];
+        let _sharePrice = list[pas].sharePrice;
+        let _gav = list[pas].gav;
+        render.push({
+          epoch: _epoch,
+          sharePrice: _sharePrice,
+          gav: _gav,
+        });
+      }
+      setChartData(render);
+    }
+    if (timeframe == 1) {
+      if (diffEpochW >= 3600000) {
+        let elemAmount = Math.floor(diffEpochW / 3600000);
+        for (let pas = 0; pas < elemAmount; pas++) {
+          let _epoch = week_epoch + pas * 3600000;
+          let _sharePrice = 0;
+          let _gav = 0;
+          render.push({
+            epoch: _epoch,
+            sharePrice: _sharePrice,
+            gav: _gav,
+          });
+        }
+      }
+      for (let pas = closestIndexW; pas < tabEpoch.length; pas++) {
+        let _epoch = tabEpoch[pas];
+        let _sharePrice = list[pas].sharePrice;
+        let _gav = list[pas].gav;
+        render.push({
+          epoch: _epoch,
+          sharePrice: _sharePrice,
+          gav: _gav,
+        });
+      }
+      setChartData(render);
+    }
+    if (timeframe == 2) {
+      if (diffEpochM >= 3600000) {
+        let elemAmount = Math.floor(diffEpochM / 3600000);
+        for (let pas = 0; pas < elemAmount; pas++) {
+          let _epoch = month_epoch + pas * 3600000;
+          let _sharePrice = 0;
+          let _gav = 0;
+          render.push({
+            epoch: _epoch,
+            sharePrice: _sharePrice,
+            gav: _gav,
+          });
+        }
+      }
+      for (let pas = closestIndexM; pas < tabEpoch.length; pas++) {
+        let _epoch = tabEpoch[pas];
+        let _sharePrice = list[pas].sharePrice;
+        let _gav = list[pas].gav;
+        render.push({
+          epoch: _epoch,
+          sharePrice: _sharePrice,
+          gav: _gav,
+        });
+      }
+      setChartData(render);
+    }
+    if (timeframe == 3) {
+      for (let pas = 0; pas < tabEpoch.length; pas++) {
+        let _epoch = tabEpoch[pas];
+        let _sharePrice = list[pas].sharePrice;
+        let _gav = list[pas].gav;
+        render.push({
+          epoch: _epoch,
+          sharePrice: _sharePrice,
+          gav: _gav,
+        });
+      }
+      setChartData(render);
+    }
+    console.log(render);
+  }, [timeframe]);
 
   const gradientOffset = () => {
     const dataMax = Math.max(...data.map((i) => i.sharePrice));
     const dataMin = Math.min(...data.map((i) => i.sharePrice));
-  
+
     if (dataMax <= 0) {
       return 0;
     }
     if (dataMin >= 0) {
       return 1;
     }
-  
+
     return dataMax / (dataMax - dataMin);
   };
-  
-  const off = gradientOffset();
 
+  const off = gradientOffset();
 
   const handleMintShare = () => {
     const newAmount = parseFloat(buyValue) * 1000000000000000000;
@@ -1057,6 +1294,29 @@ const vault: NextPage = () => {
                       ({symbol})
                     </Text>
                   </Flex>
+                  <Text fontWeight={"light"} fontSize={"1rem"}>
+                    <Link
+                      href={"https://goerli.voyager.online/contract/" + vad}
+                    >
+                      <a>
+                        <>
+                          Goerli:
+                          {vad && typeof vad == "string" && (
+                            <>
+                              {vad.substring(0, 5)}
+                              ...
+                              {vad.substring(
+                                assetManager.length - 5,
+                                vad.length
+                              )}
+                            </>
+                          )}
+                          <ExternalLinkIcon mx="2px" marginTop={"-2px"} />
+                        </>
+                      </a>
+                    </Link>
+                  </Text>
+
                   <Stack direction={"row"}>
                     {[...Array(Object.keys(addressdata.tags).length)].map(
                       (e, i) => {
@@ -1084,24 +1344,30 @@ const vault: NextPage = () => {
               alignItems={"center"}
               gap={"2vh"}
             >
-              <Flex direction={"row"} alignItems={"center"} gap={"1vw"}>
+              <Flex direction={"row"} alignItems={"center"} gap={"0.5vw"}>
                 <Box
                   style={{
                     width: "100px",
                     height: "100px",
                     borderRadius: "15px",
                     overflow: "hidden",
-                    backgroundColor: "black",
+                    backgroundColor: "transparent",
                   }}
                 >
-                  <img
-                    src={addressdata.photo_link}
-                    style={{ objectFit: "cover" }}
-                  />
+                  <Image src={databaseInfo.path} />
                 </Box>
                 <Flex direction={"column"}>
-                  <Text fontSize={"6xl"} color={"#02c77a"}>
-                    +46%
+                  <Text
+                    fontSize={"6xl"}
+                    color={
+                      totalIncome
+                        ? totalIncome < 0
+                          ? "rgb(237,33,49)"
+                          : "#31c48d"
+                        : "#31c48d"
+                    }
+                  >
+                    {totalIncome == 0 ? "--" : totalIncome?.toPrecision(4)}%
                   </Text>
                   <Text
                     fontSize={"-moz-initial"}
@@ -1237,14 +1503,60 @@ const vault: NextPage = () => {
                 <Button backgroundColor={"#030135"} padding={"10px"}>
                   <Icon as={BsShare} w={6} h={6} />
                 </Button>
-                <Button backgroundColor={"#f6643c"} padding={"10px"}>
-                  <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                    <Icon as={GiPayMoney} w={6} h={6} />
-                    <Text fontWeight={"bold"} fontSize={"2xl"}>
-                      Invest
-                    </Text>
-                  </Flex>
-                </Button>
+                {menuSelected == 1 ? (
+                  <Button
+                    backgroundColor={"#f6643c"}
+                    padding={"10px"}
+                    onClick={() => setMenuSelected(0)}
+                  >
+                    <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                      <Icon as={BiArrowBack} w={6} h={6} />
+                      <Text fontWeight={"bold"} fontSize={"2xl"}>
+                        Back
+                      </Text>
+                    </Flex>
+                  </Button>
+                ) : (
+                  <Button
+                    backgroundColor={"#f6643c"}
+                    padding={"10px"}
+                    onClick={() => setMenuSelected(1)}
+                  >
+                    <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                      <Icon as={GiPayMoney} w={6} h={6} />
+                      <Text fontWeight={"bold"} fontSize={"2xl"}>
+                        Invest
+                      </Text>
+                    </Flex>
+                  </Button>
+                )}
+                {assetManager != acccountAddress && menuSelected == 2 ? (
+                  <Button
+                    backgroundColor={"#f6643c"}
+                    padding={"10px"}
+                    onClick={() => setMenuSelected(0)}
+                  >
+                    <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                      <Icon as={BiArrowBack} w={6} h={6} />
+                      <Text fontWeight={"bold"} fontSize={"2xl"}>
+                        Back
+                      </Text>
+                    </Flex>
+                  </Button>
+                ) : (
+                  <Button
+                    backgroundColor={"#f6643c"}
+                    padding={"10px"}
+                    onClick={() => setMenuSelected(2)}
+                  >
+                    <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                      <Icon as={MdManageSearch} w={6} h={6} />
+                      <Text fontWeight={"bold"} fontSize={"2xl"}>
+                        Manage
+                      </Text>
+                    </Flex>
+                  </Button>
+                )}
               </Flex>
             </Flex>
             <Box
@@ -1252,374 +1564,743 @@ const vault: NextPage = () => {
               padding={"1vw"}
               borderTop={"solid 1px #f6643c"}
             >
-              <Tabs colorScheme={"#f6643c"}>
-              <Flex direction={"row"} alignItems={"center"} gap={"4vw"}>
-                <TabList borderBottom={"0px solid "}>
-                <Flex direction={"column"} alignItems={"center"}>
-                 <Tab fontSize={"1xl"} fontWeight={"bold"}>Overview</Tab>
-                 <Tab fontSize={"1xl"} fontWeight={"bold"}>Holdings</Tab>   
-                 <Tab fontSize={"1xl"} fontWeight={"bold"}>Fees</Tab>
-                 <Tab fontSize={"1xl"} fontWeight={"bold"}>Policies</Tab>
-                 <Tab fontSize={"1xl"} fontWeight={"bold"}>Financial</Tab>
-                 <Tab fontSize={"1xl"} fontWeight={"bold"}>Activity</Tab>
-                 <Tab fontSize={"1xl"} fontWeight={"bold"}>Depositors</Tab>
-                 <Tab fontSize={"1xl"} fontWeight={"bold"}>Social</Tab>
-                </Flex>
-                </TabList>
-                <Box width={"60vw"} minHeight={"30vw"}>
-                <TabPanels>
-                <TabPanel>
-              
-                <Flex flexDirection={"column"} gap={"2vh"}>
-                  <Flex justifyContent={"space-between"} direction={"row"}>
-                    <Flex direction={"row"} gap={"1vw"}>
-                      <Text fontSize={"4xl"}>
-                        {" "}
-                        {denominationAsset} {sharePrice}
-                      </Text>
-                      <Text fontSize={"4xl"} color={"#02c77a"}> +1.34% </Text>
+              {menuSelected == 0 ? 
+              <Tabs variant="enclosed-colored">
+                <Flex direction={"column"} alignItems={"center"} gap={"1vw"}>
+                  <TabList borderBottom={"0px solid "}>
+                    <Flex direction={"row"} alignItems={"center"}>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                        Overview
+                      </Tab>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                        Holdings
+                      </Tab>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                        Fees
+                      </Tab>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                        Policies
+                      </Tab>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                        Financial
+                      </Tab>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                        Activity
+                      </Tab>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                        Depositors
+                      </Tab>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                        Social
+                      </Tab>
                     </Flex>
-                    <Flex direction={'row'} alignItems={"center"} gap={"1rem"}>
+                  </TabList>
+                  <Box width={"60vw"} minHeight={"30vw"}>
+                    <TabPanels>
+                      <TabPanel>
+                        <Flex flexDirection={"column"} gap={"1rem"}>
+                          <Flex
+                            justifyContent={"space-between"}
+                            direction={"row"}
+                          >
+                            <Flex direction={"row"} gap={"1vw"}>
+                              <Flex>
+                                <Box
+                                  style={{
+                                    width: "50px",
+                                    height: "50px",
+                                    borderRadius: "15px",
+                                    overflow: "hidden",
+                                    backgroundColor: "transparent",
+                                  }}
+                                >
+                                  <Image src={databaseInfo.path} />
+                                </Box>
+                                <Text fontSize={"4xl"}>
+                                  {" "}
+                                  {chartSelected == 1
+                                    ? `${sharePrice}/ Shares`
+                                    : `GAV: ${gav}`}
+                                </Text>
+                              </Flex>
+                              <Text
+                                fontSize={"4xl"}
+                                color={
+                                  timeframe == 0
+                                    ? dailyIncome
+                                      ? dailyIncome > 0
+                                        ? "#31c48d"
+                                        : "rgb(237,33,49)"
+                                      : "#31c48d"
+                                    : timeframe == 1
+                                    ? weeklyIncome
+                                      ? weeklyIncome > 0
+                                        ? "#31c48d"
+                                        : "rgb(237,33,49)"
+                                      : "#31c48d"
+                                    : timeframe == 2
+                                    ? monthlyIncome
+                                      ? monthlyIncome > 0
+                                        ? "#31c48d"
+                                        : "rgb(237,33,49)"
+                                      : "#31c48d"
+                                    : timeframe == 3
+                                    ? totalIncome
+                                      ? totalIncome > 0
+                                        ? "#31c48d"
+                                        : "rgb(237,33,49)"
+                                      : "#31c48d"
+                                    : "31c48d"
+                                }
+                              >
+                                {" "}
+                                {timeframe == 0
+                                  ? dailyIncome == 0
+                                    ? "--"
+                                    : dailyIncome?.toPrecision(4)
+                                  : timeframe == 1
+                                  ? weeklyIncome == 0
+                                    ? "--"
+                                    : weeklyIncome?.toPrecision(4)
+                                  : timeframe == 2
+                                  ? monthlyIncome == 0
+                                    ? "--"
+                                    : monthlyIncome?.toPrecision(4)
+                                  : timeframe == 3
+                                  ? totalIncome == 0
+                                    ? "--"
+                                    : totalIncome?.toPrecision(4)
+                                  : "--"}
+                                %{" "}
+                              </Text>
+                            </Flex>
+                            <Flex
+                              direction={"row"}
+                              alignItems={"center"}
+                              gap={"1rem"}
+                            >
+                              <Select onChange={handleInputChange}>
+                                <option value={1}>Share price</option>
+                                <option value={2}>Gross Asset value</option>
+                              </Select>
+                              <Flex direction={"row"} gap={"1px"}>
+                                <Button
+                                  borderRadius={"25% 0% 0% 25%"}
+                                  backgroundColor={
+                                    timeframe == 0 ? "#f6643c" : "#030135"
+                                  }
+                                  onClick={() => setTimeframe(0)}
+                                >
+                                  1D
+                                </Button>
+                                <Button
+                                  borderRadius={"0px"}
+                                  backgroundColor={
+                                    timeframe == 1 ? "#f6643c" : "#030135"
+                                  }
+                                  onClick={() => setTimeframe(1)}
+                                >
+                                  1W
+                                </Button>
+                                <Button
+                                  borderRadius={"0px"}
+                                  backgroundColor={
+                                    timeframe == 2 ? "#f6643c" : "#030135"
+                                  }
+                                  onClick={() => setTimeframe(2)}
+                                >
+                                  1M
+                                </Button>
 
-                    
-                    <Select>
-                              <option>Share price</option>
-                              <option>Gross Asset value</option>
-                      </Select>
-                    <Flex direction={"row"} gap={"1px"}>
-                      <Button borderRadius={"25% 0% 0% 25%"} backgroundColor={" #030135"}>1D</Button>
-                      <Button borderRadius={"0px"} backgroundColor={" #030135"}>1W</Button>
-                      <Button  borderRadius={"0px"} backgroundColor={" #030135"}>1M</Button>
-                      <Button    borderRadius={"0px"} backgroundColor={" #030135"}>3M</Button>
-                      <Button  borderRadius={"0px"} backgroundColor={" #030135"}>6M</Button>
-                      <Button   borderRadius={"0% 25% 25% 0%"} backgroundColor={" #030135"}>1Y</Button>
-                    </Flex>
-                    </Flex>
-                  </Flex>
-                  {/* <Box width={"80%"} alignSelf={"center"}> */}
-                    {/* <Chart<any> type='line' data={data} /> */}
-                    {/* <Line id="graph" data={data} options={options}></Line> */}
-                    <ResponsiveContainer width='100%' aspect={6.0/3.0}>
-                    <AreaChart
-          data={data}
-          
-        >
-          <XAxis dataKey="date" />
-          <YAxis dataKey="sharePrice"/>
-          <Tooltip />
-          <defs>
-            <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
-              <stop offset={0.4} stopColor="green" stopOpacity={1} />
-              <stop offset={0.4} stopColor="red" stopOpacity={1} />
-              {console.log(off)}
-            </linearGradient>
-          </defs>
-          <Area type="monotone" dataKey="sharePrice" stroke="#000" fill="url(#splitColor)" />
-           </AreaChart>
-          </ResponsiveContainer>
-                  {/* </Box> */}
+                                <Button
+                                  borderRadius={"0% 25% 25% 0%"}
+                                  backgroundColor={
+                                    timeframe == 3 ? "#f6643c" : "#030135"
+                                  }
+                                  onClick={() => setTimeframe(3)}
+                                >
+                                  ALL
+                                </Button>
+                              </Flex>
+                            </Flex>
+                          </Flex>
+                          <ResponsiveContainer width="100%" aspect={9.0 / 3.0}>
+                            <AreaChart data={chartData}>
+                              <XAxis
+                                dataKey="epoch"
+                                tickFormatter={dateFormatter}
+                                minTickGap={25}
+                              />
+                              {/* <YAxis dataKey="sharePrice"/> */}
+                              <Tooltip />
+                              <defs>
+                                <linearGradient
+                                  id="splitColor"
+                                  x1="0"
+                                  y1="0"
+                                  x2="0"
+                                  y2="1"
+                                >
+                                  <stop
+                                    offset="5%"
+                                    stopColor={
+                                      chartSelected == 1
+                                        ? chartData[0]
+                                          ? chartData[0].sharePrice >
+                                            chartData[chartData.length - 1]
+                                              .sharePrice
+                                            ? "rgb(237,33,49)"
+                                            : "#31c48d"
+                                          : "rgb(237,33,49)"
+                                        : chartData[0]
+                                        ? chartData[0].gav >
+                                          chartData[chartData.length - 1].gav
+                                          ? "rgb(237,33,49)"
+                                          : "#31c48d"
+                                        : "rgb(237,33,49)"
+                                    }
+                                    stopOpacity={0.9}
+                                  />
+                                  <stop
+                                    offset="50%"
+                                    stopColor="#31c48d"
+                                    stopOpacity={0}
+                                  />
+                                  {/* <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.1}/> */}
+                                </linearGradient>
+                              </defs>
+                              <Area
+                                type="monotone"
+                                dataKey={
+                                  chartSelected == 1 ? "sharePrice" : "gav"
+                                }
+                                stroke={
+                                  chartSelected == 1
+                                    ? chartData[0]
+                                      ? chartData[0].sharePrice >
+                                        chartData[chartData.length - 1]
+                                          .sharePrice
+                                        ? "rgb(237,33,49)"
+                                        : "#31c48d"
+                                      : "rgb(237,33,49)"
+                                    : chartData[0]
+                                    ? chartData[0].gav >
+                                      chartData[chartData.length - 1].gav
+                                      ? "rgb(237,33,49)"
+                                      : "#31c48d"
+                                    : "rgb(237,33,49)"
+                                }
+                                fill="url(#splitColor)"
+                                fillOpacity={0.6}
+                                strokeWidth={2}
+                              />
+                              {/* <Area type="monotone" dataKey="sharePriceInitial" stroke="" fill="url(#splitColor2)" /> */}
+                            </AreaChart>
+                          </ResponsiveContainer>
+                          <Flex
+                            direction={"row"}
+                            justifyContent={"space-between"}
+                          >
+                            <Flex direction={"column"} gap={".200rem"}>
+                              <Text fontWeight={"light"} fontSize={".875rem"}>
+                                Creation Date
+                              </Text>
+                              <Text fontWeight={"bold"} fontSize={"1.125rem"}>
+                                Oct 8, 2021
+                              </Text>
+                            </Flex>
+                            <Flex direction={"row"} gap={"1rem"}>
+                              <Flex direction={"column"} gap={".200rem"}>
+                                <Text fontWeight={"light"} fontSize={".875rem"}>
+                                  Last Day
+                                </Text>
+                                <Text
+                                  fontWeight={"bold"}
+                                  fontSize={"1.125rem"}
+                                  color={
+                                    dailyIncome
+                                      ? dailyIncome < 0
+                                        ? "rgb(237,33,49)"
+                                        : "#31c48d"
+                                      : "#31c48d"
+                                  }
+                                >
+                                  {dailyIncome == 0
+                                    ? "--"
+                                    : dailyIncome?.toPrecision(4)}
+                                  %
+                                </Text>
+                              </Flex>
+                              <Flex direction={"column"} gap={".200rem"}>
+                                <Text fontWeight={"light"} fontSize={".875rem"}>
+                                  Last Week
+                                </Text>
+                                <Text
+                                  fontWeight={"bold"}
+                                  fontSize={"1.125rem"}
+                                  color={
+                                    weeklyIncome
+                                      ? weeklyIncome < 0
+                                        ? "rgb(237,33,49)"
+                                        : "#31c48d"
+                                      : "#31c48d"
+                                  }
+                                >
+                                  {weeklyIncome == 0
+                                    ? "--"
+                                    : weeklyIncome?.toPrecision(4)}
+                                  %
+                                </Text>
+                              </Flex>
+                              <Flex direction={"column"} gap={".200rem"}>
+                                <Text fontWeight={"light"} fontSize={".875rem"}>
+                                  Last Month
+                                </Text>
+                                <Text
+                                  fontWeight={"bold"}
+                                  fontSize={"1.125rem"}
+                                  color={
+                                    monthlyIncome
+                                      ? monthlyIncome < 0
+                                        ? "rgb(237,33,49)"
+                                        : "#31c48d"
+                                      : "#31c48d"
+                                  }
+                                >
+                                  {monthlyIncome == 0
+                                    ? "--"
+                                    : monthlyIncome?.toPrecision(4)}
+                                  %
+                                </Text>
+                              </Flex>
+                              <Flex direction={"column"} gap={".200rem"}>
+                                <Text fontWeight={"light"} fontSize={".875rem"}>
+                                  Since Creation
+                                </Text>
+                                <Text
+                                  fontWeight={"bold"}
+                                  fontSize={"1.125rem"}
+                                  color={
+                                    totalIncome
+                                      ? totalIncome < 0
+                                        ? "rgb(237,33,49)"
+                                        : "#31c48d"
+                                      : "#31c48d"
+                                  }
+                                >
+                                  {totalIncome == 0
+                                    ? "--"
+                                    : totalIncome?.toPrecision(4)}
+                                  %
+                                </Text>
+                              </Flex>
+                            </Flex>
+                          </Flex>
+                          {/* </Box> */}
+                        </Flex>
+                      </TabPanel>
+                      <TabPanel>
+                        <Flex direction={"column"} gap={"2vw"}>
+                          <div>
+                            {trackedAssetsLen > 0 ? (
+                              <div
+                                className={`${styles.portfolioTable} bg__dotted`}
+                              >
+                                <table cellSpacing="0" cellPadding="0">
+                                  <thead>
+                                    <tr>
+                                      <th>Assets</th>
+                                      <th>Balance</th>
+                                      <th>Value</th>
+                                      <th>Allocation</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {trackedAssets.map((p, index) => (
+                                      <tr key={index}>
+                                        <td>
+                                          <FakeImage
+                                            width="50px"
+                                            height="50px"
+                                            fillColor="var(--color-secondary)"
+                                            borderRadius="50%"
+                                          ></FakeImage>
+                                          <div>
+                                            <span> {p.coinName} </span>
+                                            <span> {p.coinSymbol} </span>
+                                          </div>
+                                        </td>
+                                        <td>
+                                          {" "}
+                                          {p.balance} {p.coinSymbol}
+                                        </td>
+                                        <td>
+                                          {p.value} {denominationAsset}
+                                        </td>
+                                        <td>{p.allocation}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div
+                                className={`${styles.portfolioTable} bg__dotted`}
+                              >
+                                <table cellSpacing="0" cellPadding="0">
+                                  <thead>
+                                    <tr>
+                                      <th></th>
+                                      <th></th>
+                                      <th></th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr key={1}>
+                                      <td> .</td>
+                                      <td> .</td>
+                                      <td>
+                                        {" "}
+                                        Fetching Tracked Assets, please wait..
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            {trackedAssetsLen > 0 ? (
+                              <div
+                                className={`${styles.portfolioTable} bg__dotted`}
+                              >
+                                <table cellSpacing="0" cellPadding="0">
+                                  <thead>
+                                    <tr>
+                                      <th>External position</th>
+                                      <th>Value</th>
+                                      <th>Allocation</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {trackedAssets.map((p, index) => (
+                                      <tr key={index}>
+                                        <td>
+                                          <FakeImage
+                                            width="50px"
+                                            height="50px"
+                                            fillColor="var(--color-secondary)"
+                                            borderRadius="50%"
+                                          ></FakeImage>
+                                          <div>
+                                            <span> {p.coinName} </span>
+                                            <span> {p.coinSymbol} </span>
+                                          </div>
+                                        </td>
+                                        <td>
+                                          {p.value} {denominationAsset}
+                                        </td>
+                                        <td>{p.allocation}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <div
+                                className={`${styles.portfolioTable} bg__dotted`}
+                              >
+                                <table cellSpacing="0" cellPadding="0">
+                                  <thead>
+                                    <tr>
+                                      <th></th>
+                                      <th></th>
+                                      <th></th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr key={1}>
+                                      <td> .</td>
+                                      <td> .</td>
+                                      <td>
+                                        {" "}
+                                        Fetching External positions, please
+                                        wait..
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            )}
+                          </div>
+                        </Flex>
+                      </TabPanel>
+                      <TabPanel>
+                        <div className={`${styles.feesTable} bg__dotted`}>
+                          <table cellSpacing="0" cellPadding="0">
+                            <thead>
+                              <tr>
+                                <th>Fee Type</th>
+                                <th>Fee Value</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr key={1}>
+                                <td>Entrance Fee</td>
+                                <td>
+                                  <div>
+                                    <div> {entranceFee}%</div>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr key={2}>
+                                <td>Exit Fee</td>
+                                <td>
+                                  <div>
+                                    <div> {exitFee}%</div>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr key={3}>
+                                <td>Performance Fee</td>
+                                <td>
+                                  <div>
+                                    <div> {performanceFee}%</div>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr key={4}>
+                                <td>Management Fee</td>
+                                <td>
+                                  <div>
+                                    <div> {managementFee}%</div>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </TabPanel>
+                      <TabPanel>
+                        <div
+                          className={`bg__dotted ${styles.policiesTabContent}`}
+                        >
+                          {isPublic ? (
+                            <div>
+                              <div className="fs-24 fw-600">
+                                {name} is a public fund
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <div className="fs-24 fw-600">
+                                {name} is a private fund
+                              </div>
+                            </div>
+                          )}
+                          <div>
+                            <div className="fs-24 fw-600">Deposit Limits</div>
+                            <div className="fs-20 fw-600">
+                              minimum : {minAmount} {denominationAsset}
+                            </div>
+                            <div className="fs-20 fw-600">
+                              maximum : {maxAmount} {denominationAsset}
+                            </div>
+                          </div>
+                          <div>
+                            <div className="fs-24 fw-600">Timelock</div>
+                            <div className="fs-20 fw-600">
+                              After minting shares, you'll have to wait :{" "}
+                              {timeLock} seconds before you can sell it
+                            </div>
+                          </div>
+                          <div>
+                            <div className="fs-24 fw-600">
+                              Allowed Asset to Track
+                            </div>
+                          </div>
+                          <div>
+                            <div className="fs-24 fw-600">
+                              Allowed Protocol to interact with
+                            </div>
+                          </div>
+                        </div>
+                      </TabPanel>
+                      <TabPanel>
+                        <div
+                          className={`bg__dotted ${styles.financialTabContent}`}
+                        >
+                          <div>
+                            <div className="fs-24 fw-600">
+                              General Information
+                            </div>
+                            <div>
+                              <div className="fw-600">
+                                General Assets Vault (GAV)
+                              </div>
+                              <div>
+                                <span className="fw-700">
+                                  1,993,516.452 MGTY
+                                </span>
+                                <span>$1,993,516.452</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                            <div>
+                              <div className="fw-600">
+                                Net Assets Valut (NAV)
+                              </div>
+                              <div>
+                                <span className="fw-700">
+                                  1,993,516.452 MGTY
+                                </span>
+                                <span>$1,993,516.452</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="fs-24 fw-600">
+                              Financial Metrics
+                            </div>
+                            <div>
+                              <div className="fw-600">Return Month-to-Date</div>
+                              <div>
+                                <span className="text-success">+0.5%</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </TabPanel>
+                      <TabPanel>
+                        <div className={`${styles.depositorsTable} bg__dotted`}>
+                          <table cellSpacing="0" cellPadding="0">
+                            <thead>
+                              <tr>
+                                <th>Depositor</th>
+                                <th>Since</th>
+                                <th>Number of Shares</th>
+                                <th>Percentage</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {depositorsData.map((d, index) => (
+                                <tr key={index}>
+                                  <td>{d.depositor}</td>
+                                  <td>{d.Since}</td>
+                                  <td>{d.numberOfShares}</td>
+                                  <td>{d.percentage} %</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </TabPanel>
+                      <TabPanel>
+                        <div className={`${styles.activitiesContainer}`}>
+                          <div className="bg__dotted">
+                            <div>
+                              <div>
+                                <div>
+                                  <div className="fs-12">29 Apr 2022 01:22</div>
+                                  <div className="fs-24 fw-600">Deposit</div>
+                                </div>
+                                <div>
+                                  <FakeImage
+                                    height="50px"
+                                    width="50px"
+                                    borderRadius="50%"
+                                    fillColor="black"
+                                  />
+                                  <div>
+                                    <div className="fs-20 fw-700">
+                                      Vault name
+                                    </div>
+                                    <div className="fs-12">0x4s21...1452</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div>
+                                <div>Amount</div>
+                                <div>Shares received</div>
+                                <div>Depositor</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg__dotted"></div>
+                        </div>
+                      </TabPanel>
+                    </TabPanels>
+                  </Box>
                 </Flex>
-                </TabPanel>
-                <TabPanel>
-                  <Flex direction={"column"} gap={"2vw"}>
-                  <div>
-                  {trackedAssetsLen > 0 ? (
-                <div className={`${styles.portfolioTable} bg__dotted`}>
-                  <table cellSpacing="0" cellPadding="0">
-                    <thead>
-                      <tr>
-                        <th>Assets</th>
-                        <th>Balance</th>
-                        <th>Value</th>
-                        <th>Allocation</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {trackedAssets.map((p, index) => (
-                        <tr key={index}>
-                          <td>
-                            <FakeImage
-                              width="50px"
-                              height="50px"
-                              fillColor="var(--color-secondary)"
-                              borderRadius="50%"
-                            ></FakeImage>
-                            <div>
-                              <span> {p.coinName} </span>
-                              <span> {p.coinSymbol} </span>
-                            </div>
-                          </td>
-                          <td>
-                            {" "}
-                            {p.balance} {p.coinSymbol}
-                          </td>
-                          <td>
-                            {p.value} {denominationAsset}
-                          </td>
-                          <td>{p.allocation}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className={`${styles.portfolioTable} bg__dotted`}>
-                  <table cellSpacing="0" cellPadding="0">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr key={1}>
-                        <td> .</td>
-                        <td> .</td>
-                        <td> Fetching Tracked Assets, please wait..</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              )}
-              </div>
-              <div>
-                  {trackedAssetsLen > 0 ? (
-                <div className={`${styles.portfolioTable} bg__dotted`}>
-                  <table cellSpacing="0" cellPadding="0">
-                    <thead>
-                      <tr>
-                        <th>External position</th>
-                        <th>Value</th>
-                        <th>Allocation</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {trackedAssets.map((p, index) => (
-                        <tr key={index}>
-                          <td>
-                            <FakeImage
-                              width="50px"
-                              height="50px"
-                              fillColor="var(--color-secondary)"
-                              borderRadius="50%"
-                            ></FakeImage>
-                            <div>
-                              <span> {p.coinName} </span>
-                              <span> {p.coinSymbol} </span>
-                            </div>
-                          </td>
-                          <td>
-                            {p.value} {denominationAsset}
-                          </td>
-                          <td>{p.allocation}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className={`${styles.portfolioTable} bg__dotted`}>
-                  <table cellSpacing="0" cellPadding="0">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr key={1}>
-                        <td> .</td>
-                        <td> .</td>
-                        <td> Fetching External positions, please wait..</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              )}
-              </div>
-                  </Flex>
-                
-                
-
-                </TabPanel>
-                <TabPanel>
-                <div className={`${styles.feesTable} bg__dotted`}>
-                <table cellSpacing="0" cellPadding="0">
-                  <thead>
-                    <tr>
-                      <th>Fee Type</th>
-                      <th>Fee Value</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr key={1}>
-                      <td>Entrance Fee</td>
-                      <td>
-                        <div>
-                          <div> {entranceFee}%</div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr key={2}>
-                      <td>Exit Fee</td>
-                      <td>
-                        <div>
-                          <div> {exitFee}%</div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr key={3}>
-                      <td>Performance Fee</td>
-                      <td>
-                        <div>
-                          <div> {performanceFee}%</div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr key={4}>
-                      <td>Management Fee</td>
-                      <td>
-                        <div>
-                          <div> {managementFee}%</div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-                </TabPanel>
-                <TabPanel>
-                <div className={`bg__dotted ${styles.policiesTabContent}`}>
-                {isPublic ? (
-                  <div>
-                    <div className="fs-24 fw-600">{name} is a public fund</div>
-                  </div>
-                ) : (
-                  <div>
-                    <div className="fs-24 fw-600">{name} is a private fund</div>
-                  </div>
-                )}
-                <div>
-                  <div className="fs-24 fw-600">Deposit Limits</div>
-                  <div className="fs-20 fw-600">
-                    minimum : {minAmount} {denominationAsset}
-                  </div>
-                  <div className="fs-20 fw-600">
-                    maximum : {maxAmount} {denominationAsset}
-                  </div>
-                </div>
-                <div>
-                  <div className="fs-24 fw-600">Timelock</div>
-                  <div className="fs-20 fw-600">
-                    After minting shares, you'll have to wait : {timeLock}{" "}
-                    seconds before you can sell it
-                  </div>
-                </div>
-                <div>
-                  <div className="fs-24 fw-600">Allowed Asset to Track</div>
-                </div>
-                <div>
-                  <div className="fs-24 fw-600">
-                    Allowed Protocol to interact with
-                  </div>
-                </div>
-              </div>
-                </TabPanel>
-                <TabPanel>
-                <div className={`bg__dotted ${styles.financialTabContent}`}>
-                <div>
-                  <div className="fs-24 fw-600">General Information</div>
-                  <div>
-                    <div className="fw-600">General Assets Vault (GAV)</div>
-                    <div>
-                      <span className="fw-700">1,993,516.452 MGTY</span>
-                      <span>$1,993,516.452</span>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div>
-                    <div className="fw-600">Net Assets Valut (NAV)</div>
-                    <div>
-                      <span className="fw-700">1,993,516.452 MGTY</span>
-                      <span>$1,993,516.452</span>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div className="fs-24 fw-600">Financial Metrics</div>
-                  <div>
-                    <div className="fw-600">Return Month-to-Date</div>
-                    <div>
-                      <span className="text-success">+0.5%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-                </TabPanel>
-                <TabPanel>
-                <div className={`${styles.depositorsTable} bg__dotted`}>
-                <table cellSpacing="0" cellPadding="0">
-                  <thead>
-                    <tr>
-                      <th>Depositor</th>
-                      <th>Since</th>
-                      <th>Number of Shares</th>
-                      <th>Percentage</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {depositorsData.map((d, index) => (
-                      <tr key={index}>
-                        <td>{d.depositor}</td>
-                        <td>{d.Since}</td>
-                        <td>{d.numberOfShares}</td>
-                        <td>{d.percentage} %</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-                </TabPanel>
-                <TabPanel>
-                <div className={`${styles.activitiesContainer}`}>
-                <div className="bg__dotted">
-                  <div>
-                    <div>
-                      <div>
-                        <div className="fs-12">29 Apr 2022 01:22</div>
-                        <div className="fs-24 fw-600">Deposit</div>
-                      </div>
-                      <div>
-                        <FakeImage
-                          height="50px"
-                          width="50px"
-                          borderRadius="50%"
-                          fillColor="black"
-                        />
-                        <div>
-                          <div className="fs-20 fw-700">Vault name</div>
-                          <div className="fs-12">0x4s21...1452</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <div>Amount</div>
-                      <div>Shares received</div>
-                      <div>Depositor</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg__dotted"></div>
-              </div>
-                </TabPanel>
-                </TabPanels>
-                </Box>
-                
-              </Flex>
               </Tabs>
+              :
+              menuSelected == 1 ?
+              <Tabs variant="enclosed-colored">
+                <Flex direction={"column"} alignItems={"center"} gap={"1vw"}>
+                  <TabList borderBottom={"0px solid "}>
+                    <Flex direction={"row"} alignItems={"center"}>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                        Buy
+                      </Tab>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                        Sell
+                      </Tab>
+                    </Flex>
+                  </TabList>
+                  <Box width={"60vw"} minHeight={"30vw"}>
+                    <TabPanels>
+                      <TabPanel>
+                          buy
+                      </TabPanel>
+                      <TabPanel>
+                                sell
+                      </TabPanel>
+                      </TabPanels>
+                      </Box>
+                  </Flex>
+              </Tabs>
+              :
+              <div>
+             <Tabs variant="enclosed-colored">
+                <Flex direction={"column"} alignItems={"center"} gap={"1vw"}>
+                  <TabList borderBottom={"0px solid "}>
+                    <Flex direction={"row"} alignItems={"center"}>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                      DeFi
+                      </Tab>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                      Fees
+                      </Tab>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                      Integrations
+                      </Tab>
+                      <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                      Policies
+                      </Tab>
+                    </Flex>
+                  </TabList>
+                  <Box width={"60vw"} minHeight={"30vw"}>
+                    <TabPanels>
+                      <TabPanel>
+                          DeFi
+                      </TabPanel>
+                      <TabPanel>
+                          Fees
+                      </TabPanel>
+                      <TabPanel>
+                          Integration
+                      </TabPanel>
+                      <TabPanel>
+                          Policies
+                      </TabPanel>
+                      </TabPanels>
+                      </Box>
+                  </Flex>
+              </Tabs>
+              </div>
+
+                              }
             </Box>
           </Box>
         </Flex>

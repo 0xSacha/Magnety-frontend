@@ -807,7 +807,7 @@ const Contract: NextPage = () => {
                             <FormLabel htmlFor="type">Type of Fund </FormLabel>
                             <Select {...field} id="type">
                               {/* <option>Public</option> */}
-                              <option>Private</option>
+                              <option >Private</option>
                               <option>Public</option>
                             </Select>
                           </FormControl>
