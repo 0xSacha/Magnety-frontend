@@ -94,7 +94,7 @@ const randomChartData = (
   startAt = 0,
   maxChanges = 10,
   minimumValue = 0,
-  maximumValue = 100
+  maximumValue = 100,
 ) => {
   return [
     ...times(n, (i) => {
@@ -104,12 +104,12 @@ const randomChartData = (
         const min = random(
           current,
           Math.max(current - maxChanges, minimumValue),
-          true
+          true,
         );
         const max = random(
           current,
           Math.min(current + maxChanges, maximumValue),
-          true
+          true,
         );
         current = random(min, max, true);
       }
@@ -355,7 +355,7 @@ const vault: NextPage = () => {
     res
       .then((value) => {
         const _name = shortStringFeltToStr(
-          BigInt(hexToDecimalString(value.result[0]))
+          BigInt(hexToDecimalString(value.result[0])),
         );
         setName(_name);
       })
@@ -370,7 +370,7 @@ const vault: NextPage = () => {
     res2
       .then((value) => {
         const _symbol = shortStringFeltToStr(
-          BigInt(hexToDecimalString(value.result[0]))
+          BigInt(hexToDecimalString(value.result[0])),
         );
         setSymbol(_symbol);
       })
@@ -409,7 +409,7 @@ const vault: NextPage = () => {
         name
           .then((value) => {
             const _denominationAssetName = shortStringFeltToStr(
-              BigInt(hexToDecimalString(value.result[0]))
+              BigInt(hexToDecimalString(value.result[0])),
             );
             setDenominationAsset(_denominationAssetName);
           })
@@ -688,7 +688,7 @@ const vault: NextPage = () => {
                     res6
                       .then((value) => {
                         const __sharePricePurchased = hexToDecimalString(
-                          value.result[0]
+                          value.result[0],
                         );
                         const _sharePricePurchased =
                           parseFloat(__sharePricePurchased) /
@@ -745,7 +745,7 @@ const vault: NextPage = () => {
             name
               .then((value) => {
                 const coinName_ = shortStringFeltToStr(
-                  BigInt(hexToDecimalString(value.result[0]))
+                  BigInt(hexToDecimalString(value.result[0])),
                 );
 
                 const symbol = provider.callContract({
@@ -756,7 +756,7 @@ const vault: NextPage = () => {
                 symbol
                   .then((value) => {
                     const coinSymbol_ = shortStringFeltToStr(
-                      BigInt(hexToDecimalString(value.result[0]))
+                      BigInt(hexToDecimalString(value.result[0])),
                     );
 
                     const balance = provider.callContract({
@@ -767,7 +767,7 @@ const vault: NextPage = () => {
                     balance
                       .then((value) => {
                         const __coinBalance = hexToDecimalString(
-                          value.result[0]
+                          value.result[0],
                         );
                         const _coinBalance =
                           parseFloat(__coinBalance) / 1000000000000000000;
@@ -785,7 +785,7 @@ const vault: NextPage = () => {
                         price
                           .then((value) => {
                             const __coinPrice = hexToDecimalString(
-                              value.result[0]
+                              value.result[0],
                             );
                             const _coinPrice =
                               parseFloat(__coinPrice) / 1000000000000000000;
@@ -1018,7 +1018,7 @@ const vault: NextPage = () => {
                         {"#" + addressdata.tags[i]}
                       </span>
                     );
-                  }
+                  },
                 )}
               </div>
             </div>
@@ -1270,7 +1270,7 @@ const vault: NextPage = () => {
                         Selling{" "}
                         {(
                           parseFloat(
-                            userShareInfo[parseFloat(sellTokenId)].shareAmount
+                            userShareInfo[parseFloat(sellTokenId)].shareAmount,
                           ) *
                           (parseFloat(percentShare) / 100)
                         ).toPrecision(5)}{" "}
@@ -1306,39 +1306,39 @@ const vault: NextPage = () => {
                             {(
                               parseFloat(
                                 userShareInfo[parseFloat(sellTokenId)]
-                                  .shareAmount
+                                  .shareAmount,
                               ) *
                                 (parseFloat(percentShare) / 100) *
                                 parseFloat(sharePrice) -
                               parseFloat(
                                 userShareInfo[parseFloat(sellTokenId)]
-                                  .shareAmount
+                                  .shareAmount,
                               ) *
                                 (parseFloat(percentShare) / 100) *
                                 parseFloat(sharePrice) *
                                 (((parseFloat(sharePrice) -
                                   parseFloat(
                                     userShareInfo[parseFloat(sellTokenId)]
-                                      .pricePurchased
+                                      .pricePurchased,
                                   )) /
                                   parseFloat(sharePrice)) *
                                   (parseFloat(performanceFee) / 100)) -
                               (parseFloat(
                                 userShareInfo[parseFloat(sellTokenId)]
-                                  .shareAmount
+                                  .shareAmount,
                               ) *
                                 (parseFloat(percentShare) / 100) *
                                 parseFloat(sharePrice) -
                                 parseFloat(
                                   userShareInfo[parseFloat(sellTokenId)]
-                                    .shareAmount
+                                    .shareAmount,
                                 ) *
                                   (parseFloat(percentShare) / 100) *
                                   parseFloat(sharePrice) *
                                   (((parseFloat(sharePrice) -
                                     parseFloat(
                                       userShareInfo[parseFloat(sellTokenId)]
-                                        .pricePurchased
+                                        .pricePurchased,
                                     )) /
                                     parseFloat(sharePrice)) *
                                     (parseFloat(performanceFee) / 100))) *
@@ -1388,7 +1388,7 @@ const vault: NextPage = () => {
                                           addPercent(
                                             p.coinSymbol,
                                             p.address,
-                                            index
+                                            index,
                                           )
                                         }
                                       >
@@ -1436,7 +1436,7 @@ const vault: NextPage = () => {
                                           addPercent(
                                             p.coinSymbol,
                                             p.address,
-                                            index
+                                            index,
                                           )
                                         }
                                       >

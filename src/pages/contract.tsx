@@ -213,7 +213,7 @@ const Contract: NextPage = () => {
       strB.reduce((memo, byte) => {
         memo += byte.toString(16);
         return memo;
-      }, "0x")
+      }, "0x"),
     );
   }
 
@@ -419,7 +419,7 @@ const Contract: NextPage = () => {
       const deployment = await deployTarget({
         constructorCalldata: [
           hexToDecimalString(
-            "0x031ed52f5b1ea0dc84172a99fad44d202beaa528e8629d0a1f0d4a8b163a71b1"
+            "0x031ed52f5b1ea0dc84172a99fad44d202beaa528e8629d0a1f0d4a8b163a71b1",
           ),
           hexToDecimalString(comptroller),
         ],
@@ -700,7 +700,7 @@ const Contract: NextPage = () => {
             <div>
               Choose your denomination Asset f
               {hexToDecimalString(
-                "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7"
+                "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7",
               )}
             </div>
             <div className={styles.asset_container}>

@@ -66,7 +66,7 @@ function MintToken() {
         setAmountError("Please input a valid number");
       }
     },
-    [setAmount]
+    [setAmount],
   );
 
   const onMint = useCallback(() => {

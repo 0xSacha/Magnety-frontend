@@ -65,7 +65,7 @@ const Home: NextPage = () => {
       <p>0x02fe94b72a6eee4b24da419ba898ca2b0d994b6d0408ce93f53129f6f9df3f25</p>
       <p>
         {hexToDecimalString(
-          "0x02fe94b72a6eee4b24da419ba898ca2b0d994b6d0408ce93f53129f6f9df3f25"
+          "0x02fe94b72a6eee4b24da419ba898ca2b0d994b6d0408ce93f53129f6f9df3f25",
         )}
       </p>
       <p>fund Name: {fundNameVaue}</p>

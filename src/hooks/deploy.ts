@@ -64,7 +64,7 @@ export function useContractFactory({
       }
       return undefined;
     },
-    [factory]
+    [factory],
   );
 
   return { factory, contract, deploy };

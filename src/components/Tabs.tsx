@@ -37,7 +37,7 @@ const Tabs = (props: PropsWithChildren<TabsProps>) => {
         </div>
         <div className={`${styles.tabContent}`}>
           {props.children.map((child) =>
-            child.props.id === activeTab ? child : undefined
+            child.props.id === activeTab ? child : undefined,
           )}
         </div>
       </div>
