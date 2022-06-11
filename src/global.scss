@@ -205,3 +205,17 @@ img{
   -o-user-drag: none;
   user-drag: none;
 }
+
+.social_button{
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background-color: rgb(214, 214, 214);
+  color: var(--color-primary);
+}
+
+.text-center{
+  text-align: center;
+}
