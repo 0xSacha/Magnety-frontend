@@ -62,6 +62,7 @@ import { useRouter } from "next/router";
 import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
 import { toDataUrl } from "~/utils/fileHelper";
 import ImageUpload from "~/components/FileUpload";
+import postContract from "~/utils/postContract";
 
 type FieldType = {
   name: string;
@@ -711,8 +712,14 @@ const Contract: NextPage = () => {
             image: null
           }}
           onSubmit={(values, actions) => {
+            // on submit form
             setTimeout(() => {
               alert(JSON.stringify(values, null, 8));
+              postContract(values).then(res=>{
+                console.log(res)
+              }).catch(err=>{
+                console.log(err)
+              })
               actions.setSubmitting(false);
             }, 1000);
           }}
@@ -1067,7 +1074,7 @@ const Contract: NextPage = () => {
                           focusThumbOnChange={false}
                           value={parseFloat(props.values.entranceFees)}
                           onChange={(v) => {
-                            props.setFieldValue("entranceFees", v);
+                            props.setFieldValue("entranceFees", `${v}%`);
                           }}
                           min={0}
                           max={10}
@@ -1100,7 +1107,7 @@ const Contract: NextPage = () => {
                           focusThumbOnChange={false}
                           value={parseFloat(props.values.exitFees)}
                           onChange={(v) => {
-                            props.setFieldValue("exitFees", v);
+                            props.setFieldValue("exitFees", `${v}%`);
                           }}
                           min={0}
                           max={10}
@@ -1140,7 +1147,7 @@ const Contract: NextPage = () => {
                           focusThumbOnChange={false}
                           value={parseFloat(props.values.managementFees)}
                           onChange={(v) => {
-                            props.setFieldValue("managementFees", v);
+                            props.setFieldValue("managementFees", `${v}%`);
                           }}
                           min={0}
                           max={20}
@@ -1173,7 +1180,7 @@ const Contract: NextPage = () => {
                           focusThumbOnChange={false}
                           value={parseFloat(props.values.performanceFees)}
                           onChange={(v) => {
-                            props.setFieldValue("performanceFees", v);
+                            props.setFieldValue("performanceFees", `${v}%`);
                           }}
                           min={0}
                           max={20}

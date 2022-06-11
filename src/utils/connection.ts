@@ -19,8 +19,26 @@ export const connect = async () => {
     completed: Boolean,
   })
 
-  // OUR TODO MODEL
-  const Todo = mongoose.models.Todo || mongoose.model("Todo", TodoSchema)
+  const ContractSchema = new mongoose.Schema({
+    name: String,
+    symbol: String,
+    description: String,
+    type: String,
+    min: Number,
+    max: Number,
+    lockup: Number,
+    limit: Number,
+    entranceFees: String,
+    exitFees: String,
+    managementFees: String,
+    performanceFees: String,
+    tags: [],
+    image: String
+  })
 
-  return { conn, Todo }
+  // OUR TODO MODEL
+  const Todo = mongoose.models.Todo || mongoose.model("Todo", TodoSchema);
+  const Contract = mongoose.models.Contract || mongoose.model("Contract", ContractSchema);
+
+  return { conn, Todo, Contract }
 }
