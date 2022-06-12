@@ -10,7 +10,17 @@ import {
 import { IncrementCounter } from "./IncrementCounter";
 import Profile from "./Profile";
 import Image from "next/image";
-
+import {
+  Button,
+  ButtonGroup,
+  Flex,
+  Text,
+  Input,
+  Select,
+  Box,
+} from "@chakra-ui/react";
+import { starknetKeccak } from "starknet/dist/utils/hash";
+import Link from "next/link";
 
 
 const Layout = (props: PropsWithChildren<unknown>) => {
@@ -27,6 +37,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
         onClick()
       }
     }
+    // localStorage.setItem('isWalletConnected', "false")
     connectWalletOnPageLoad()
   }, [])
 
@@ -37,11 +48,18 @@ const Layout = (props: PropsWithChildren<unknown>) => {
       mod = false
     }
     starkNet.enable({ showModal: mod }).then(value => {
-      setAddress(JSON.stringify(value))
-      localStorage.setItem('isWalletConnected', "true")
-      dispatch(increment())
-      console.log(starkNet.account)
-      setIsConnected(true)
+      console.log(value)
+      console.log(value.length)
+      if (value.length == 0) {
+        console.log("no address detected")
+      }
+      else {
+        setAddress(value[0])
+        localStorage.setItem('isWalletConnected', "true")
+        dispatch(increment())
+        console.log(starkNet.account)
+        setIsConnected(true)
+      }
     })
   }
 
@@ -67,37 +85,41 @@ const Layout = (props: PropsWithChildren<unknown>) => {
           className={`page__sidebar_wrapper ${isSidebarOpen ? "page__sidebar_open" : ""
             }`}
         >
-          <div className="page__sidebar_backdrop"></div>
           <div className="page__sidebar">
-            {!isSidebarOpen && !isConnected && <>
-              <div className="fs-16 fw-700">Hello</div>
-              <div className="fs-12">please connect you wallect in order to use the full fonctionnalities of Magnety </div>
-              <ConnectWallet />
-
-            </>}
+            {!isSidebarOpen && !isConnected && 
+              <Flex direction={"column"} gap={"2vh"} >
+                <Flex direction={"column"} textAlign="center" gap={"2vh"}>
+                <Text fontWeight={"bold"} fontSize={"1xl"}>
+                  Welcome to Magnety
+                </Text>
+                <Text fontWeight={"light"} fontSize={"0.75rem"}>
+                please connect you wallet to access the full fonctionnalities
+                </Text>
+                </Flex>
+                <ConnectWallet />
+              </Flex>
+            }
             {!isSidebarOpen && isConnected && <>
-              <div className="fs-16 fw-700">Hello {address.substring(2, 7)}..</div>
-              <div className="fs-12">Your account is verified</div>
 
-              <div className="fs-14 fw-600" style={{ marginTop: '43px', marginBottom: '13px' }}>Statistics</div>
-              <div className="d-flex justify-content-space-around">
-                <div className="d-flex-column align-items-center">
-                  <div className="fs-12 fw-500">funds</div>
-                  <div className="fs-14 fw-600" style={{ marginTop: '5px' }}>3</div>
-                </div>
-                <div>
-                  <div className="fs-12 fw-500">PNL</div>
-                  <div className="fs-14 fw-600" style={{ marginTop: '5px' }}>$350</div>
-                </div>
-              </div>
+              <Flex direction={"column"} gap={"2vh"} alignItems={"center"}>
+                <Flex direction={"column"} textAlign="center" gap={"2vh"}>
+                <Text fontWeight={"bold"} fontSize={"1xl"}>
+                  Welcome to Magnety
+                </Text>
+                <Text fontWeight={"light"} fontSize={"0.75rem"}>
+                This is your first connection, customize your profile now! </Text>
+            
+                </Flex>
+                <Button>
+                <Link href={`/user/${address}`}><Box backgroundColor={"#f6643c"} padding={"0.8vh"} borderRadius={"10px"} alignItems={"center"}><Text fontWeight={"bold"}>My profile</Text>
 
-              <div className="fs-14 fw-600" style={{ marginTop: '23px', marginBottom: '6px' }}>Manage</div>
-              <div className="fs-12 fw-500">Manage your funds by using the Assets Manager Interface</div>
-              <button data-color="secondary" style={{ display: 'flex', margin: '8px auto' }}>Launch</button>
+                </Box>
+                </Link>
+                </Button>
+                
+              </Flex>
 
-              <div className="fs-14 fw-600" style={{ marginTop: '31px', marginBottom: '6px' }}>Create</div>
-              <div className="fs-12 fw-500">Start a new trading adventure by creating a new vault</div>
-              <button data-color="secondary" style={{ display: 'flex', margin: '8px auto' }}>Create</button>
+          
 
             </>}
               <div style={{
@@ -110,7 +132,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
                 gap: '10px',
                 margin: '20px 0'
               }}>
-                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                <Flex direction={"row"} justifyContent={"space-between"}>
                   <button className="social_button">
                     <Image src={'/twitter_primary.svg'} width='21px' height='21px'></Image>
                   </button>
@@ -118,7 +140,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
                     <Image src={'/linkedin_primary.svg'} width='21px' height='21px'></Image>
                   </button>
                   <button className="social_button">
-                    <Image src={'/telegram_primary.svg'} width='17px' height='21px'></Image>
+                    <Image src={'/notion-logo-1.svg'} width='17px' height='21px'></Image>
                   </button>
                   <button className="social_button">
                     <Image src={'/discord.svg'} width='21px' height='21px'></Image>
@@ -126,16 +148,16 @@ const Layout = (props: PropsWithChildren<unknown>) => {
                   <button className="social_button">
                     <Image src={'/medium.svg'} width='21px' height='21px'></Image>
                   </button>
-                </div>
-                <div className="fs-12 text-center">© 2022 - Nested - All Rights Reserved</div>
+                </Flex>
+                <div className="fs-12 text-center">© 2022 - Magnety - All Rights Reserved</div>
                 <div className="fs-12 text-center">Terms & conditions</div>
               </div>
 
-            {
+            {/* {
               isSidebarOpen && <>
                   <Profile></Profile>
               </>
-            }
+            } */}
           </div>
           
           {/* <div className="page__sidebar_toggler">

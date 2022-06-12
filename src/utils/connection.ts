@@ -36,9 +36,19 @@ export const connect = async () => {
     image: String
   })
 
+
+  const UserSchema = new mongoose.Schema({
+    userAddress: String, 
+    name: String,
+    description: String,
+    image: String,
+    banner: String,
+  })
+
   // OUR TODO MODEL
   const Todo = mongoose.models.Todo || mongoose.model("Todo", TodoSchema);
   const Contract = mongoose.models.Contract || mongoose.model("Contract", ContractSchema);
+  const User = mongoose.models.User || mongoose.model("User", UserSchema);
 
-  return { conn, Todo, Contract }
+  return { conn, Todo, Contract, User }
 }

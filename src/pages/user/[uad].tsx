@@ -6,6 +6,8 @@ import { useAppSelector } from "../../app/hooks";
 import { selectCount } from "../../app/counterSlice";
 import UDatabase from "./users.json";
 import FakeImage from "~/components/FakeImage";
+import { getStarknet } from '../../starknetWrapper'
+
 import Image from "next/image";
 import {
   Box,
@@ -17,6 +19,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { Field, Form, Formik, FormikProps } from "formik";
+
 
 const VAULT_UNDER_MANAGEMENT = [
   {
@@ -35,21 +38,21 @@ const VAULT_EXPOSED = [
   },
 ];
 
+
+
+
+
+
 const vault: NextPage = () => {
   let count = useAppSelector(selectCount);
   const [editMode, setEditMode] = useState<boolean>(false);
   let formRef =
     React.createRef<FormikProps<{ name: string; description: string }>>();
+  const [acccountAddress, setAcccountAddress] = React.useState<string>("acccountAddress");
 
   const router = useRouter();
   var { uad } = router.query;
-  var addressdata = UDatabase["default"];
-  if (uad !== undefined) {
-    /* uad = AssetManager ... to find */
-    addressdata = UDatabase[String(uad)];
-  } else {
-    uad = "0xABCDEDFGHIJKLM";
-  }
+  
 
   function validateName(value) {
     let error;
@@ -64,6 +67,13 @@ const vault: NextPage = () => {
       formRef.current.handleSubmit();
     }
   };
+
+  useEffect(() => {
+    const { account } = getStarknet();
+    if ( account.address  != "") {
+      setAcccountAddress(account.address);
+    }
+  }, [count]);
 
   return (
     <>

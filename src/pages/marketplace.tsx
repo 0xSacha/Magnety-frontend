@@ -348,14 +348,14 @@ const vault: NextPage = () => {
                           </div>
                           <div style={{ width: "35%", float: "left" }}></div>
                         </div>
-                        <ResponsiveContainer width="100%" aspect={9.0 / 3.0}>
+                        {/* <ResponsiveContainer width="100%" aspect={9.0 / 3.0}>
                             <AreaChart data={Adapter(data)}>
                               <XAxis
                                 dataKey="epoch"
                                 tickFormatter={dateFormatter}
                                 minTickGap={25}
                               />
-                              {/* <YAxis dataKey="sharePrice"/> */}
+                              <YAxis dataKey="sharePrice"/>
                               <Tooltip />
                               <defs>
                                 <linearGradient
@@ -385,7 +385,7 @@ const vault: NextPage = () => {
                                     stopColor="#31c48d"
                                     stopOpacity={0}
                                   />
-                                  {/* <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.1}/> */}
+                                  <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.1}/>
                                 </linearGradient>
                               </defs>
                               <Area
@@ -403,9 +403,9 @@ const vault: NextPage = () => {
                                 fillOpacity={0.6}
                                 strokeWidth={2}
                               />
-                              {/* <Area type="monotone" dataKey="sharePriceInitial" stroke="" fill="url(#splitColor2)" /> */}
+                              <Area type="monotone" dataKey="sharePriceInitial" stroke="" fill="url(#splitColor2)" />
                             </AreaChart>
-                          </ResponsiveContainer>
+                          </ResponsiveContainer> */}
                         <div
                           style={{
                             width: "100%",
