@@ -44,16 +44,23 @@ div.page {
     overflow: hidden;
   }
   .page__backdrop {
-    --dot1Color: #f6643caf;
+    --dot1Color: #05014bde;
+    --dot2Color: #f6643cbb;
     background: 
       radial-gradient(
-        circle 80vh at 40vw 20vh,
+        circle 70vh at 17vw 40vh,
+        var(--dot1Color) 30%,
+        transparent
+      ),
+      radial-gradient(
+        circle 50vh at 90vw 90vh,
         var(--dot1Color) 30%,
         transparent
       );
+      
     filter: blur(20px);
-    -webkit-filter: blur(20px);
-    opacity: 0.5;
+    -webkit-filter: blur(50px);
+    opacity: 0.6;
     position: absolute;
     inset: 0;
     z-index: 0;

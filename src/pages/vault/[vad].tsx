@@ -521,13 +521,12 @@ const vault: NextPage = () => {
     setAccountInterface(account);
     console.log("accountInteface set");
     console.log(accountInterface);
-    const address_ = account.address;
-    setAcccountAddress(address_);
-    if (address_ != "" && denominationAssetAddress != "deno") {
+    if ( account.address  != "" && denominationAssetAddress != "deno") {
+      setAcccountAddress(account.address);
       const res1 = provider.callContract({
         contractAddress: denominationAssetAddress,
         entrypoint: "balanceOf",
-        calldata: [hexToDecimalString(address_)],
+        calldata: [hexToDecimalString( account.address)],
       });
       res1
         .then((value) => {
@@ -552,7 +551,7 @@ const vault: NextPage = () => {
               entrypoint: "checkIsAllowedDepositor",
               calldata: [
                 hexToDecimalString(vaultAddress),
-                hexToDecimalString(address_),
+                hexToDecimalString( account.address),
               ],
             });
             res3
@@ -573,7 +572,7 @@ const vault: NextPage = () => {
       const res3 = provider.callContract({
         contractAddress: vaultAddress,
         entrypoint: "getBalanceOf",
-        calldata: [hexToDecimalString(address_)],
+        calldata: [hexToDecimalString( account.address)],
       });
       res3
         .then((value) => {
@@ -585,7 +584,7 @@ const vault: NextPage = () => {
             const res4 = provider.callContract({
               contractAddress: vaultAddress,
               entrypoint: "tokenOfOwnerByIndex",
-              calldata: [hexToDecimalString(address_), pas.toString(), "0"],
+              calldata: [hexToDecimalString( account.address), pas.toString(), "0"],
             });
             res4
               .then((value) => {
@@ -1294,21 +1293,30 @@ const vault: NextPage = () => {
                       ({symbol})
                     </Text>
                   </Flex>
+                  
+
+                  <Stack direction={"row"}>
+                    {[...Array(Object.keys(addressdata.tags).length)].map(
+                      (e, i) => {
+                        return (
+                          <Text fontWeight={"semibold"} fontSize={"1.5rem"}>
+                            {"#" + addressdata.tags[i]}
+                          </Text>
+                        );
+                      }
+                    )}
+                  </Stack>
                   <Text fontWeight={"light"} fontSize={"1rem"}>
                     <Link
                       href={"https://goerli.voyager.online/contract/" + vad}
                     >
                       <a>
                         <>
-                          Goerli:
                           {vad && typeof vad == "string" && (
                             <>
                               {vad.substring(0, 5)}
                               ...
-                              {vad.substring(
-                                assetManager.length - 5,
-                                vad.length
-                              )}
+                              
                             </>
                           )}
                           <ExternalLinkIcon mx="2px" marginTop={"-2px"} />
@@ -1316,18 +1324,6 @@ const vault: NextPage = () => {
                       </a>
                     </Link>
                   </Text>
-
-                  <Stack direction={"row"}>
-                    {[...Array(Object.keys(addressdata.tags).length)].map(
-                      (e, i) => {
-                        return (
-                          <Text fontWeight={"light"} fontSize={"1rem"}>
-                            {"#" + addressdata.tags[i]}
-                          </Text>
-                        );
-                      }
-                    )}
-                  </Stack>
                 </Flex>
               </Flex>
               <Box maxWidth={"40vw"} marginLeft={"1vw"}>
@@ -1407,7 +1403,7 @@ const vault: NextPage = () => {
                 </Flex>
                 <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
                   <Text fontWeight={"light"} fontSize={"-moz-initial"}>
-                    Shareholders
+                    Rank
                   </Text>
                   <Text fontWeight={"bold"} fontSize={"2xl"}>
                     623
@@ -1467,7 +1463,7 @@ const vault: NextPage = () => {
                               assetManager.length - 5,
                               assetManager.length
                             )}{" "}
-                            <ExternalLinkIcon mx="2px" marginTop={"-10px"} />
+                           
                           </a>
                         </Link>
                       </Text>
@@ -1565,9 +1561,9 @@ const vault: NextPage = () => {
               borderTop={"solid 1px #f6643c"}
             >
               {menuSelected == 0 ? 
-              <Tabs variant="enclosed-colored">
+              <Tabs >
                 <Flex direction={"column"} alignItems={"center"} gap={"1vw"}>
-                  <TabList borderBottom={"0px solid "}>
+                  <TabList >
                     <Flex direction={"row"} alignItems={"center"}>
                       <Tab fontSize={"1xl"} fontWeight={"bold"}>
                         Overview
@@ -1594,8 +1590,8 @@ const vault: NextPage = () => {
                         Social
                       </Tab>
                     </Flex>
-                  </TabList>
-                  <Box width={"60vw"} minHeight={"30vw"}>
+                  </TabList >
+                  <Box width={"60vw"} minHeight={"30vw"} borderRadius='10%' borderTop={"solid 2px #f6643c"} borderBottom={"solid 2px #f6643c"} backgroundColor="blackAlpha.400" padding={"2%"}>
                     <TabPanels>
                       <TabPanel>
                         <Flex flexDirection={"column"} gap={"1rem"}>
@@ -1762,7 +1758,7 @@ const vault: NextPage = () => {
                                     stopOpacity={0.9}
                                   />
                                   <stop
-                                    offset="50%"
+                                    offset="90%"
                                     stopColor="#31c48d"
                                     stopOpacity={0}
                                   />
@@ -2257,7 +2253,7 @@ const vault: NextPage = () => {
                                 sell
                       </TabPanel>
                       </TabPanels>
-                      </Box>
+                  </Box>
                   </Flex>
               </Tabs>
               :
