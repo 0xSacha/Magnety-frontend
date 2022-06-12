@@ -9,6 +9,7 @@ import {
 } from '../app/counterSlice'
 import { IncrementCounter } from "./IncrementCounter";
 import Profile from "./Profile";
+import Image from "next/image";
 
 
 
@@ -97,7 +98,38 @@ const Layout = (props: PropsWithChildren<unknown>) => {
               <div className="fs-14 fw-600" style={{ marginTop: '31px', marginBottom: '6px' }}>Create</div>
               <div className="fs-12 fw-500">Start a new trading adventure by creating a new vault</div>
               <button data-color="secondary" style={{ display: 'flex', margin: '8px auto' }}>Create</button>
+
             </>}
+              <div style={{
+                position: 'absolute',
+                bottom: 0,
+                left: "10px",
+                right: "10px",
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                margin: '20px 0'
+              }}>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                  <button className="social_button">
+                    <Image src={'/twitter_primary.svg'} width='21px' height='21px'></Image>
+                  </button>
+                  <button className="social_button">
+                    <Image src={'/linkedin_primary.svg'} width='21px' height='21px'></Image>
+                  </button>
+                  <button className="social_button">
+                    <Image src={'/telegram_primary.svg'} width='17px' height='21px'></Image>
+                  </button>
+                  <button className="social_button">
+                    <Image src={'/discord.svg'} width='21px' height='21px'></Image>
+                  </button>
+                  <button className="social_button">
+                    <Image src={'/medium.svg'} width='21px' height='21px'></Image>
+                  </button>
+                </div>
+                <div className="fs-12 text-center">© 2022 - Nested - All Rights Reserved</div>
+                <div className="fs-12 text-center">Terms & conditions</div>
+              </div>
 
             {
               isSidebarOpen && <>
@@ -105,13 +137,14 @@ const Layout = (props: PropsWithChildren<unknown>) => {
               </>
             }
           </div>
-          <div className="page__sidebar_toggler">
+          
+          {/* <div className="page__sidebar_toggler">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             >
             </button>
             {!isSidebarOpen && <>Expand to edit and see all your personnal informations</>}
-          </div>
+          </div> */}
         </div>
       </div>
     </>

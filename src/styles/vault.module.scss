@@ -475,3 +475,49 @@
         }
     }
 }
+
+// profile
+
+.vaultContainer{
+    margin-top: 80px;
+    display: flex;
+    gap: 63px;
+    justify-content: center;
+}
+
+.vaultCard{
+    background-color: #0D0C1D;
+    border-radius: 30px;
+    width: 50%;
+    padding: 17px 21px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+    >div{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+.vaultCard
+
+.vaultCardDetail{
+    display: flex;
+    align-items: center;
+    gap: 37px;
+    border-radius: 15px;
+    background-color: #090651;
+    padding: 7px 20px;
+}
+
+
+button.socialButton{
+    width: 35px;
+    height: 35px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}

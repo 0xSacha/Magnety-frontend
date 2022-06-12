@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "~/styles/contract.module.scss";
 import { useContractFactory } from "~/hooks/deploy";
 import TargetSource from "../abi/Vault.json";
@@ -15,13 +15,17 @@ import {
   Select,
   Box,
 } from "@chakra-ui/react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 import {
   Slider,
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
   SliderMark,
+  HStack,
+  Tag,
+  TagCloseButton,
+  TagLabel,
 } from "@chakra-ui/react";
 import {
   FormControl,
@@ -56,6 +60,9 @@ import ethbtc from "../image/ETH-BTC.png";
 import { compileString } from "sass";
 import { useRouter } from "next/router";
 import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
+import { toDataUrl } from "~/utils/fileHelper";
+import ImageUpload from "~/components/FileUpload";
+import postContract from "~/utils/postContract";
 
 type FieldType = {
   name: string;
@@ -66,6 +73,10 @@ type FieldType = {
   toggle?: boolean;
   toggleMessage?: string;
 };
+
+function RemoveAtIndex(array: any[], index: number) {
+  return [...array.slice(0, index), ...array.slice(index + 1)];
+}
 
 type FormInputTextFieldProps = {
   fiels: [FieldType, FieldType?];
@@ -208,6 +219,18 @@ const Contract: NextPage = () => {
   const { library } = useStarknet();
   const { account } = getStarknet();
   const router = useRouter();
+
+  const handleInputTagEnterKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    cb: Function
+  ) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (event?.currentTarget?.value) {
+        cb();
+      }
+    }
+  };
   const [deploying, setDeploying] = useState(false);
 
   // const { contract: comptroller } = useComptrollerContract()
@@ -807,8 +830,10 @@ const Contract: NextPage = () => {
                             <FormLabel htmlFor="type">Type of Fund </FormLabel>
                             <Select {...field} id="type">
                               {/* <option>Public</option> */}
-                              <option >Private</option>
-                              <option>Public</option>
+                              <option style={{ color: "black" }}>
+                                Private
+                              </option>
+                              <option style={{ color: "black" }}>Public</option>
                             </Select>
                           </FormControl>
                         )}
@@ -1033,6 +1058,249 @@ const Contract: NextPage = () => {
                     <Text>1000 max</Text>
                   </Flex>
                 </div>
+                <Text
+                  fontWeight={"500"}
+                  fontSize={"4xl"}
+                  marginTop={"40px"}
+                  marginLeft={"20px"}
+                  marginBottom={"20px"}
+                >
+                  Monetisation 💰
+                </Text>
+                <Flex
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"10%"}
+                >
+                  <Box width={"40%"}>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"600"} marginBottom={"10px"}>
+                        Entrance Fees
+                      </Text>
+                      <Flex direction={"row"} gap="50px">
+                        <Text> 0%</Text>
+
+                        <Slider
+                          flex="1"
+                          focusThumbOnChange={false}
+                          value={parseFloat(props.values.entranceFees)}
+                          onChange={(v) => {
+                            props.setFieldValue("entranceFees", `${v}%`);
+                          }}
+                          min={0}
+                          max={10}
+                          step={1}
+                        >
+                          <SliderTrack bg="red.100">
+                            <SliderFilledTrack bg="tomato" />
+                          </SliderTrack>
+                          <SliderThumb
+                            fontSize="sm"
+                            boxSize="32px"
+                            children={parseFloat(props.values.entranceFees)}
+                            bgColor={"#f6643c"}
+                          />
+                        </Slider>
+                        <Text>10%</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                  <Box width={"40%"}>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"600"} marginBottom={"10px"}>
+                        Exit Fees
+                      </Text>
+                      <Flex direction={"row"} gap="50px">
+                        <Text>0%</Text>
+
+                        <Slider
+                          flex="1"
+                          focusThumbOnChange={false}
+                          value={parseFloat(props.values.exitFees)}
+                          onChange={(v) => {
+                            props.setFieldValue("exitFees", `${v}%`);
+                          }}
+                          min={0}
+                          max={10}
+                          step={1}
+                        >
+                          <SliderTrack bg="red.100">
+                            <SliderFilledTrack bg="tomato" />
+                          </SliderTrack>
+                          <SliderThumb
+                            fontSize="sm"
+                            boxSize="32px"
+                            children={parseFloat(props.values.exitFees)}
+                            bgColor={"#f6643c"}
+                          />
+                        </Slider>
+                        <Text>10%</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                </Flex>
+                <Flex
+                  direction={"row"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  gap={"10%"}
+                >
+                  <Box width={"40%"}>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"600"} marginBottom={"10px"}>
+                        Management Fees
+                      </Text>
+                      <Flex direction={"row"} gap="50px">
+                        <Text> 0%</Text>
+
+                        <Slider
+                          flex="1"
+                          focusThumbOnChange={false}
+                          value={parseFloat(props.values.managementFees)}
+                          onChange={(v) => {
+                            props.setFieldValue("managementFees", `${v}%`);
+                          }}
+                          min={0}
+                          max={20}
+                          step={1}
+                        >
+                          <SliderTrack bg="red.100">
+                            <SliderFilledTrack bg="tomato" />
+                          </SliderTrack>
+                          <SliderThumb
+                            fontSize="sm"
+                            boxSize="32px"
+                            children={parseFloat(props.values.managementFees)}
+                            bgColor={"#f6643c"}
+                          />
+                        </Slider>
+                        <Text>20%</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                  <Box width={"40%"}>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"600"} marginBottom={"10px"}>
+                        Perfomance Fees
+                      </Text>
+                      <Flex direction={"row"} gap="50px">
+                        <Text>0%</Text>
+
+                        <Slider
+                          flex="1"
+                          focusThumbOnChange={false}
+                          value={parseFloat(props.values.performanceFees)}
+                          onChange={(v) => {
+                            props.setFieldValue("performanceFees", `${v}%`);
+                          }}
+                          min={0}
+                          max={20}
+                          step={1}
+                        >
+                          <SliderTrack bg="red.100">
+                            <SliderFilledTrack bg="tomato" />
+                          </SliderTrack>
+                          <SliderThumb
+                            fontSize="sm"
+                            boxSize="32px"
+                            children={parseFloat(props.values.performanceFees)}
+                            bgColor={"#f6643c"}
+                          />
+                        </Slider>
+                        <Text>20%</Text>
+                      </Flex>
+                    </Flex>
+                  </Box>
+                </Flex>
+                {/* {JSON.stringify(props.values)} */}
+                <Flex gap={"20px"} direction={"column"}>
+                  <Text
+                    fontWeight={"500"}
+                    fontSize={"4xl"}
+                    marginTop={"40px"}
+                    marginLeft={"20px"}
+                    marginBottom={"20px"}
+                  >
+                    Tags
+                  </Text>
+                  <HStack spacing={4}>
+                    {props.values.tags.map((tagValue, index) => (
+                      <Tag
+                        size={"lg"}
+                        key={index}
+                        borderRadius="full"
+                        variant="solid"
+                        colorScheme="green"
+                        bg={'gray.100'}
+                        color={'black'}
+                      >
+                        <TagLabel>{tagValue}</TagLabel>
+                        <TagCloseButton
+                          onClick={() =>
+                            props.setFieldValue(
+                              "tags",
+                              RemoveAtIndex(props.values.tags, index)
+                            )
+                          }
+                        />
+                      </Tag>
+                    ))}
+                  </HStack>
+                  <Flex direction={"row"} gap={"20px"}>
+                    <Input
+                      placeholder="Add new tag"
+                      maxLength={6}
+                      onKeyPress={(e) =>
+                        handleInputTagEnterKeyPress(e, () => {
+                          if (!props.values.tags.includes(e.currentTarget.value as never)) {
+                            props.setFieldValue("tags", [
+                              ...props.values.tags,
+                              e.currentTarget.value,
+                            ]);
+                          }
+                          e.currentTarget.value = "";
+                        })
+                      }
+                    />
+                  </Flex>
+                </Flex>
+
+                <Text
+                  fontWeight={"500"}
+                  fontSize={"4xl"}
+                  marginTop={"40px"}
+                  marginLeft={"20px"}
+                  marginBottom={"20px"}
+                >
+                  Image
+                </Text>
+                <Flex height={'200px'} gap={'5%'}>
+                  <div style={{width: '40%'}}>
+                    <ImageUpload onUpload={(image)=> {
+                      console.log(image);
+                      props.setFieldValue("image", image);
+                    }}/>
+                  </div>
+                  {props.values.image && (
+                    <Flex direction={'column'} width={'55%'}>
+                      <span>Preview</span>
+                      <div style={{position:'relative', height: '100%'}}>
+                        <Image width={'100%'} layout='fill' objectFit='contain' src={props.values.image}></Image>
+                      </div>
+                    </Flex>
+                  )}
+                </Flex>
+
+                <Text
+                  fontWeight={"500"}
+                  fontSize={"4xl"}
+                  marginTop={"40px"}
+                  marginLeft={"20px"}
+                  marginBottom={"20px"}
+                >
+                  Feed your Fund 🍔
+                </Text>
               </Flex>
             </div>
             <div
