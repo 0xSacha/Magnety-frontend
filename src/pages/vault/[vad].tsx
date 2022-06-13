@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -54,7 +54,6 @@ import {
 import { _DeepPartialObject } from "chart.js/types/utils";
 import Tabs from "~/components/Tabs";
 import Tab from "~/components/Tab";
-import { SwapActionSelectModal } from "~/components/SwapModule";
 import { getStarknet, AccountInterface } from "../../starknetWrapper";
 import { contractAddress } from "~/registry/address";
 import { hexToDecimalString } from "starknet/dist/utils/number";
@@ -234,45 +233,46 @@ const vault: NextPage = () => {
   const feeManager = contractAddress.FeeManager;
   const policyManager = contractAddress.PolicyManager;
 
-  const [name, setName] = useState<string>("name");
-  const [symbol, setSymbol] = useState<string>("symbol");
+  const [name, setName] = React.useState<string>("name");
+  const [symbol, setSymbol] = React.useState<string>("symbol");
   const [accountInterface, setAccountInterface] =
-    useState<AccountInterface>(account);
+    React.useState<AccountInterface>(account);
   const [acccountAddress, setAcccountAddress] =
-    useState<string>("acccountAddress");
-  const [assetManager, setAssetManager] = useState<string>("add");
-  const [denominationAsset, setDenominationAsset] = useState<string>("deno");
-  const [entranceFee, setEntranceFee] = useState<string>("");
-  const [exitFee, setExitFee] = useState<string>("");
-  const [performanceFee, setPerformanceFee] = useState<string>("");
-  const [managementFee, setManagementFee] = useState<string>("");
-  const [isPublic, setIsPublic] = useState<string>("");
-  const [timeLock, setTimeLock] = useState<string>("");
-  const [minAmount, setMinAmount] = useState<string>("");
-  const [maxAmount, setMaxAmount] = useState<string>("");
+    React.useState<string>("acccountAddress");
+  const [assetManager, setAssetManager] = React.useState<string>("add");
+  const [denominationAsset, setDenominationAsset] =
+    React.useState<string>("deno");
+  const [entranceFee, setEntranceFee] = React.useState<string>("");
+  const [exitFee, setExitFee] = React.useState<string>("");
+  const [performanceFee, setPerformanceFee] = React.useState<string>("");
+  const [managementFee, setManagementFee] = React.useState<string>("");
+  const [isPublic, setIsPublic] = React.useState<string>("");
+  const [timeLock, setTimeLock] = React.useState<string>("");
+  const [minAmount, setMinAmount] = React.useState<string>("");
+  const [maxAmount, setMaxAmount] = React.useState<string>("");
   const [denominationAssetAddress, setDenominationAssetAddress] =
-    useState<string>("deno");
-  const [shareHolders, setShareHolders] = useState<string>("0");
-  const [shareSupply, setShareSupply] = useState<string>("0");
-  const [sharePrice, setSharePrice] = useState<string>("0");
-  const [gav, setGav] = useState<string>("0");
-  const [trackedAssets, setTrackedAssets] = useState<PortfolioData>([]);
-  const [userShareInfo, setUserShareInfo] = useState<userShareData>([]);
-  const [sellShareTab, setSellShareTab] = useState<SellShareData>([]);
+    React.useState<string>("deno");
+  const [shareHolders, setShareHolders] = React.useState<string>("0");
+  const [shareSupply, setShareSupply] = React.useState<string>("0");
+  const [sharePrice, setSharePrice] = React.useState<string>("0");
+  const [gav, setGav] = React.useState<string>("0");
+  const [trackedAssets, setTrackedAssets] = React.useState<PortfolioData>([]);
+  const [userShareInfo, setUserShareInfo] = React.useState<userShareData>([]);
+  const [sellShareTab, setSellShareTab] = React.useState<SellShareData>([]);
 
-  const [sellList, setSellList] = useState<userShareData>([]);
-  const [trackedAssetsLen, setTrackedAssetsLen] = useState<number>(0);
-  const [userBalance, setUserBalance] = useState<string>("0");
-  const [isAllowedDepositor, setIsAllowedDepositor] = useState<string>("0");
-  const [userShareBalance, setUserShareBalance] = useState<string>("");
-  const [sellTokenId, setSellTokenId] = useState<string>("");
-  const [percentShare, setPercentShare] = useState<string>("0");
-  const [buyValue, setBuyValue] = useState<any>(0);
-  const [sellValue, setSellValue] = useState<any>(0);
-  const [onChange, setOnChange] = useState<boolean>(true);
+  const [sellList, setSellList] = React.useState<userShareData>([]);
+  const [trackedAssetsLen, setTrackedAssetsLen] = React.useState<number>(0);
+  const [userBalance, setUserBalance] = React.useState<string>("0");
+  const [isAllowedDepositor, setIsAllowedDepositor] =
+    React.useState<string>("0");
+  const [userShareBalance, setUserShareBalance] = React.useState<string>("");
+  const [sellTokenId, setSellTokenId] = React.useState<string>("");
+  const [percentShare, setPercentShare] = React.useState<string>("0");
+  const [buyValue, setBuyValue] = React.useState<any>(0);
+  const [sellValue, setSellValue] = React.useState<any>(0);
+  const [onChange, setOnChange] = React.useState<boolean>(true);
 
-  const [onPopUp, setonPopUp] = useState<boolean>(false);
-  const [showSwapModule, setShowSwapModule] = useState<boolean>(false);
+  const [onPopUp, setonPopUp] = React.useState<boolean>(false);
 
   const handleChange3 = (value) => setSellValue(value);
 
@@ -976,14 +976,6 @@ const vault: NextPage = () => {
         ) : (
           <></>
         )}
-
-        <SwapActionSelectModal
-          isOpen={showSwapModule}
-          onClose={() => {
-            setShowSwapModule(false);
-          }}
-        />
-
         <div className={`${styles.head}`}>
           <div>
             <div className={`${styles.title}`}>
@@ -1030,14 +1022,6 @@ const vault: NextPage = () => {
                 )}
               </div>
             </div>
-            <Button
-              backgroundColor={"#f6643c"}
-              color={"white"}
-              onClick={() => setShowSwapModule(true)}
-              size="md"
-            >
-              Perform AMM
-            </Button>
           </div>
 
           <div>
