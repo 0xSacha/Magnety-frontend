@@ -6,7 +6,7 @@ import { useAppSelector } from "../../app/hooks";
 import { selectCount } from "../../app/counterSlice";
 import UDatabase from "./users.json";
 import FakeImage from "~/components/FakeImage";
-import { getStarknet } from "../../starknetWrapper";
+import { getStarknet, AccountInterface } from "../../starknetWrapper";
 import { UserInfo } from "../../utils/type";
 import Image from "next/image";
 import ImageUpload from "~/components/FileUpload";
@@ -23,6 +23,7 @@ import {
 } from "@chakra-ui/react";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { string } from "yup";
+import { Value } from "sass";
 // import { userInfo } from "os";
 
 const VAULT_UNDER_MANAGEMENT = [
@@ -50,6 +51,8 @@ function UserPage(props: UserPageProps) {
   const [userInfo, setUserInfo] = useState<UserInfo>(props.user);
   let count = useAppSelector(selectCount);
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [accountInterface, setAccountInterface] =
+    React.useState<AccountInterface>();
   const [acccountAddress, setAcccountAddress] =
     React.useState<string>("acccountAddress");
   const [accountUserPage, setAccountUserPage] = React.useState<
@@ -59,18 +62,17 @@ function UserPage(props: UserPageProps) {
   const router = useRouter();
   const userAddress = router.query.uad;
 
-  let formRef =
-    React.createRef<
-      FormikProps<{
-        name: string;
-        description: string;
-        twitter: string;
-        linkedin: string;
-        telegram: string;
-        coverImage: string;
-        profilePic: string;
-      }>
-    >();
+  let formRef = React.createRef<
+    FormikProps<{
+      name: string;
+      description: string;
+      twitter: string;
+      linkedin: string;
+      telegram: string;
+      coverImage: string;
+      profilePic: string;
+    }>
+  >();
 
   function validateName(value) {
     let error;
@@ -93,15 +95,51 @@ function UserPage(props: UserPageProps) {
   }
 
   const handleSubmit = () => {
-    if (formRef.current) {
-      formRef.current.handleSubmit();
+    async function signFunction() {
+      if (accountInterface == undefined) {
+        console.log("account undefined");
+      } else {
+        const nonce = await accountInterface.getNonce();
+        const sig = await accountInterface
+          .signMessage({
+            types: {
+              StarkNetDomain: [
+                { name: "name", type: "felt" },
+                { name: "chainId", type: "felt" },
+                { name: "version", type: "felt" },
+              ],
+              Message: [
+                { name: "contents", type: "felt" },
+                { name: "nonce", type: "felt" },
+              ],
+            },
+            primaryType: "Message",
+            message: {
+              contents: "1234",
+              nonce: nonce,
+            },
+            domain: {
+              name: "Example DApp",
+              chainId: "SN_GOERLI",
+              version: "0.0.1",
+            },
+          })
+          .then(() => {
+            if (formRef.current) {
+              formRef.current.handleSubmit();
+            }
+          })
+          .catch((reason: any) => console.log(reason));
+      }
     }
+    signFunction();
   };
 
   useEffect(() => {
     const { account } = getStarknet();
     if (account.address != "") {
       setAcccountAddress(account.address);
+      setAccountInterface(account);
     }
   }, [count]);
 
@@ -217,6 +255,7 @@ function UserPage(props: UserPageProps) {
                       fontWeight: "semi-bold",
                       marginLeft: "2vw",
                       marginTop: "1vw",
+                      maxWidth: "25vw",
                     }}
                   >
                     {userInfo.description}
@@ -513,8 +552,25 @@ export async function getServerSideProps(context: any) {
   const res = await fetch(
     "http://localhost:3000/api/user/" + context.query.uad
   );
-  const user = await res.json();
-
+  await console.log(res.status);
+  if (res.status == 200) {
+    console.log(res);
+    const { data } = await res.json();
+    const user = data;
+    return { props: { user } };
+  } else {
+    const user = {
+      name: "George Soros",
+      description:
+        "currently president of Soros Fund Management, based in New York, I have $25 billion for myself, my family and my foundations",
+      telegram: "",
+      twitter: "",
+      linkedin: "",
+      userAddress: "0x00000000000000000",
+      coverImage: "",
+      profilePic: "",
+    };
+    return { props: { user } };
+  }
   //return the serverSideProps the todo and the url from out env variables for frontend api calls
-  return { props: { user } };
 }

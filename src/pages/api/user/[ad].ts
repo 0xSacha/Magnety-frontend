@@ -16,9 +16,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const handleCase: ResponseFuncs = {
     // RESPONSE FOR GET REQUESTS
     GET: async (req: NextApiRequest, res: NextApiResponse) => {
-      console.log(address)
       const { UserInfo } = await connect() // connect to database
-      res.json(await UserInfo.findOne({ userAddress : `${address}`}).catch(catcher))
+      // res.json(await UserInfo.findOne({ userAddress : `${address}`}).catch(catcher))
+
+        // await UserInfo.findOne({ userAddress : `${address}`}).then((value) => res.json(value))
+        UserInfo.findOne(
+          { userAddress : `${address}`},
+          (err, data) => {
+              if (data) {
+                  res.status(200).json({
+                      text: "User found",
+                      data: data
+                  });
+              } else {
+                  res.status(404).json({
+                      text: "user not found",
+                      error: err
+                  });
+              }
+          }
+      );
     },
     // RESPONSE PUT REQUESTS
     PUT: async (req: NextApiRequest, res: NextApiResponse) => {
