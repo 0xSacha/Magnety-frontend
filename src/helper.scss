@@ -19,7 +19,7 @@ $fontSizes: 10, 12, 14, 16, 18, 20, 22, 24, 28, 32, 35, 36, 38, 40, 48, 96;
   }
 }
 
-$fontWeights: 100, 200, 300, 400, 500, 600, 700, 800, 900, bold;
+$fontWeights: 100,200,300,400,500,600,700,800,900, bold;
 @each $fw in $fontWeights {
   .fw-#{$fw} {
     font-weight: $fw;
@@ -50,6 +50,7 @@ $colors: (
   }
 }
 
+
 .d-flex {
   display: flex;
 }
@@ -65,29 +66,29 @@ $textAlign: center, start, end;
   }
 }
 
-.overflow-hidden {
+.overflow-hidden{
   overflow: hidden;
 }
 
-.text-right {
+.text-right{
   text-align: right;
 }
 
-$justifyContent: center, baseline, start, flex-start, end, flex-end,
-  space-around, space-between, space-evenly, stretch;
+$justifyContent: center, baseline, start, flex-start, end, flex-end, space-around, space-between, space-evenly, stretch;
 @each $value in $justifyContent {
   .justify-content-#{$value} {
     justify-content: $value;
   }
 }
 
-$alignItems: center, baseline, start, flex-start, end, flex-end, space-around,
-  space-between, space-evenly, stretch;
+
+$alignItems: center, baseline, start, flex-start, end, flex-end, space-around, space-between, space-evenly, stretch;
 @each $value in $alignItems {
   .align-items-#{$value} {
     align-items: $value;
   }
 }
+
 
 .grid-container {
   display: grid;
