@@ -1,84 +1,81 @@
-.iconContainer{
-    width: 60px;
-    height: 60px;
-    padding: 11px;
-    background: var(--color-secondary);
-    border-radius: 10px;
+.iconContainer {
+  width: 60px;
+  height: 60px;
+  padding: 11px;
+  background: var(--color-secondary);
+  border-radius: 10px;
 }
 
-.statisticsCard{
-    display: flex;
-    gap:4px;
-    align-items: center;
+.statisticsCard {
+  display: flex;
+  gap: 4px;
+  align-items: center;
 }
 
-.vaultContainer{
-    margin-top: 80px;
-    display: flex;
-    gap: 63px;
-    justify-content: center;
+.vaultContainer {
+  margin-top: 80px;
+  display: flex;
+  gap: 63px;
+  justify-content: center;
 }
 
-.vaultCard{
-    background-color: #0D0C1D;
-    border-radius: 30px;
-    width: 50%;
-    padding: 17px 21px;
+.vaultCard {
+  background-color: #0d0c1d;
+  border-radius: 30px;
+  width: 50%;
+  padding: 17px 21px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  > div {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     gap: 10px;
-    >div{
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+  }
 }
-.vaultCard
+.vaultCard .vaultCardDetail {
+  display: flex;
+  align-items: center;
+  gap: 37px;
+  border-radius: 15px;
+  background-color: #090651;
+  padding: 7px 20px;
+}
 
-.vaultCardDetail{
+.profileBackground {
+  height: 180px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-image: url("/banner.svg");
+  background-size: cover;
+  background-position: center;
+  div {
+    margin: 17px;
+    padding: 17px;
+    width: fit-content;
+    margin-left: auto;
+    background: var(--color-primary);
+    border-radius: 50%;
+    cursor: pointer;
     display: flex;
-    align-items: center;
-    gap: 37px;
-    border-radius: 15px;
-    background-color: #090651;
-    padding: 7px 20px;
+  }
 }
 
-.profileBackground{
-    height: 180px;
+.profileContainer {
+  height: 130px;
+  .profilePicture {
+    transform: translateY(-50%);
     position: absolute;
-    left: 0;
-    right: 0;
-    background-image: url("/banner.svg");
-    background-size: cover;
-    background-position: center;
-    div{
-        margin: 17px;
-        padding: 17px;
-        width: fit-content;
-        margin-left: auto;
-        background: var(--color-primary);
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
+  }
+  .profileInfo {
+    margin-left: 230px;
+    display: flex;
+    flex-direction: column;
+    > div {
+      display: flex;
+      align-items: center;
     }
-}
-
-
-.profileContainer{
-    height: 130px;
-    .profilePicture{
-        transform: translateY(-50%);
-        position: absolute;
-    }
-    .profileInfo{
-        margin-left: 230px;
-        display: flex;
-        flex-direction:column;
-        >div{
-            display: flex;
-            align-items: center;
-        }
-    }
+  }
 }

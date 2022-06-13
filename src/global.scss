@@ -47,8 +47,7 @@ div.page {
     --dot1Color: #f6643c;
     --dot2Color: #ffffff;
     --dot3Color: #030135;
-    background: 
-      radial-gradient(
+    background: radial-gradient(
         circle 50vh at 25vw -10vh,
         var(--dot1Color) 80%,
         transparent
@@ -73,7 +72,7 @@ div.page {
   .page__sidebar_wrapper {
     position: relative;
     margin-top: $headerHeight;
-    .page__sidebar_backdrop{
+    .page__sidebar_backdrop {
       position: absolute;
       inset: 0;
       background: #0000008f;
@@ -81,20 +80,21 @@ div.page {
       /* filter: blur(127px); */
       backdrop-filter: blur(2px);
     }
-    .page__sidebar, .page__sidebar_toggler{
+    .page__sidebar,
+    .page__sidebar_toggler {
       position: absolute;
       inset: 0;
       transition: left 0.2s;
     }
 
-    .page__sidebar{
+    .page__sidebar {
       background-color: var(--color-primary);
       border-left: 1px solid #0b0951;
       color: white;
       overflow: auto;
       padding: 12px 16px;
     }
-    .page__sidebar_toggler{
+    .page__sidebar_toggler {
       bottom: 20px;
       font-size: 12px;
       color: white;
@@ -103,7 +103,7 @@ div.page {
       left: -18px;
       display: flex;
       align-items: center;
-      button{
+      button {
         width: 36px;
         height: 36px;
         border-radius: 50%;
@@ -112,19 +112,19 @@ div.page {
       }
     }
 
-    &.page__sidebar_open{
-      .page__sidebar{
+    &.page__sidebar_open {
+      .page__sidebar {
         left: calc(-85vw + var(--sidebar-width));
         padding: 0 0 20px 0;
       }
-      .page__sidebar_toggler{
+      .page__sidebar_toggler {
         left: calc(-85vw + var(--sidebar-width) - 18px);
       }
-      .page__sidebar_backdrop{
+      .page__sidebar_backdrop {
         left: calc(-100vw + var(--sidebar-width));
       }
-      .page__sidebar_toggler{
-        button{
+      .page__sidebar_toggler {
+        button {
           background-image: url("/sidebar_close.svg");
         }
       }
@@ -175,12 +175,12 @@ button {
     --text: var(--color-secondary, black);
     --bg: white;
   }
-  &[data-color="transparent"]{
-    --text: 'black';
+  &[data-color="transparent"] {
+    --text: "black";
     --bg: hsl(0deg 0% 85% / 90%);
-    &:hover{
+    &:hover {
       --hover-bg: hsl(0deg 0% 85% / 75%);
-      --hover-text: 'white';
+      --hover-text: "white";
     }
   }
 }
@@ -204,7 +204,7 @@ button {
 }
 
 // remove drag effect on images
-img{
+img {
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;

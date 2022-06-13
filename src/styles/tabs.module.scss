@@ -1,29 +1,28 @@
-
-.tabContainer{
+.tabContainer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  .tabHeader {
     display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    .tabHeader{
-        display: flex;
-       justify-content: center;
-        gap: 10px;
-        margin-bottom: 10px;
-        font-size: 16px;
-        >button{
-            // background-color: white;
-            // color: black;
-            min-width: 100px;
-            padding: 5px;
-            border-radius: 5px;
-            &:hover {
-                background-color: white;
-                color: black;
-            }
-        }
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    > button {
+      // background-color: white;
+      // color: black;
+      min-width: 100px;
+      padding: 5px;
+      border-radius: 5px;
+      &:hover {
+        background-color: white;
+        color: black;
+      }
     }
-    .tabContent{
-        flex-grow: 1;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
+  }
+  .tabContent {
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
 }

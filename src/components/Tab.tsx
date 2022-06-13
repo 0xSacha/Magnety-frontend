@@ -7,7 +7,7 @@ type TabProps = {
 };
 
 const Tab = (props: PropsWithChildren<TabProps>) => {
-  return <>{ props.children }</>;
+  return <>{props.children}</>;
 };
 
 export default Tab;

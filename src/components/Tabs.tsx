@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, ReactChild, ReactNode } from "react";
 import styles from "~/styles/tabs.module.scss";
-import { Button, ButtonGroup } from '@chakra-ui/react'
+import { Button, ButtonGroup } from "@chakra-ui/react";
 
 type TabsProps = {
   activeTab: string;
@@ -37,7 +37,7 @@ const Tabs = (props: PropsWithChildren<TabsProps>) => {
         </div>
         <div className={`${styles.tabContent}`}>
           {props.children.map((child) =>
-            child.props.id === activeTab ? child : undefined
+            child.props.id === activeTab ? child : undefined,
           )}
         </div>
       </div>

@@ -1,18 +1,18 @@
-import { useStarknetBlock } from '@starknet-react/core'
-import type { NextPage } from 'next'
-import { useEffect, useRef, useState } from 'react'
+import { useStarknetBlock } from "@starknet-react/core";
+import type { NextPage } from "next";
+import { useEffect, useRef, useState } from "react";
 
 const Home: NextPage = () => {
-  const renderCount = useRef(0)
-  renderCount.current += 1
+  const renderCount = useRef(0);
+  renderCount.current += 1;
 
-  const [blockCount, setBlockCount] = useState(0)
+  const [blockCount, setBlockCount] = useState(0);
 
-  const { data } = useStarknetBlock()
+  const { data } = useStarknetBlock();
 
   useEffect(() => {
-    setBlockCount((count) => count + 1)
-  }, [data?.block_hash])
+    setBlockCount((count) => count + 1);
+  }, [data?.block_hash]);
 
   return (
     <div>
@@ -20,7 +20,7 @@ const Home: NextPage = () => {
       <p>Render: {renderCount.current}</p>
       <p>Blocks: {blockCount}</p>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
