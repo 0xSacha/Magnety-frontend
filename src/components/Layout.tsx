@@ -22,6 +22,12 @@ import {
 import { starknetKeccak } from "starknet/dist/utils/hash";
 import Link from "next/link";
 
+import Twitter from "../image/twitter.svg"
+import Discord from "../image/discord.svg"
+import Linkedin from "../image/linkedin.svg"
+import Medium from "../image/medium.svg"
+import Notion from "../image/notion.svg"
+
 
 const Layout = (props: PropsWithChildren<unknown>) => {
   const dispatch = useAppDispatch()
@@ -48,8 +54,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
       mod = false
     }
     starkNet.enable({ showModal: mod }).then(value => {
-      console.log(value)
-      console.log(value.length)
+
       if (value.length == 0) {
         console.log("no address detected")
       }
@@ -57,7 +62,6 @@ const Layout = (props: PropsWithChildren<unknown>) => {
         setAddress(value[0])
         localStorage.setItem('isWalletConnected', "true")
         dispatch(increment())
-        console.log(starkNet.account)
         setIsConnected(true)
       }
     })
@@ -134,19 +138,19 @@ const Layout = (props: PropsWithChildren<unknown>) => {
               }}>
                 <Flex direction={"row"} justifyContent={"space-between"}>
                   <button className="social_button">
-                    <Image src={'/twitter_primary.svg'} width='21px' height='21px'></Image>
+                    <Image src={Twitter} width='21px' height='21px'></Image>
                   </button>
                   <button className="social_button">
-                    <Image src={'/linkedin_primary.svg'} width='21px' height='21px'></Image>
+                    <Image src={Linkedin} width='21px' height='21px'></Image>
                   </button>
                   <button className="social_button">
-                    <Image src={'/notion-logo-1.svg'} width='17px' height='21px'></Image>
+                    <Image src={Notion} width='17px' height='21px'></Image>
                   </button>
                   <button className="social_button">
-                    <Image src={'/discord.svg'} width='21px' height='21px'></Image>
+                    <Image src={Discord} width='21px' height='21px'></Image>
                   </button>
                   <button className="social_button">
-                    <Image src={'/medium.svg'} width='21px' height='21px'></Image>
+                    <Image src={Medium} width='21px' height='21px'></Image>
                   </button>
                 </Flex>
                 <div className="fs-12 text-center">© 2022 - Magnety - All Rights Reserved</div>

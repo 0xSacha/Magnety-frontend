@@ -12,3 +12,15 @@ export interface ResponseFuncs {
     item: string
     completed: boolean
   }
+
+  export interface UserInfo {
+    _id?: number
+    userAddress: String
+    name: String
+    description: String
+    twitter: String
+    linkedin: String
+    telegram: String
+    coverImage: string
+    profilePic: string
+  }

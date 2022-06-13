@@ -10,20 +10,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const catcher = (error: Error) => res.status(400).json({ error })
 
   // GRAB ID FROM req.query (where next stores params)
-  const address: string = req.query.address as string
+  const address: string = req.query.ad as string
 
   // Potential Responses for /todos/:address
   const handleCase: ResponseFuncs = {
     // RESPONSE FOR GET REQUESTS
     GET: async (req: NextApiRequest, res: NextApiResponse) => {
-      const { User } = await connect() // connect to database
-      res.json(await User.findOne({ userAddress : `${address}`}).catch(catcher))
+      console.log(address)
+      const { UserInfo } = await connect() // connect to database
+      res.json(await UserInfo.findOne({ userAddress : `${address}`}).catch(catcher))
     },
     // RESPONSE PUT REQUESTS
     PUT: async (req: NextApiRequest, res: NextApiResponse) => {
-      const { User } = await connect() // connect to database
+      const { UserInfo } = await connect() // connect to database
       res.json(
-        await User.findOneAndUpdate({ userAddress : `${address}`}, req.body, { upsert: true }).catch(catcher)
+        await UserInfo.findOneAndUpdate({ userAddress : `${address}`}, req.body, {upsert:true}).catch(catcher)
       )
     },
   }

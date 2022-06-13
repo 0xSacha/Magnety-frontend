@@ -48,7 +48,7 @@ export const connect = async () => {
   // OUR TODO MODEL
   const Todo = mongoose.models.Todo || mongoose.model("Todo", TodoSchema);
   const Contract = mongoose.models.Contract || mongoose.model("Contract", ContractSchema);
-  const User = mongoose.models.User || mongoose.model("User", UserSchema);
+  const UserInfo = mongoose.models.User || mongoose.model("User", UserSchema);
 
-  return { conn, Todo, Contract, User }
+  return { conn, Todo, Contract, UserInfo }
 }
