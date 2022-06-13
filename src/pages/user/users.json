@@ -1,20 +1,20 @@
 {
-  "default": {
-    "name": "Loading..",
-    "description": "Loading..",
-    "photo_link": "https://...",
-    "banner": "https://..."
-  },
-  "0x304b0398d0dea1c63ae98518413a2bfae0d5c00b6a2e4087ea98e754c06b93e": {
-    "name": "Paul Oconnor",
-    "description": "I am a PhD student interested by the crypo market, be bullish !",
-    "photo_link": "https://sunrift.com/wp-content/uploads/2014/12/Blake-profile-photo-square.jpg",
-    "banner": "https://cemhri.org/wp-content/uploads/2018/04/Home-Four-Banner-Background-Image.png"
-  },
-  "0xEA3d559857b9af4e7d0557458A909d8297cF9bfc": {
-    "name": "Mat Grand",
-    "description": "Looking to reach the moon",
-    "photo_link": "https://...",
-    "banner": "https://..."
-  }
+    "default" : {
+        "name" : "Loading..",
+        "description" : "Loading..",
+        "photo_link" : "https://...",
+        "banner" : "https://..."
+    },
+    "0x304b0398d0dea1c63ae98518413a2bfae0d5c00b6a2e4087ea98e754c06b93e" : {
+        "name" : "Paul Oconnor",
+        "description" : "I am a PhD student interested by the crypo market, be bullish !",
+        "photo_link" : "https://sunrift.com/wp-content/uploads/2014/12/Blake-profile-photo-square.jpg",
+        "banner" : "https://cemhri.org/wp-content/uploads/2018/04/Home-Four-Banner-Background-Image.png"
+    },
+    "0xEA3d559857b9af4e7d0557458A909d8297cF9bfc" : {
+        "name" : "Mat Grand",
+        "description" : "Looking to reach the moon",
+        "photo_link" : "https://...",
+        "banner" : "https://..."
+    }
 }

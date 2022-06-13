@@ -190,21 +190,21 @@ const Contract: NextPage = () => {
           ? [...state, id]
           : [...state.slice(0, index), ...state.slice(index + 1)];
       return state;
-    });
+    })
   }
 
   function addNewProtocolMult(idTab: number[]) {
     setAllowedProtocol([]);
-    idTab.forEach((id) => {
+    idTab.forEach(id=>{
       addNewProtocol(id);
-    });
+    })
   }
 
   function addNewProtocol(id: number) {
     setAllowedProtocol((state) => {
       state = [...state, id];
       return state;
-    });
+    })
   }
 
   function strToShortStringFelt(str: string): bigint {
@@ -213,36 +213,37 @@ const Contract: NextPage = () => {
       strB.reduce((memo, byte) => {
         memo += byte.toString(16);
         return memo;
-      }, "0x"),
+      }, "0x")
     );
   }
 
   const multicall = async (_tab: any[], _tabA: any[], _tabB: any[]) => {
     console.log("invoke");
-    const tx1 = await account.execute([
-      {
-        contractAddress:
-          "0x031ed52f5b1ea0dc84172a99fad44d202beaa528e8629d0a1f0d4a8b163a71b1",
-        entrypoint: "initializeFund",
-        calldata: _tab,
-      },
-      {
-        contractAddress: Asset[denominationAsset].address.toString(),
-        entrypoint: "approve",
-        calldata: _tabA,
-      },
-      {
-        contractAddress: comptroller,
-        entrypoint: "activateVault",
-        calldata: _tabB,
-      },
-    ]);
-    console.log(tx1);
+    let tx1 = await account.execute(
+      [
+        {
+          contractAddress: '0x031ed52f5b1ea0dc84172a99fad44d202beaa528e8629d0a1f0d4a8b163a71b1',
+          entrypoint: 'initializeFund',
+          calldata: _tab,
+        },
+        {
+          contractAddress: Asset[denominationAsset].address.toString(),
+          entrypoint: 'approve',
+          calldata: _tabA,
+        },
+        {
+          contractAddress: comptroller,
+          entrypoint: 'activateVault',
+          calldata: _tabB,
+        }
+      ]
+    );
+    console.log(tx1)
     // return (tx1)
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const tab: any[] = [];
+    let tab: any[] = [];
     console.log(formData);
     // tab.push(hexToDecimalString(deployedVaultAddress))
     // tab.push(strToShortStringFelt(formData.name).toString())
@@ -322,24 +323,24 @@ const Contract: NextPage = () => {
     tab.push(formData.performance_fees ?? "0");
 
     tab.push(trackedAsset.length.toString());
-    trackedAsset.forEach((track) => {
+    trackedAsset.forEach(track=>{
       tab.push(hexToDecimalString(Asset[track].address));
-    });
+    })
 
     tab.push(allowedProtocol.length.toString());
-    allowedProtocol.forEach((value) => {
-      const integrationArgs = Integration[value].integration;
+    allowedProtocol.forEach(value=>{
+      let integrationArgs = Integration[value].integration;
       tab.push(integrationArgs[0]);
       tab.push(integrationArgs[1]);
       tab.push("0");
-    });
+    })
 
-    let min = parseFloat(formData.minimum);
+    var min = parseFloat(formData.minimum);
     min = min * 1000000000000000000;
     tab.push(min.toString());
     tab.push("0");
 
-    let max = parseFloat(formData.maximum);
+    var max = parseFloat(formData.maximum);
     max = max * 1000000000000000000;
     tab.push(max.toString());
     tab.push("0");
@@ -357,7 +358,7 @@ const Contract: NextPage = () => {
     const _tabB: Array<string> = [];
     _tabB.push(hexToDecimalString(deployedVaultAddress));
     _tabB.push(hexToDecimalString(Asset[denominationAsset].address));
-    let amountToInvest = parseFloat(formData.amount_to_invest);
+    var amountToInvest = parseFloat(formData.amount_to_invest);
     amountToInvest = amountToInvest * 1000000000000000000;
     _tabA.push(amountToInvest.toString());
     _tabA.push("0");
@@ -393,9 +394,7 @@ const Contract: NextPage = () => {
 
   const [deployedVaultAddress, setDeployedVaultAddress] = useState<string>("");
 
-  const [deployedVaultHash, setDeployedVaultHash] = useState<
-    string | undefined
-  >("");
+  const [deployedVaultHash, setDeployedVaultHash] = useState<string | undefined>("");
 
   const [compiledTarget, setCompiledTarget] = useState<CompiledContract>();
 
@@ -413,13 +412,13 @@ const Contract: NextPage = () => {
   }, []);
 
   const onDeploy = async () => {
-    if (deploying) return;
+    if(deploying) return;
     setDeploying(true);
     const _deployTarget = async () => {
       const deployment = await deployTarget({
         constructorCalldata: [
           hexToDecimalString(
-            "0x031ed52f5b1ea0dc84172a99fad44d202beaa528e8629d0a1f0d4a8b163a71b1",
+            "0x031ed52f5b1ea0dc84172a99fad44d202beaa528e8629d0a1f0d4a8b163a71b1"
           ),
           hexToDecimalString(comptroller),
         ],
@@ -429,14 +428,14 @@ const Contract: NextPage = () => {
         // console.log("redirect");
         setDeployedVaultHash(deployment.deployTransactionHash);
         await library
-          .waitForTransaction(deployment.deployTransactionHash)
-          .then(() => settxAccepted(1));
-        router.push("/vault?address=" + deployment.address);
+        .waitForTransaction(deployment.deployTransactionHash)
+        .then(() => settxAccepted(1));
+        router.push("/vault?address="+deployment.address);
         setDeploying(false);
       }
     };
     await _deployTarget();
-    console.log("deployed");
+    console.log("deployed")
   };
 
   const targetLink =
@@ -455,13 +454,13 @@ const Contract: NextPage = () => {
   const FIELDS0 = (
     <div>
       <button type="button" onClick={onDeploy}>
-        {deploying ? "Deploying..." : "Deploy Vault"}
+        {deploying ? 'Deploying...' : 'Deploy Vault'}
       </button>
       <div>
         {deployedVaultAddress && (
           <div>
             Vault contract:{" "}
-            <a href={targetLink} target="_blank" rel="noreferrer">
+            <a href={targetLink} target="_blank">
               {deployedVaultAddress}
             </a>
           </div>
@@ -469,7 +468,7 @@ const Contract: NextPage = () => {
         {deployedVaultHash && (
           <div>
             TX:{" "}
-            <a href={targetLink2} target="_blank" rel="noreferrer">
+            <a href={targetLink2} target="_blank">
               {deployedVaultHash}
             </a>
             <div>
@@ -652,9 +651,9 @@ const Contract: NextPage = () => {
   //               <div>Liquidity</div>
   //             </button>
   const protocalList = [
-    { values: [0], path: alphaRoad, alt: "btc", label: "Swap" },
-    { values: [1, 2], path: alphaRoad, alt: "eth", label: "Liquidity" },
-  ];
+    { values: [0], path: alphaRoad, alt: "btc", label: 'Swap' },
+    { values: [1, 2], path: alphaRoad, alt: "eth", label: 'Liquidity' },
+  ]
 
   const dominationAssetsList = [
     { value: 1, path: btc, alt: "btc" },
@@ -700,33 +699,26 @@ const Contract: NextPage = () => {
             <div>
               Choose your denomination Asset f
               {hexToDecimalString(
-                "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7",
+                "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7"
               )}
             </div>
             <div className={styles.asset_container}>
-              {dominationAssetsList.map((item, index) => (
-                <button
-                  key={index}
-                  data-color="transparent"
-                  type="button"
+              { dominationAssetsList.map((item, index)=> (
+                <button 
+                  key={index} 
+                  data-color="transparent" 
+                  type="button" 
                   onClick={() => setDenominationAsset(item.value)}
                   className={`${styles.asset_button} ${
                     denominationAsset == item.value ? styles.asset_selected : ""
                   }`}
                 >
                   <Image src={item.path} alt={item.alt} />
-                  {denominationAsset == item.value && (
-                    <>
-                      <span className={styles.asset_selected_checkmark}>
-                        <Image
-                          src={"/checkmark-circle-outline.svg"}
-                          alt={item.alt}
-                          width="24px"
-                          height="24px"
-                        />
-                      </span>
-                    </>
-                  )}
+                  {denominationAsset == item.value && <>
+                    <span className={styles.asset_selected_checkmark}>
+                      <Image src={'/checkmark-circle-outline.svg'} alt={item.alt} width='24px' height='24px'/>
+                    </span>
+                  </>}
                 </button>
               ))}
             </div>
@@ -750,31 +742,22 @@ const Contract: NextPage = () => {
           <div>
             <div>Select Protocol you want to use</div>
             <div className={styles.asset_container}>
-              {protocalList.map((item, index) => (
+              {protocalList.map((item, index)=>(
                 <button
                   key={index}
                   type="button"
                   data-color="transparent"
-                  onClick={() => addNewProtocolMult(item.values)}
+                  onClick={()=> addNewProtocolMult(item.values)}
                   className={`${styles.asset_button} ${
-                    allowedProtocol.includes(item.values[0])
-                      ? styles.asset_selected
-                      : ""
+                    allowedProtocol.includes(item.values[0]) ? styles.asset_selected : ""
                   }`}
                 >
                   <Image src={item.path} alt={item.alt} />
-                  {allowedProtocol.includes(item.values[0]) && (
-                    <>
-                      <span className={styles.asset_selected_checkmark}>
-                        <Image
-                          src={"/checkmark-circle-outline.svg"}
-                          alt={item.alt}
-                          width="24px"
-                          height="24px"
-                        />
-                      </span>
-                    </>
-                  )}
+                  {allowedProtocol.includes(item.values[0]) && <>
+                    <span className={styles.asset_selected_checkmark}>
+                      <Image src={'/checkmark-circle-outline.svg'} alt={item.alt} width='24px' height='24px'/>
+                    </span>
+                  </>}
                   <div>{item.label}</div>
                 </button>
               ))}
@@ -799,24 +782,15 @@ const Contract: NextPage = () => {
                   data-color="transparent"
                   onClick={() => addNewAsset(item.value)}
                   className={`${styles.asset_button} ${
-                    trackedAsset.includes(item.value)
-                      ? styles.asset_selected
-                      : ""
+                    trackedAsset.includes(item.value) ? styles.asset_selected : ""
                   }`}
                 >
                   <Image src={item.path} alt={item.alt} />
-                  {trackedAsset.includes(item.value) && (
-                    <>
-                      <span className={styles.asset_selected_checkmark}>
-                        <Image
-                          src={"/checkmark-circle-outline.svg"}
-                          alt={item.alt}
-                          width="24px"
-                          height="24px"
-                        />
-                      </span>
-                    </>
-                  )}
+                  {trackedAsset.includes(item.value) && <>
+                    <span className={styles.asset_selected_checkmark}>
+                      <Image src={'/checkmark-circle-outline.svg'} alt={item.alt} width='24px' height='24px'/>
+                    </span>
+                  </>}
                 </button>
               ))}
             </div>

@@ -1,54 +1,27 @@
-import { useStarknet, useStarknetInvoke } from "@starknet-react/core";
-import React from "react";
-import { useComptrollerContract } from "~/hooks/comptroller";
+import { useStarknet, useStarknetInvoke } from '@starknet-react/core'
+import React from 'react'
+import { useComptrollerContract } from '~/hooks/comptroller'
 
 export function InitializeFund() {
-  const { account } = useStarknet();
-  const { contract: comptroller } = useComptrollerContract();
-  const { invoke } = useStarknetInvoke({
-    contract: comptroller,
-    method: "activateVault",
-  });
+    const { account } = useStarknet()
+    const { contract: comptroller } = useComptrollerContract()
+    const { invoke } = useStarknetInvoke({ contract: comptroller, method: 'activateVault' })
 
-  if (!account) {
-    return null;
-  }
+    if (!account) {
+        return null
+    }
 
-  return (
-    // <div>
-    //     <button onClick={() => invoke({ args: ['0x1', '0x1651', '0x150,', '0x5515', ['15', '0'], ['10', '10', '10', '10'], ['0x5515', '0x511'], [['65', '55', '55'], ['6999', '55', '55']], ['0', '10000000000000000000000000000000'], '3600', '1'] })}>InitializeFund</button>
-    // </div>
-    <div>
-      <button
-        onClick={() =>
-          invoke({
-            args: [
-              "1",
-              "1",
-              "1",
-              "1",
-              ["1", "1"],
-              ["1", "1", "1", "1"],
-              ["1", "2"],
-              [
-                ["0", "1", "2"],
-                ["0", "1", "2"],
-              ],
-              ["1", "1"],
-              ["1", "1"],
-              "1",
-              "1",
-            ],
-          })
-        }
-      >
-        InitializeFund
-      </button>
-    </div>
-    // <div>
-    //     <button onClick={() => invoke({ args: [ [["0", "1", "2"], ["0", "1", "2"]] ], })}>addGlobalAllowedIntegration</button>
-    // </div>
-  );
+    return (
+        // <div>
+        //     <button onClick={() => invoke({ args: ['0x1', '0x1651', '0x150,', '0x5515', ['15', '0'], ['10', '10', '10', '10'], ['0x5515', '0x511'], [['65', '55', '55'], ['6999', '55', '55']], ['0', '10000000000000000000000000000000'], '3600', '1'] })}>InitializeFund</button>
+        // </div>
+        <div>
+            <button onClick={() => invoke({ args: ['1', '1', '1', '1', ['1', '1'], ['1', '1', '1', '1'], ['1', '2'], [["0", "1", "2"], ["0", "1", "2"]], ['1', '1'], ['1', '1'], '1', '1'] })}>InitializeFund</button>
+        </div>
+        // <div>
+        //     <button onClick={() => invoke({ args: [ [["0", "1", "2"], ["0", "1", "2"]] ], })}>addGlobalAllowedIntegration</button>
+        // </div>
+    )
 }
 
 // "inputs": [
