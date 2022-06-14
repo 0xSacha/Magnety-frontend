@@ -53,7 +53,7 @@ const Home: NextPage = () => {
   }, [counterResult]);
 
   return (
-    <Box margin={"auto"} paddingTop={"8%"}>
+    <Box margin={"auto"} paddingTop={"5%"}>
       <Flex
         direction={"row"}
         flexWrap={"wrap"}
@@ -61,7 +61,7 @@ const Home: NextPage = () => {
         justifyContent={"space-evenly"}
        
       >
-        <Flex direction={"column"} gap={"5vh"} width={"45%"}>
+        <Flex direction={"column"} gap={"8vh"} width={"45%"}>
           <Text fontWeight={"bold"} fontSize={"35px"} textAlign={"center"}>Discover and Create Extraordinary DeFi strategies</Text>
 
           <Flex direction={"row"} justifyContent={"space-evenly"} alignItems={"center"}>
