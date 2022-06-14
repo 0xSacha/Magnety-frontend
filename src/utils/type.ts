@@ -21,6 +21,5 @@ export interface ResponseFuncs {
     twitter: String
     linkedin: String
     telegram: String
-    coverImage: string
     profilePic: string
   }

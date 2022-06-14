@@ -40,6 +40,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // RESPONSE PUT REQUESTS
     PUT: async (req: NextApiRequest, res: NextApiResponse) => {
       const { UserInfo } = await connect() // connect to database
+      console.log(req.body)
       res.json(
         await UserInfo.findOneAndUpdate({ userAddress : `${address}`}, req.body, {upsert:true}).catch(catcher)
       )

@@ -99,11 +99,21 @@ function UserPage(props: UserPageProps) {
     return error;
   }
 
+  async function postDB(data:UserInfo) {
+    await fetch(`http://localhost:3000/api/user/${userAddress}`, {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+  }
+
   function validateDescription(value) {
     let error;
     if (!value) {
       error = "Name is required";
-    } else if (value.length > 70) {
+    } else if (value.length > 140) {
       error = "too long 😱";
     }
     return error;
@@ -135,7 +145,7 @@ function UserPage(props: UserPageProps) {
             },
             primaryType: "Message",
             message: {
-              contents: "1234",
+              contents: "Updating User Profile",
               nonce: nonce,
             },
             domain: {
@@ -183,7 +193,7 @@ function UserPage(props: UserPageProps) {
               backgroundPosition: "center bottom",
             }}
           >
-            <img src={props.user.coverImage} style={{ objectFit: "cover" }} />
+            <div style={{ objectFit: "cover", backgroundColor:"black" }} />
           </Box>
           <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
             <ModalOverlay />
@@ -195,19 +205,11 @@ function UserPage(props: UserPageProps) {
               </ModalBody>
 
               <ModalFooter>
-                <Button
-                  colorScheme="blue"
-                  mr={3}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Close
-                </Button>
-                <Button variant="ghost">Secondary Action</Button>
               </ModalFooter>
             </ModalContent>
           </Modal>
 
-          {acccountAddress == userInfo.userAddress && (
+          {acccountAddress == userAddress  && (
             <div
               style={{
                 position: "absolute",
@@ -379,7 +381,6 @@ function UserPage(props: UserPageProps) {
                   linkedin: "",
                   telegram: "",
                   twitter: "",
-                  Cover: userInfo.coverImage ? userInfo.coverImage : "",
                 }}
                 innerRef={formRef}
                 onSubmit={(values, actions) => {
@@ -387,6 +388,17 @@ function UserPage(props: UserPageProps) {
                   setTimeout(() => {
                     console.log(actions);
                     alert(JSON.stringify(values, null, 2));
+                    const data: UserInfo = 
+                    {
+                      userAddress:userAddress as String,
+                      name: values.name,
+                      description: values.description,
+                      twitter: values.telegram,
+                      linkedin: values.linkedin,
+                      telegram: values.telegram,
+                      profilePic: values.profilePic
+                    }
+                    postDB(data)
                     actions.setSubmitting(false);
                     setEditMode(false);
                   }, 100);
@@ -597,7 +609,6 @@ export async function getServerSideProps(context: any) {
   const res = await fetch(
     "http://localhost:3000/api/user/" + context.query.uad
   );
-  await console.log(res.status);
   if (res.status == 200) {
     console.log(res);
     const { data } = await res.json();

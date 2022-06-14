@@ -38,11 +38,13 @@ export const connect = async () => {
 
 
   const UserSchema = new mongoose.Schema({
-    userAddress: String, 
+    userAddress: String,
     name: String,
     description: String,
-    image: String,
-    banner: String,
+    twitter: String,
+    linkedin: String,
+    telegram: String,
+    profilePic: String
   })
 
   // OUR TODO MODEL
