@@ -8,8 +8,8 @@ import { getStarknet, toBN } from "../starknetWrapper";
 import { contractAddress } from "~/registry/address";
 import { ContractInfo } from "../utils/type";
 
-import ERC20 from '../abi/ERC20.json'
-
+import ERC20 from '../abi/erc20.json'
+import VF from '../abi/VaultFactory.json'
 import {
   Button,
   ButtonGroup,
@@ -145,6 +145,8 @@ const Contract: NextPage = () => {
 
   const Initialize = async (_tabA: String[], _tabI: any[], _tabDB: ContractInfo) => {
     console.log("yoo")
+    console.log(_tabA)
+    console.log(account.address)
     const nonce = await account.getNonce();
     try {
       await account.execute([
@@ -153,24 +155,22 @@ const Contract: NextPage = () => {
           entrypoint: "approve",
           calldata: _tabA,
         },
-        // {
-        //   contractAddress: contractAddress.VaultFactory,
-        //   entrypoint: "initializeFund",
-        //   calldata: _tabI,
-        // },
+        {
+          contractAddress: contractAddress.VaultFactory,
+          entrypoint: "initializeFund",
+          calldata: _tabI,
+        },
       ],
         [
-          ERC20 as Abi
+          ERC20 as Abi,
+          VF as Abi,
+
         ],
 
-        {
-          nonce: nonce,
-          maxFee: toBN(464884545484684519863),
-          // version: 454n,
-        }
+        { maxFee: 500000000000000000000000000 }
 
 
-      );
+      ).then((tx) => console.log(tx));
       // await fetch(`http://localhost:3000/api/contract/${deployedVaultAddress}`, {
       //   method: "put",
       //   headers: {
@@ -253,20 +253,6 @@ const Contract: NextPage = () => {
     e.preventDefault();
   };
 
-  const handleForm = (key: string, value: any): void => {
-    setFormData((state: any) => {
-      if (value == undefined) {
-        const { [key]: _removedEntity, ...filteredEntities } = state;
-        return {
-          ...filteredEntities,
-        };
-      }
-      return {
-        ...state,
-        [key]: value,
-      };
-    });
-  };
 
 
 
@@ -277,7 +263,6 @@ const Contract: NextPage = () => {
     const compiled = json.parse(await raw.text());
     return compiled;
   };
-  getCompiledVault().then(setCompiledTarget);
 
   const { deploy: deployTarget } = useContractFactory({
     compiledContract: compiledTarget,
@@ -303,6 +288,11 @@ const Contract: NextPage = () => {
   }, [compiledTarget]);
 
   const handleDeploy = async () => {
+    // provider.deployContract(
+    //   {
+
+    //   }
+    // )
     onDeploy()
   };
 
@@ -425,7 +415,7 @@ const Contract: NextPage = () => {
 
           console.log("go submited")
           setTimeout(() => {
-            alert(JSON.stringify(values, null, 8));
+            // alert(JSON.stringify(values, null, 8));
 
             let dataFinance_ = [{
               sharePrice: values.amount / values.shareAmount,
@@ -433,7 +423,7 @@ const Contract: NextPage = () => {
               gav: values.amount
             }]
             let data: ContractInfo = {
-              fundAddress: deployedVaultAddress,
+              fundAddress: "deployedVaultAddress",
               name: values.name,
               symbol: values.symbol,
               strategy: values.strategy,
@@ -443,7 +433,7 @@ const Contract: NextPage = () => {
             }
             let _tabI: any[] = [];
 
-            _tabI.push(hexToDecimalString(deployedVaultAddress));
+            // _tabI.push(hexToDecimalString(deployedVaultAddress));
             _tabI.push(strToShortStringFelt(values.name).toString());
             _tabI.push(strToShortStringFelt(values.symbol).toString());
             _tabI.push(hexToDecimalString(Asset[denominationAsset].address));
@@ -489,6 +479,7 @@ const Contract: NextPage = () => {
             var _tabA: String[] = []
             _tabA.push(contractAddress.VaultFactory)
             _tabA.push(amount.toString())
+            _tabA.push("0")
 
             console.log(_tabI)
             console.log(data)
@@ -1198,7 +1189,15 @@ const Contract: NextPage = () => {
               </div>
               <Flex width={"100%"} justifyContent={"center"}>
 
-
+              <Button
+                      mt={4}
+                      alignSelf={"center"}
+                      backgroundColor="#f6643c"
+                      // isLoading={props.isSubmitting}
+                      type="submit"
+                    >
+                      Create my Fund
+                    </Button>
                 {
                   deployedVaultAddress != "" ?
                     <Button
