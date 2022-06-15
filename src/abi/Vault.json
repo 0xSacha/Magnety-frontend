@@ -499,16 +499,26 @@
         "type": "event"
     },
     {
-        "inputs": [],
-        "name": "getAB",
-        "outputs": [
+        "data": [
             {
-                "name": "res",
+                "name": "externalPositionAddress",
                 "type": "felt"
             }
         ],
-        "stateMutability": "view",
-        "type": "function"
+        "keys": [],
+        "name": "TrackedExternalPositionAdded",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "externalPositionAddress",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "TrackedExternalPositionRemoved",
+        "type": "event"
     },
     {
         "inputs": [],
@@ -525,18 +535,6 @@
     {
         "inputs": [],
         "name": "getDenominationAsset",
-        "outputs": [
-            {
-                "name": "res",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "checkIsActivated",
         "outputs": [
             {
                 "name": "res",
@@ -605,6 +603,23 @@
         "type": "function"
     },
     {
+        "inputs": [
+            {
+                "name": "_externalPosition",
+                "type": "felt"
+            }
+        ],
+        "name": "isTrackedExternalPosition",
+        "outputs": [
+            {
+                "name": "isTrackedExternalPosition_",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "name": "getTrackedAssets",
         "outputs": [
@@ -614,6 +629,22 @@
             },
             {
                 "name": "trackedAssets_",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getTrackedExternalPositions",
+        "outputs": [
+            {
+                "name": "trackedExternalPositions__len",
+                "type": "felt"
+            },
+            {
+                "name": "trackedExternalPositions_",
                 "type": "felt*"
             }
         ],
@@ -816,12 +847,6 @@
             }
         ],
         "name": "initializer",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "activate",
         "outputs": [],
         "type": "function"
     },

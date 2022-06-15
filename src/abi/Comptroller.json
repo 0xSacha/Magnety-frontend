@@ -32,267 +32,6 @@
             {
                 "name": "_vault",
                 "type": "felt"
-            },
-            {
-                "name": "_asset",
-                "type": "felt"
-            },
-            {
-                "name": "_amount",
-                "type": "Uint256"
-            }
-        ],
-        "name": "activateVault",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_vaultId",
-                "type": "felt"
-            },
-            {
-                "name": "_asset",
-                "type": "felt"
-            }
-        ],
-        "name": "addTrackedAsset",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_vaultId",
-                "type": "felt"
-            },
-            {
-                "name": "asset",
-                "type": "felt"
-            }
-        ],
-        "name": "removeTrackedAsset",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_vaultId",
-                "type": "felt"
-            },
-            {
-                "name": "_contract",
-                "type": "felt"
-            },
-            {
-                "name": "_selector",
-                "type": "felt"
-            },
-            {
-                "name": "_callData_len",
-                "type": "felt"
-            },
-            {
-                "name": "_callData",
-                "type": "felt*"
-            }
-        ],
-        "name": "executeCall",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_vaultId",
-                "type": "felt"
-            },
-            {
-                "name": "_assets_len",
-                "type": "felt"
-            },
-            {
-                "name": "_assets",
-                "type": "felt*"
-            },
-            {
-                "name": "_percents_len",
-                "type": "felt"
-            },
-            {
-                "name": "_percents",
-                "type": "felt*"
-            }
-        ],
-        "name": "claimManagementFee",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_vault",
-                "type": "felt"
-            },
-            {
-                "name": "_asset",
-                "type": "felt"
-            },
-            {
-                "name": "_amount",
-                "type": "Uint256"
-            }
-        ],
-        "name": "buyShare",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_vault",
-                "type": "felt"
-            },
-            {
-                "name": "token_id",
-                "type": "Uint256"
-            },
-            {
-                "name": "share_amount",
-                "type": "Uint256"
-            },
-            {
-                "name": "assets_len",
-                "type": "felt"
-            },
-            {
-                "name": "assets",
-                "type": "felt*"
-            },
-            {
-                "name": "percents_len",
-                "type": "felt"
-            },
-            {
-                "name": "percents",
-                "type": "felt*"
-            }
-        ],
-        "name": "sell_share",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_vault",
-                "type": "felt"
-            },
-            {
-                "name": "key",
-                "type": "felt"
-            },
-            {
-                "name": "amount",
-                "type": "Uint256"
-            }
-        ],
-        "name": "__get_fee",
-        "outputs": [
-            {
-                "name": "fee",
-                "type": "Uint256"
-            },
-            {
-                "name": "fee_asset_manager",
-                "type": "Uint256"
-            },
-            {
-                "name": "fee_treasury",
-                "type": "Uint256"
-            },
-            {
-                "name": "fee_stacking_vault",
-                "type": "Uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_caller",
-                "type": "felt"
-            },
-            {
-                "name": "_vaultId",
-                "type": "felt"
-            }
-        ],
-        "name": "getVaultAddressFromCallerAndId",
-        "outputs": [
-            {
-                "name": "res",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_caller",
-                "type": "felt"
-            }
-        ],
-        "name": "getVaultAmountFromCaller",
-        "outputs": [
-            {
-                "name": "res",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getVaultAmount",
-        "outputs": [
-            {
-                "name": "res",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_vaultId",
-                "type": "felt"
-            }
-        ],
-        "name": "getVaultAddressFromId",
-        "outputs": [
-            {
-                "name": "res",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_vault",
-                "type": "felt"
             }
         ],
         "name": "getSharePrice",
@@ -337,7 +76,7 @@
                 "type": "felt"
             }
         ],
-        "name": "calc_gav",
+        "name": "calculLiquidGav",
         "outputs": [
             {
                 "name": "gav",
@@ -345,6 +84,281 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            }
+        ],
+        "name": "calculNotLiquidGav",
+        "outputs": [
+            {
+                "name": "gav",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            }
+        ],
+        "name": "calculGav",
+        "outputs": [
+            {
+                "name": "gav",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "key",
+                "type": "felt"
+            },
+            {
+                "name": "amount",
+                "type": "Uint256"
+            }
+        ],
+        "name": "__get_fee",
+        "outputs": [
+            {
+                "name": "fee",
+                "type": "Uint256"
+            },
+            {
+                "name": "fee_asset_manager",
+                "type": "Uint256"
+            },
+            {
+                "name": "fee_treasury",
+                "type": "Uint256"
+            },
+            {
+                "name": "fee_stacking_vault",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_asset",
+                "type": "felt"
+            }
+        ],
+        "name": "addTrackedAsset",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_asset",
+                "type": "felt"
+            }
+        ],
+        "name": "removeTrackedAsset",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_externalPosition",
+                "type": "felt"
+            }
+        ],
+        "name": "addTrackedExternalPosition",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_externalPosition",
+                "type": "felt"
+            }
+        ],
+        "name": "removeTrackedExternalPosition",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_contract",
+                "type": "felt"
+            },
+            {
+                "name": "_selector",
+                "type": "felt"
+            },
+            {
+                "name": "_callData_len",
+                "type": "felt"
+            },
+            {
+                "name": "_callData",
+                "type": "felt*"
+            }
+        ],
+        "name": "executeCall",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_assets_len",
+                "type": "felt"
+            },
+            {
+                "name": "_assets",
+                "type": "felt*"
+            },
+            {
+                "name": "_percents_len",
+                "type": "felt"
+            },
+            {
+                "name": "_percents",
+                "type": "felt*"
+            }
+        ],
+        "name": "claimManagementFee",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            }
+        ],
+        "name": "getManagementFeeValue",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "caller",
+                "type": "felt"
+            },
+            {
+                "name": "share_amount",
+                "type": "Uint256"
+            },
+            {
+                "name": "share_price",
+                "type": "Uint256"
+            }
+        ],
+        "name": "mintFromVF",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_amount",
+                "type": "Uint256"
+            }
+        ],
+        "name": "buyShare",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "token_id",
+                "type": "Uint256"
+            },
+            {
+                "name": "share_amount",
+                "type": "Uint256"
+            },
+            {
+                "name": "assets_len",
+                "type": "felt"
+            },
+            {
+                "name": "assets",
+                "type": "felt*"
+            },
+            {
+                "name": "percents_len",
+                "type": "felt"
+            },
+            {
+                "name": "percents",
+                "type": "felt*"
+            }
+        ],
+        "name": "sell_share",
+        "outputs": [],
         "type": "function"
     }
 ]

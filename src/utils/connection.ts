@@ -1,5 +1,6 @@
 //IMPORT MONGOOSE
 import mongoose, { Model } from "mongoose"
+import { number } from "starknet"
 import Vault from "../models/vault"
 
 // CONNECTING TO MONGOOSE (Get Database Url from .env.local)
@@ -19,20 +20,32 @@ export const connect = async () => {
     completed: Boolean,
   })
 
+  type DataFinance = {
+    sharePrice: number;
+    date: Date;
+    gav: number;
+  }[];
+
   const ContractSchema = new mongoose.Schema({
+    fundAddress: String,
     name: String,
     symbol: String,
-    description: String,
-    type: String,
-    min: Number,
-    max: Number,
-    lockup: Number,
-    limit: Number,
-    entranceFees: String,
-    exitFees: String,
-    managementFees: String,
-    performanceFees: String,
-    tags: [],
+    strategy: String,
+    // type: String,
+    // min: Number,
+    // max: Number,
+    // lockup: Number,
+    // limit: Number,
+    // entranceFees: String,
+    // exitFees: String,
+    // managementFees: String,
+    // performanceFees: String,
+    tags: [String],
+    dataFinance: [{
+      sharePrice: Number,
+      date: Number,
+      gav: Number,
+    }],
     image: String
   })
 

@@ -2,17 +2,17 @@
     {
         "members": [
             {
-                "name": "contract",
+                "name": "low",
                 "offset": 0,
                 "type": "felt"
             },
             {
-                "name": "selector",
+                "name": "high",
                 "offset": 1,
                 "type": "felt"
             }
         ],
-        "name": "integration",
+        "name": "Uint256",
         "size": 2,
         "type": "struct"
     },
@@ -20,6 +20,10 @@
         "inputs": [
             {
                 "name": "_vaultFactory",
+                "type": "felt"
+            },
+            {
+                "name": "_ethAddress",
                 "type": "felt"
             }
         ],
@@ -30,11 +34,53 @@
     {
         "inputs": [
             {
-                "name": "_asset",
+                "name": "_baseAsset",
+                "type": "felt"
+            },
+            {
+                "name": "_amount",
+                "type": "Uint256"
+            },
+            {
+                "name": "_denominationAsset",
                 "type": "felt"
             }
         ],
-        "name": "checkIsAssetAvailable",
+        "name": "calculAssetValue",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "Uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_derivative",
+                "type": "felt"
+            }
+        ],
+        "name": "getDerivativePriceFeed",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_derivative",
+                "type": "felt"
+            }
+        ],
+        "name": "checkIsSupportedDerivativeAsset",
         "outputs": [
             {
                 "name": "res",
@@ -51,7 +97,7 @@
                 "type": "felt"
             }
         ],
-        "name": "checkIsExternalPositionAvailable",
+        "name": "getExternalPositionPriceFeed",
         "outputs": [
             {
                 "name": "res",
@@ -59,107 +105,6 @@
             }
         ],
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_contract",
-                "type": "felt"
-            },
-            {
-                "name": "_selector",
-                "type": "felt"
-            }
-        ],
-        "name": "checkIsIntegrationAvailable",
-        "outputs": [
-            {
-                "name": "res",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_contract",
-                "type": "felt"
-            },
-            {
-                "name": "_selector",
-                "type": "felt"
-            }
-        ],
-        "name": "getIntegration",
-        "outputs": [
-            {
-                "name": "res",
-                "type": "felt"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getAvailableAssets",
-        "outputs": [
-            {
-                "name": "availableAssets_len",
-                "type": "felt"
-            },
-            {
-                "name": "availableAssets",
-                "type": "felt*"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getAvailableExternalPositions",
-        "outputs": [
-            {
-                "name": "availableExternalPositions_len",
-                "type": "felt"
-            },
-            {
-                "name": "availableExternalPositions",
-                "type": "felt*"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getAvailableIntegrations",
-        "outputs": [
-            {
-                "name": "availableIntegrations_len",
-                "type": "felt"
-            },
-            {
-                "name": "availableIntegrations",
-                "type": "integration*"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_asset",
-                "type": "felt"
-            }
-        ],
-        "name": "setAvailableAsset",
-        "outputs": [],
         "type": "function"
     },
     {
@@ -169,26 +114,43 @@
                 "type": "felt"
             }
         ],
-        "name": "setAvailableExternalPosition",
+        "name": "checkIsSupportedExternalPosition",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_derivative",
+                "type": "felt"
+            },
+            {
+                "name": "_priceFeed",
+                "type": "felt"
+            }
+        ],
+        "name": "addDerivative",
         "outputs": [],
         "type": "function"
     },
     {
         "inputs": [
             {
-                "name": "_contract",
+                "name": "_externalPosition",
                 "type": "felt"
             },
             {
-                "name": "_selector",
-                "type": "felt"
-            },
-            {
-                "name": "_integration",
+                "name": "_priceFeed",
                 "type": "felt"
             }
         ],
-        "name": "setAvailableIntegration",
+        "name": "addExternalPosition",
         "outputs": [],
         "type": "function"
     }

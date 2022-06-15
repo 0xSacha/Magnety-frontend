@@ -7,17 +7,12 @@
                 "type": "felt"
             },
             {
-                "name": "selector",
+                "name": "tokenId",
                 "offset": 1,
-                "type": "felt"
-            },
-            {
-                "name": "integration",
-                "offset": 2,
-                "type": "felt"
+                "type": "Uint256"
             }
         ],
-        "name": "integration",
+        "name": "ShareInfo",
         "size": 3,
         "type": "struct"
     },
@@ -36,6 +31,28 @@
         ],
         "name": "Uint256",
         "size": 2,
+        "type": "struct"
+    },
+    {
+        "members": [
+            {
+                "name": "contract",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "selector",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "integration",
+                "offset": 2,
+                "type": "felt"
+            }
+        ],
+        "name": "integration",
+        "size": 3,
         "type": "struct"
     },
     {
@@ -81,6 +98,30 @@
         "keys": [],
         "name": "VaultInitalized",
         "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "areDependenciesSet",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getOwner",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
         "inputs": [],
@@ -167,8 +208,72 @@
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "getDerivativePriceFeed",
+        "inputs": [
+            {
+                "name": "_user",
+                "type": "felt"
+            }
+        ],
+        "name": "getUserShareAmount",
+        "outputs": [
+            {
+                "name": "amount",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_user",
+                "type": "felt"
+            },
+            {
+                "name": "id",
+                "type": "felt"
+            }
+        ],
+        "name": "getUserShareInfo",
+        "outputs": [
+            {
+                "name": "info",
+                "type": "ShareInfo"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_user",
+                "type": "felt"
+            }
+        ],
+        "name": "getUserVaultAmount",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_user",
+                "type": "felt"
+            },
+            {
+                "name": "_vaultId",
+                "type": "felt"
+            }
+        ],
+        "name": "getUserVault",
         "outputs": [
             {
                 "name": "res",
@@ -180,7 +285,24 @@
     },
     {
         "inputs": [],
-        "name": "getStackingVault",
+        "name": "getVaultAmount",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vaultId",
+                "type": "felt"
+            }
+        ],
+        "name": "getVaultFromId",
         "outputs": [
             {
                 "name": "res",
@@ -192,14 +314,19 @@
     },
     {
         "inputs": [],
-        "name": "getDaoTreasury",
-        "outputs": [
+        "name": "claimOwnership",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
             {
-                "name": "res",
+                "name": "_nominatedOwner",
                 "type": "felt"
             }
         ],
-        "stateMutability": "view",
+        "name": "setNewOwner",
+        "outputs": [],
         "type": "function"
     },
     {
@@ -357,6 +484,82 @@
                 "type": "felt"
             },
             {
+                "name": "_trackedAsset_len",
+                "type": "felt"
+            },
+            {
+                "name": "_trackedAsset",
+                "type": "felt*"
+            }
+        ],
+        "name": "addAllowedTrackedAsset",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_integration_len",
+                "type": "felt"
+            },
+            {
+                "name": "_integration",
+                "type": "integration*"
+            }
+        ],
+        "name": "addAllowedIntegration",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_caller",
+                "type": "felt"
+            },
+            {
+                "name": "_tokenId",
+                "type": "Uint256"
+            }
+        ],
+        "name": "setNewMint",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_caller",
+                "type": "felt"
+            },
+            {
+                "name": "_tokenId",
+                "type": "Uint256"
+            }
+        ],
+        "name": "setNewBurn",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
                 "name": "_fundName",
                 "type": "felt"
             },
@@ -373,6 +576,14 @@
                 "type": "Uint256"
             },
             {
+                "name": "_amount",
+                "type": "Uint256"
+            },
+            {
+                "name": "_shareAmount",
+                "type": "Uint256"
+            },
+            {
                 "name": "_feeConfig_len",
                 "type": "felt"
             },
@@ -386,6 +597,14 @@
             },
             {
                 "name": "_assetList",
+                "type": "felt*"
+            },
+            {
+                "name": "_externalPositionList_len",
+                "type": "felt"
+            },
+            {
+                "name": "_externalPositionList",
                 "type": "felt*"
             },
             {
@@ -414,60 +633,6 @@
             }
         ],
         "name": "initializeFund",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_assetList_len",
-                "type": "felt"
-            },
-            {
-                "name": "_assetList",
-                "type": "felt*"
-            },
-            {
-                "name": "_vault",
-                "type": "felt"
-            },
-            {
-                "name": "_integrationManager",
-                "type": "felt"
-            },
-            {
-                "name": "_policyManager",
-                "type": "felt"
-            }
-        ],
-        "name": "__addAllowedAsset",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_integration_len",
-                "type": "felt"
-            },
-            {
-                "name": "_integration",
-                "type": "integration*"
-            },
-            {
-                "name": "_vault",
-                "type": "felt"
-            },
-            {
-                "name": "_integrationManager",
-                "type": "felt"
-            },
-            {
-                "name": "_policyManager",
-                "type": "felt"
-            }
-        ],
-        "name": "__addAllowedIntegration",
         "outputs": [],
         "type": "function"
     },
