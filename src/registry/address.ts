@@ -1,6 +1,6 @@
 export const contractAddress =
 {
-    VaultFactory: "0x031ed52f5b1ea0dc84172a99fad44d202beaa528e8629d0a1f0d4a8b163a71b1",
+    VaultFactory: "0x04bbe22585942255a955363cac24f33c449f8624785c437152360ab8012fad22",
     StakingVault: "0x738bb79798127c6d026013b4067a20694a091ddde9b69e36b0a384c9b94610f",
     valueInterpretor: "0x046f1fada567408141c9da54f7ff684bf79e8a85f8ef6e8b78a0e67972125c02",
     alphaRoadFinanceToken: "0x06d5483321e825a2712a2862c1d8cb60d20c485e2cbf9277fa543f4c646312ba",
