@@ -64,6 +64,7 @@ export function useContractFactory({
                 setContract(contract);
                 return contract;
             }
+           
             return undefined;
         },
         [factory]

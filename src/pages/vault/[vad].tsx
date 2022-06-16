@@ -20,6 +20,7 @@ import { GiPayMoney } from "react-icons/gi";
 import { MdManageSearch } from "react-icons/md";
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import moment from "moment";
+
 import {
   AreaChart,
   Area,
@@ -238,6 +239,8 @@ const vault: NextPage = () => {
 
     setOnChange(!onChange);
   };
+
+  
 
   const handleChange = (value) => setBuyValue(value);
   const handleChange2 = (value) => setPercentShare(value);
