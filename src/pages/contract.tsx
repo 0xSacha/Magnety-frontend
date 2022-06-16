@@ -303,12 +303,15 @@ const Contract: NextPage = () => {
       const deployment = await deployTarget({
         constructorCalldata: [
           hexToDecimalString(
-            "0x031ed52f5b1ea0dc84172a99fad44d202beaa528e8629d0a1f0d4a8b163a71b1"
+            contractAddress.VaultFactory
           ),
-          hexToDecimalString(comptroller),
+          hexToDecimalString(
+            contractAddress.Comptroller
+          ),
         ],
       });
       if (deployment) {
+        console.log(deployment.address)
         setDeployedVaultAddress(deployment.address);
         setDeployedVaultHash(deployment.deployTransactionHash);
         await library
@@ -401,10 +404,10 @@ const Contract: NextPage = () => {
           max: 20,
           lockup: "3",
           limit: "10",
-          entranceFees: "0%",
-          exitFees: "0%",
-          managementFees: "0%",
-          performanceFees: "0%",
+          entranceFees: "0",
+          exitFees: "0",
+          managementFees: "0",
+          performanceFees: "0",
           tags: ["DeFi", "Hedging", "Yield", "LongTerm"],
           amount: 1,
           shareAmount: 10,
@@ -433,7 +436,7 @@ const Contract: NextPage = () => {
             }
             let _tabI: any[] = [];
 
-            // _tabI.push(hexToDecimalString(deployedVaultAddress));
+            _tabI.push(hexToDecimalString(deployedVaultAddress));
             _tabI.push(strToShortStringFelt(values.name).toString());
             _tabI.push(strToShortStringFelt(values.symbol).toString());
             _tabI.push(hexToDecimalString(Asset[denominationAsset].address));
@@ -474,10 +477,10 @@ const Contract: NextPage = () => {
             _tabI.push("0");
 
             _tabI.push(values.lockup);
-            _tabI.push(values.type == "public" ? 1 : 0)
+            _tabI.push(values.type == "public" ? "1" : "0")
 
             var _tabA: String[] = []
-            _tabA.push(contractAddress.VaultFactory)
+            _tabA.push(hexToDecimalString(contractAddress.VaultFactory))
             _tabA.push(amount.toString())
             _tabA.push("0")
 
@@ -1136,8 +1139,8 @@ const Contract: NextPage = () => {
                               id="amount"
                               defaultValue={props.values.amount}
                               isRequired
-                              step={0.01}
-                              min={0.01}
+                              step={0.001}
+                              min={0.0001}
                               max={100000000000}
                             >
                               <NumberInputField />
