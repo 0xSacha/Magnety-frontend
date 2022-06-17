@@ -531,7 +531,7 @@ const Contract: NextPage = () => {
             _tabI.push("0");
 
             _tabI.push(values.lockup);
-            _tabI.push(values.type == "public" ? "1" : "0")
+            _tabI.push(values.type == "Public" ? "1" : "0")
 
             var _tabA: String[] = []
             _tabA.push(hexToDecimalString(contractAddress.VaultFactory))
@@ -1224,7 +1224,7 @@ const Contract: NextPage = () => {
                               }}
                               id="shareAmount"
                               isRequired
-                              defaultValue={props.values.shareAmount.toPrecision(2)}
+                              defaultValue={props.values.shareAmount}
                               step={2}
                               min={1}
                               max={100}
@@ -1291,13 +1291,13 @@ const Contract: NextPage = () => {
                 {txAcceptedTransac == 0 ?
                 <Flex direction={"column"}>
                 <Text fontWeight={"2x1"}>Your transaction is about to be confirmed on L2</Text>
-                <Link href={targetLink}>
+                {/* <Link href={targetLink}>
                   <Button backgroundColor={"#f6643c"}>
                   Fund on Goerli
                   </Button>
-                </Link>
+                </Link> */}
                 <Text>
-                  Hash {targetLink}
+                  Fund Address : {deployedVaultAddress}
                 </Text>
                 </Flex>
                 :

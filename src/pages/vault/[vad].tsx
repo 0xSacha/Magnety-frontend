@@ -84,6 +84,9 @@ import ethzkp from "../../image/ETH-ZKP.png";
 import btctst from "../../image/BTC-TST.png";
 import ethtst from "../../image/ETH-TST.png";
 import ethbtc from "../../image/ETH-BTC.png";
+import { ContractInfo } from "../../utils/type";
+
+
 
 const { provider, account } = getStarknet();
 const databaseInfo = {
@@ -119,27 +122,48 @@ type DataChart = {
 }[];
 
 import VDatabase from "./vaults.json";
+import { useDeprecatedAnimatedState } from "framer-motion";
 
 const vault: NextPage = () => {
   let count = useAppSelector(selectCount);
 
   const router = useRouter();
   var { vad } = router.query; /* vault address*/
-  var addressdata = VDatabase["default"];
-  if (vad !== undefined) {
-    /* vad = contractAddress.StakingVault */
-    addressdata =
-      VDatabase[String(vad)]; /* replace with get vault vaultaddress*/
-  }
+  const [vaultAddress, setVaultAddess] = React.useState<string>("");
+
+  const [vaultInfo, setVaultInfo] = React.useState<ContractInfo>();
+  useEffect(() => {
+    console.log(vad)
+    if (vad !== undefined) {
+      setVaultAddess(String(vad))
+      loadData()
+    }
+  }, [vad])
+  
+  const loadData = async () => {
+    console.log("loading db Fund Data");
+    const res = await fetch(
+      "http://localhost:3000/api/contract/" +String(vad)
+    );
+    if (res.status == 200) {
+      console.log(res);
+      const { data } = await res.json();
+      console.log(data)
+      setVaultInfo(data)
+    }
+  };
+
+ 
+
+
+
 
   /* TODO : check if address is correct else use stakingvault address ! */
 
-  const vaultAddress = contractAddress.StakingVault;
   const comptroller = contractAddress.Comptroller;
   const valueIntepretor = contractAddress.valueInterpretor;
   const feeManager = contractAddress.FeeManager;
   const policyManager = contractAddress.PolicyManager;
-
   const [name, setName] = React.useState<string>("name");
   const [symbol, setSymbol] = React.useState<string>("symbol");
   const [accountInterface, setAccountInterface] =
@@ -264,7 +288,11 @@ const vault: NextPage = () => {
     return <FakeImage fillColor="black" borderRadius="50%" />;
   }
 
+
+  
+
   useEffect(() => {
+    if (vaultAddress != ""){
     const res = provider.callContract({
       contractAddress: vaultAddress,
       entrypoint: "getName",
@@ -507,7 +535,8 @@ const vault: NextPage = () => {
     // }).catch(err => {
     //   console.log(err);
     // });
-  }, []);
+    }
+  }, [vaultAddress]);
 
   const dateFormatter = (date) => {
     // return moment(date).unix();
@@ -1278,7 +1307,7 @@ const vault: NextPage = () => {
                   }}
                 >
                   <img
-                    src={addressdata.photo_link}
+                    src={vaultInfo?.image}
                     style={{ objectFit: "cover" }}
                   />
                 </Box>
@@ -1297,18 +1326,19 @@ const vault: NextPage = () => {
                     </Text>
                   </Flex>
                   
-
+                  {vaultInfo !== undefined &&
                   <Stack direction={"row"}>
-                    {[...Array(Object.keys(addressdata.tags).length)].map(
+                    {[...Array(Object.keys(vaultInfo.tags).length)].map(
                       (e, i) => {
                         return (
                           <Text fontWeight={"semibold"} fontSize={"1.5rem"}>
-                            {"#" + addressdata.tags[i]}
+                            {"#" + vaultInfo.tags[i]}
                           </Text>
                         );
                       }
                     )}
                   </Stack>
+                  }
                   <Text fontWeight={"light"} fontSize={"1rem"}>
                     <Link
                       href={"https://goerli.voyager.online/contract/" + vad}
@@ -1331,7 +1361,7 @@ const vault: NextPage = () => {
               </Flex>
               <Box maxWidth={"40vw"} marginLeft={"1vw"}>
                 <Text fontWeight={"light"} fontSize={"2xl"}>
-                  {addressdata.description}
+                  {vaultInfo?.strategy}
                 </Text>
               </Box>
             </Flex>
@@ -1448,7 +1478,7 @@ const vault: NextPage = () => {
                   }}
                 >
                   <img
-                    src={addressdata.photo_link}
+                    src={vaultInfo?.image}
                     style={{ objectFit: "cover" }}
                   />
                 </Box>
