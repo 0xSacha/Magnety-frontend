@@ -7,7 +7,7 @@ export const contractAddress =
     alphaRoadFinanceLP: "0x071022eeb1763628f03a0ffcfd0c7b6eff3cfb3a964b064691e4828d8264c03a",
     FeeManager: "0x02a57c5a744539249708c59ec571c8e9b9a64a31f7f5b0f547d6259f733b744a",
     PolicyManager: "0x04038bf421e89c6962ad59ff4fc7cb4e18deceb8bdc31f2f159b5eb7bcf42c4d",
-    Comptroller: "0x04432fc00432c1025c8b03775fc64180948d5a2725cc50882f4dec0b526459f5",
+    Comptroller: "0x0446cb0471c71f71cbcc712842a24eec1fa2ec909243f49b4103ced511af382e",
     IntegrationManager: "0x02e903175db51c8e8613c5194c98060c240a0d9c54a1e33d4c0dfda0a771816e",
     ValueInterpreter: "0x046f1fada567408141c9da54f7ff684bf79e8a85f8ef6e8b78a0e67972125c02",
     Oracle: "0x013befe6eda920ce4af05a50a67bd808d67eee6ba47bb0892bef2d630eaf1bba",
