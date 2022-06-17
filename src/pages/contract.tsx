@@ -480,7 +480,7 @@ const Contract: NextPage = () => {
               gav: values.amount
             }]
             let data: ContractInfo = {
-              fundAddress: "deployedVaultAddress",
+              fundAddress: deployedVaultAddress,
               name: values.name,
               symbol: values.symbol,
               strategy: values.strategy,

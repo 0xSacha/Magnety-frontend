@@ -134,8 +134,10 @@ const vault: NextPage = () => {
   const [vaultInfo, setVaultInfo] = React.useState<ContractInfo>();
   useEffect(() => {
     console.log(vad)
-    if (vad !== undefined) {
-      setVaultAddess(String(vad))
+    if (vad !== undefined && typeof(vad) == "string") {
+      setVaultAddess(vad)
+      console.log("fff")
+      console.log(vaultAddress)
       loadData()
     }
   }, [vad])
@@ -292,6 +294,7 @@ const vault: NextPage = () => {
   
 
   useEffect(() => {
+    console.log(vaultAddress)
     if (vaultAddress != ""){
     const res = provider.callContract({
       contractAddress: vaultAddress,
@@ -333,6 +336,7 @@ const vault: NextPage = () => {
       .then((value) => {
         const _assetManager = value.result[0];
         setAssetManager(_assetManager);
+        //look for asset manager image
       })
       .catch((err) => {
         console.log(err);
@@ -412,7 +416,7 @@ const vault: NextPage = () => {
 
     const res8 = provider.callContract({
       contractAddress: comptroller,
-      entrypoint: "calc_gav",
+      entrypoint: "calculGav",
       calldata: [hexToDecimalString(vaultAddress)],
     });
     res8
