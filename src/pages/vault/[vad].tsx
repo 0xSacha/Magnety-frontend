@@ -86,8 +86,6 @@ import ethtst from "../../image/ETH-TST.png";
 import ethbtc from "../../image/ETH-BTC.png";
 import { ContractInfo } from "../../utils/type";
 
-
-
 const { provider, account } = getStarknet();
 const databaseInfo = {
   path: eth,
@@ -135,18 +133,16 @@ const vault: NextPage = () => {
   const [fundExist, setFundExist] = React.useState<Boolean>(true);
   const [loading, setLoading] = React.useState<Boolean>(true);
 
-  
-
   const [vaultInfo, setVaultInfo] = React.useState<ContractInfo>();
   useEffect(() => {
-    console.log(vad)
-    if (vad !== undefined && typeof (vad) == "string") {
-      setVaultAddess(vad)
-      console.log("fff")
-      console.log(vaultAddress)
-      loadData()
+    console.log(vad);
+    if (vad !== undefined && typeof vad == "string") {
+      setVaultAddess(vad);
+      console.log("fff");
+      console.log(vaultAddress);
+      loadData();
     }
-  }, [vad])
+  }, [vad]);
 
   const loadData = async () => {
     console.log("loading db Fund Data");
@@ -156,13 +152,12 @@ const vault: NextPage = () => {
     if (res.status == 200) {
       console.log(res);
       const { data } = await res.json();
-      console.log(data)
-      setVaultInfo(data)
-      setLoading(false)
-    }
-    else {
-      setFundExist(false)
-      setLoading(false)
+      console.log(data);
+      setVaultInfo(data);
+      setLoading(false);
+    } else {
+      setFundExist(false);
+      setLoading(false);
     }
   };
 
@@ -174,19 +169,13 @@ const vault: NextPage = () => {
     if (res.status == 200) {
       console.log(res);
       const { data } = await res.json();
-      console.log(data)
-      setAssetManagerImage(data.profilePic)
-      setAssetManagerName(data.name)
-    }
-    else {
-      console.log("not found")
+      console.log(data);
+      setAssetManagerImage(data.profilePic);
+      setAssetManagerName(data.name);
+    } else {
+      console.log("not found");
     }
   };
-
-
-
-
-
 
   /* TODO : check if address is correct else use stakingvault address ! */
 
@@ -220,15 +209,20 @@ const vault: NextPage = () => {
   const [trackedAssets, setTrackedAssets] = React.useState<PortfolioData>([]);
   const [userShareInfo, setUserShareInfo] = React.useState<userShareData>([]);
   const [sellShareTab, setSellShareTab] = React.useState<SellShareData>([]);
-  const [allowedTrackedAsset, setAllowedTrackedAsset] = React.useState<string[]>([]);
-  const [allowedIntegration, setAllowedIntegration] = React.useState<Array<string[]>>([]);
+  const [allowedTrackedAsset, setAllowedTrackedAsset] = React.useState<
+    string[]
+  >([]);
+  const [allowedIntegration, setAllowedIntegration] = React.useState<
+    Array<string[]>
+  >([]);
 
   const [chartData, setChartData] = React.useState<DataChart>([]);
   const [dailyIncome, setDailyIncome] = React.useState<number>();
   const [monthlyIncome, setMonthlyIncome] = React.useState<number>();
   const [weeklyIncome, setWeeklyIncome] = React.useState<number>();
   const [totalIncome, setTotalIncome] = React.useState<number>();
-  const [assetManagerShareAmount, setAssetManagerShareAmount] = React.useState<number>();
+  const [assetManagerShareAmount, setAssetManagerShareAmount] =
+    React.useState<number>();
   const [sellList, setSellList] = React.useState<userShareData>([]);
   const [trackedAssetsLen, setTrackedAssetsLen] = React.useState<number>(0);
   const [userBalance, setUserBalance] = React.useState<string>("0");
@@ -297,8 +291,6 @@ const vault: NextPage = () => {
     setOnChange(!onChange);
   };
 
-
-
   const handleChange = (value) => setBuyValue(value);
   const handleChange2 = (value) => setPercentShare(value);
   function shortStringFeltToStr(felt: bigint): string {
@@ -311,60 +303,79 @@ const vault: NextPage = () => {
       symb == "Ether" ||
       symb == "ETH" ||
       symb ==
-      "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+        "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
     ) {
       return <Image src={Ether} alt="eth" />;
     }
   }
 
   function getUserTotalShare() {
-    let userTotalShare_ = 0
+    let userTotalShare_ = 0;
     for (let index = 0; index < userShareInfo.length; index++) {
-       userTotalShare_ = userTotalShare_ + parseFloat(userShareInfo[index].shareAmount);
+      userTotalShare_ =
+        userTotalShare_ + parseFloat(userShareInfo[index].shareAmount);
     }
-    userTotalShare_ = userTotalShare_ /1000000000000000000
-    return(userTotalShare_)
+    userTotalShare_ = userTotalShare_ / 1000000000000000000;
+    return userTotalShare_;
   }
 
   function returnImagefromAddress(address: string) {
-    console.log(address)
-    if (address == "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7") {
+    console.log(address);
+    if (
+      address ==
+      "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+    ) {
       return eth;
-    }
-    else {
-      if (address == "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7") {
+    } else {
+      if (
+        address ==
+        "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7"
+      ) {
         return btc;
-      }
-      else {
-        if (address == "0x7a6dde277913b4e30163974bf3d8ed263abb7c7700a18524f5edf38a13d39ec") {
+      } else {
+        if (
+          address ==
+          "0x7a6dde277913b4e30163974bf3d8ed263abb7c7700a18524f5edf38a13d39ec"
+        ) {
           return zkp;
-        }
-        else {
-          if (address == "0x7394cbe418daa16e42b87ba67372d4ab4a5df0b05c6e554d158458ce245bc10") {
+        } else {
+          if (
+            address ==
+            "0x7394cbe418daa16e42b87ba67372d4ab4a5df0b05c6e554d158458ce245bc10"
+          ) {
             return tst;
-          }
-          else {
-            if (address == "0x68f02f0573d85b5d54942eea4c1bf97c38ca0e3e34fe3c974d1a3feef6c33be") {
+          } else {
+            if (
+              address ==
+              "0x68f02f0573d85b5d54942eea4c1bf97c38ca0e3e34fe3c974d1a3feef6c33be"
+            ) {
               return ethzkp;
-            }
-            else {
-              if (address == "0x6d0845eb49bcbef8c91f9717623b56331cc4205a5113bddef98ec40f050edc8") {
+            } else {
+              if (
+                address ==
+                "0x6d0845eb49bcbef8c91f9717623b56331cc4205a5113bddef98ec40f050edc8"
+              ) {
                 return btctst;
-              }
-              else {
-                if (address == "0x212040ea46c99455a30b62bfe9239f100271a198a0fdf0e86befc30e510e443") {
+              } else {
+                if (
+                  address ==
+                  "0x212040ea46c99455a30b62bfe9239f100271a198a0fdf0e86befc30e510e443"
+                ) {
                   return ethtst;
-                }
-                else {
-                  if (address == "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945") {
+                } else {
+                  if (
+                    address ==
+                    "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945"
+                  ) {
                     return ethbtc;
-                  }
-                  else {
-                    if (address == "0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a") {
+                  } else {
+                    if (
+                      address ==
+                      "0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a"
+                    ) {
                       return alphaRoad;
-                    }
-                    else {
-                      return ethtst
+                    } else {
+                      return ethtst;
                     }
                   }
                 }
@@ -377,28 +388,31 @@ const vault: NextPage = () => {
   }
 
   function returnSelectorfromAddress(address: string) {
-    console.log(address)
-    if (address == "0x3f35dbce7a07ce455b128890d383c554afbc1b07cf7390a13e2d602a38c1a0a") {
+    console.log(address);
+    if (
+      address ==
+      "0x3f35dbce7a07ce455b128890d383c554afbc1b07cf7390a13e2d602a38c1a0a"
+    ) {
       return "Swap";
-    }
-    else {
-      if (address == "0x147fd8f7d12de6da66feedc6d64a11bd371e5471ee1018f11f9072ede67a0fa") {
+    } else {
+      if (
+        address ==
+        "0x147fd8f7d12de6da66feedc6d64a11bd371e5471ee1018f11f9072ede67a0fa"
+      ) {
         return "Add Liquidity";
-      }
-      else {
-        if (address == "0x2c0f7bf2d6cf5304c29171bf493feb222fef84bdaf17805a6574b0c2e8bcc87") {
+      } else {
+        if (
+          address ==
+          "0x2c0f7bf2d6cf5304c29171bf493feb222fef84bdaf17805a6574b0c2e8bcc87"
+        ) {
           return "Remove Liquidity";
         }
       }
     }
   }
 
-
-
-
-
   useEffect(() => {
-    console.log(vaultAddress)
+    console.log(vaultAddress);
     if (vaultAddress != "") {
       const res = provider.callContract({
         contractAddress: vaultAddress,
@@ -440,7 +454,7 @@ const vault: NextPage = () => {
         .then((value) => {
           const _assetManager = value.result[0];
           setAssetManager(_assetManager);
-          loadDataAssetManager(_assetManager)
+          loadDataAssetManager(_assetManager);
           //look for asset manager image
         })
         .catch((err) => {
@@ -644,10 +658,10 @@ const vault: NextPage = () => {
       });
       res16
         .then((value) => {
-          let tabAsset = value.result
-          tabAsset[0] = hexToDecimalString(tabAsset[0])
+          let tabAsset = value.result;
+          tabAsset[0] = hexToDecimalString(tabAsset[0]);
           const lenghtTab = tabAsset.shift();
-          setAllowedTrackedAsset(tabAsset)
+          setAllowedTrackedAsset(tabAsset);
           const res17 = provider.callContract({
             contractAddress: policyManager,
             entrypoint: "getAllowedIntegration",
@@ -655,21 +669,29 @@ const vault: NextPage = () => {
           });
           res17
             .then((value) => {
-              console.log("integrationnn")
-              let tabIntegration = value.result
-              let tabIntegrationFinal: string[][] = []
-              let firstIndex = 1 + (parseFloat(lenghtTab == undefined ? "0" : lenghtTab) * 2)
-              const removeApproveIntegration = tabIntegration.splice(0, firstIndex);
-              for (let index = 0; index < tabIntegration.length; index = index + 2) {
+              console.log("integrationnn");
+              let tabIntegration = value.result;
+              let tabIntegrationFinal: string[][] = [];
+              let firstIndex =
+                1 + parseFloat(lenghtTab == undefined ? "0" : lenghtTab) * 2;
+              const removeApproveIntegration = tabIntegration.splice(
+                0,
+                firstIndex
+              );
+              for (
+                let index = 0;
+                index < tabIntegration.length;
+                index = index + 2
+              ) {
                 const element = tabIntegration[index];
-                const element2 = tabIntegration[index + 1]
-                let shortTab: string[] = []
-                shortTab.push(element)
-                shortTab.push(element2)
-                tabIntegrationFinal.push(shortTab)
+                const element2 = tabIntegration[index + 1];
+                let shortTab: string[] = [];
+                shortTab.push(element);
+                shortTab.push(element2);
+                tabIntegrationFinal.push(shortTab);
               }
-              console.log(tabIntegrationFinal)
-              setAllowedIntegration(tabIntegrationFinal)
+              console.log(tabIntegrationFinal);
+              setAllowedIntegration(tabIntegrationFinal);
             })
             .catch((err) => {
               console.log(err);
@@ -678,9 +700,6 @@ const vault: NextPage = () => {
         .catch((err) => {
           console.log(err);
         });
-
-
-
     }
   }, [vaultAddress]);
 
@@ -762,7 +781,11 @@ const vault: NextPage = () => {
             const res4 = provider.callContract({
               contractAddress: vaultAddress,
               entrypoint: "tokenOfOwnerByIndex",
-              calldata: [hexToDecimalString(account.address), pas.toString(), "0"],
+              calldata: [
+                hexToDecimalString(account.address),
+                pas.toString(),
+                "0",
+              ],
             });
             res4
               .then((value) => {
@@ -825,13 +848,12 @@ const vault: NextPage = () => {
 
   useEffect(() => {
     if (assetManager !== "add" && gav != "0") {
-
       const res3 = provider.callContract({
         contractAddress: vaultAddress,
         entrypoint: "getBalanceOf",
         calldata: [hexToDecimalString(assetManager)],
       });
-      let shareAmount = 0
+      let shareAmount = 0;
       res3
         .then((value) => {
           const userShareBalance__ = hexToDecimalString(value.result[0]);
@@ -858,11 +880,11 @@ const vault: NextPage = () => {
                     const sharesBalance = hexToDecimalString(value.result[0]);
                     console.log("share balance Asset Manager");
                     console.log(sharesBalance);
-                    console.log(parseFloat(sharesBalance))
-                    shareAmount = shareAmount + parseFloat(sharesBalance)
-                    console.log("totalshareAmountFromAssetManager")
-                    console.log(shareAmount)
-                    setAssetManagerShareAmount(shareAmount)
+                    console.log(parseFloat(sharesBalance));
+                    shareAmount = shareAmount + parseFloat(sharesBalance);
+                    console.log("totalshareAmountFromAssetManager");
+                    console.log(shareAmount);
+                    setAssetManagerShareAmount(shareAmount);
                   })
                   .catch((err) => {
                     console.log(err);
@@ -872,7 +894,6 @@ const vault: NextPage = () => {
                 console.log(err);
               });
           }
-
         })
 
         .catch((err) => {
@@ -1230,174 +1251,173 @@ const vault: NextPage = () => {
   ];
 
   useEffect(() => {
-    if(vaultInfo?.dataFinance != undefined)
-    {
-    setChartData([]);
-    let list = vaultInfo?.dataFinance;
-    let render: DataChart = [];
-    let tabEpoch: number[] = [];
-    //convert date in epoch
-    list.forEach((d) => {
-      tabEpoch.push(d.date); // date -> epoch
-    });
+    if (vaultInfo?.dataFinance != undefined) {
+      setChartData([]);
+      let list = vaultInfo?.dataFinance;
+      let render: DataChart = [];
+      let tabEpoch: number[] = [];
+      //convert date in epoch
+      list.forEach((d) => {
+        tabEpoch.push(d.date); // date -> epoch
+      });
 
-    if (list.length != 0) {
-      setTotalIncome(
-        ((list[list.length - 1].sharePrice - list[0].sharePrice) /
-          list[0].sharePrice) *
-        100
-      );
-    } else {
-      setTotalIncome(0);
-    }
+      if (list.length != 0) {
+        setTotalIncome(
+          ((list[list.length - 1].sharePrice - list[0].sharePrice) /
+            list[0].sharePrice) *
+            100
+        );
+      } else {
+        setTotalIncome(0);
+      }
 
-    let day_epoch = moment().subtract(1, "days").valueOf();
-    let now = moment().valueOf();
-    console.log(day_epoch);
-    console.log(now);
-    console.log(tabEpoch);
-    const closestD = tabEpoch.reduce((a, b) => {
-      return Math.abs(b - day_epoch) < Math.abs(a - day_epoch) ? b : a;
-    });
-    let closestIndexD = tabEpoch.indexOf(closestD);
-    let diffEpochD = Math.abs(day_epoch - closestD);
-    if (diffEpochD <= 3600000) {
-      setDailyIncome(
-        ((list[list.length - 1].sharePrice - list[closestIndexD].sharePrice) /
-          list[closestIndexD].sharePrice) *
-        100
-      );
-    } else {
-      setDailyIncome(0);
-    }
-    console.log("clothest index");
-    console.log(list[list.length - 1].sharePrice);
-    console.log(list[closestIndexD].sharePrice);
+      let day_epoch = moment().subtract(1, "days").valueOf();
+      let now = moment().valueOf();
+      console.log(day_epoch);
+      console.log(now);
+      console.log(tabEpoch);
+      const closestD = tabEpoch.reduce((a, b) => {
+        return Math.abs(b - day_epoch) < Math.abs(a - day_epoch) ? b : a;
+      });
+      let closestIndexD = tabEpoch.indexOf(closestD);
+      let diffEpochD = Math.abs(day_epoch - closestD);
+      if (diffEpochD <= 3600000) {
+        setDailyIncome(
+          ((list[list.length - 1].sharePrice - list[closestIndexD].sharePrice) /
+            list[closestIndexD].sharePrice) *
+            100
+        );
+      } else {
+        setDailyIncome(0);
+      }
+      console.log("clothest index");
+      console.log(list[list.length - 1].sharePrice);
+      console.log(list[closestIndexD].sharePrice);
 
-    let week_epoch = moment().subtract(1, "weeks").valueOf();
-    const closestW = tabEpoch.reduce((a, b) => {
-      return Math.abs(b - week_epoch) < Math.abs(a - week_epoch) ? b : a;
-    });
-    let closestIndexW = tabEpoch.indexOf(closestW);
-    let diffEpochW = Math.abs(week_epoch - closestW);
-    if (diffEpochW <= 3600000) {
-      setWeeklyIncome(
-        ((list[list.length - 1].sharePrice - list[closestIndexW].sharePrice) /
-          list[closestIndexW].sharePrice) *
-        100
-      );
-    } else {
-      setWeeklyIncome(0);
-    }
+      let week_epoch = moment().subtract(1, "weeks").valueOf();
+      const closestW = tabEpoch.reduce((a, b) => {
+        return Math.abs(b - week_epoch) < Math.abs(a - week_epoch) ? b : a;
+      });
+      let closestIndexW = tabEpoch.indexOf(closestW);
+      let diffEpochW = Math.abs(week_epoch - closestW);
+      if (diffEpochW <= 3600000) {
+        setWeeklyIncome(
+          ((list[list.length - 1].sharePrice - list[closestIndexW].sharePrice) /
+            list[closestIndexW].sharePrice) *
+            100
+        );
+      } else {
+        setWeeklyIncome(0);
+      }
 
-    let month_epoch = moment().subtract(1, "months").valueOf();
-    const closestM = tabEpoch.reduce((a, b) => {
-      return Math.abs(b - month_epoch) < Math.abs(a - month_epoch) ? b : a;
-    });
-    let closestIndexM = tabEpoch.indexOf(closestM);
-    let diffEpochM = Math.abs(month_epoch - closestM);
-    if (diffEpochM < 3600000) {
-      setMonthlyIncome(
-        ((list[list.length - 1].sharePrice - list[closestIndexM].sharePrice) /
-          list[closestIndexM].sharePrice) *
-        100
-      );
-    } else {
-      setMonthlyIncome(0);
-    }
+      let month_epoch = moment().subtract(1, "months").valueOf();
+      const closestM = tabEpoch.reduce((a, b) => {
+        return Math.abs(b - month_epoch) < Math.abs(a - month_epoch) ? b : a;
+      });
+      let closestIndexM = tabEpoch.indexOf(closestM);
+      let diffEpochM = Math.abs(month_epoch - closestM);
+      if (diffEpochM < 3600000) {
+        setMonthlyIncome(
+          ((list[list.length - 1].sharePrice - list[closestIndexM].sharePrice) /
+            list[closestIndexM].sharePrice) *
+            100
+        );
+      } else {
+        setMonthlyIncome(0);
+      }
 
-    if (timeframe == 0) {
-      if (diffEpochD >= 3600000) {
-        let elemAmount = Math.floor(diffEpochD / 3600000);
-        for (let pas = 0; pas < elemAmount; pas++) {
-          let _epoch = day_epoch + pas * 3600000;
-          let _sharePrice = 0;
-          let _gav = 0;
+      if (timeframe == 0) {
+        if (diffEpochD >= 3600000) {
+          let elemAmount = Math.floor(diffEpochD / 3600000);
+          for (let pas = 0; pas < elemAmount; pas++) {
+            let _epoch = day_epoch + pas * 3600000;
+            let _sharePrice = 0;
+            let _gav = 0;
+            render.push({
+              epoch: _epoch,
+              sharePrice: _sharePrice,
+              gav: _gav,
+            });
+          }
+        }
+        for (let pas = closestIndexD; pas < tabEpoch.length; pas++) {
+          let _epoch = tabEpoch[pas];
+          let _sharePrice = list[pas].sharePrice;
+          let _gav = list[pas].gav;
           render.push({
             epoch: _epoch,
             sharePrice: _sharePrice,
             gav: _gav,
           });
         }
+        setChartData(render);
       }
-      for (let pas = closestIndexD; pas < tabEpoch.length; pas++) {
-        let _epoch = tabEpoch[pas];
-        let _sharePrice = list[pas].sharePrice;
-        let _gav = list[pas].gav;
-        render.push({
-          epoch: _epoch,
-          sharePrice: _sharePrice,
-          gav: _gav,
-        });
-      }
-      setChartData(render);
-    }
-    if (timeframe == 1) {
-      if (diffEpochW >= 3600000) {
-        let elemAmount = Math.floor(diffEpochW / 3600000);
-        for (let pas = 0; pas < elemAmount; pas++) {
-          let _epoch = week_epoch + pas * 3600000;
-          let _sharePrice = 0;
-          let _gav = 0;
+      if (timeframe == 1) {
+        if (diffEpochW >= 3600000) {
+          let elemAmount = Math.floor(diffEpochW / 3600000);
+          for (let pas = 0; pas < elemAmount; pas++) {
+            let _epoch = week_epoch + pas * 3600000;
+            let _sharePrice = 0;
+            let _gav = 0;
+            render.push({
+              epoch: _epoch,
+              sharePrice: _sharePrice,
+              gav: _gav,
+            });
+          }
+        }
+        for (let pas = closestIndexW; pas < tabEpoch.length; pas++) {
+          let _epoch = tabEpoch[pas];
+          let _sharePrice = list[pas].sharePrice;
+          let _gav = list[pas].gav;
           render.push({
             epoch: _epoch,
             sharePrice: _sharePrice,
             gav: _gav,
           });
         }
+        setChartData(render);
       }
-      for (let pas = closestIndexW; pas < tabEpoch.length; pas++) {
-        let _epoch = tabEpoch[pas];
-        let _sharePrice = list[pas].sharePrice;
-        let _gav = list[pas].gav;
-        render.push({
-          epoch: _epoch,
-          sharePrice: _sharePrice,
-          gav: _gav,
-        });
-      }
-      setChartData(render);
-    }
-    if (timeframe == 2) {
-      if (diffEpochM >= 3600000) {
-        let elemAmount = Math.floor(diffEpochM / 3600000);
-        for (let pas = 0; pas < elemAmount; pas++) {
-          let _epoch = month_epoch + pas * 3600000;
-          let _sharePrice = 0;
-          let _gav = 0;
+      if (timeframe == 2) {
+        if (diffEpochM >= 3600000) {
+          let elemAmount = Math.floor(diffEpochM / 3600000);
+          for (let pas = 0; pas < elemAmount; pas++) {
+            let _epoch = month_epoch + pas * 3600000;
+            let _sharePrice = 0;
+            let _gav = 0;
+            render.push({
+              epoch: _epoch,
+              sharePrice: _sharePrice,
+              gav: _gav,
+            });
+          }
+        }
+        for (let pas = closestIndexM; pas < tabEpoch.length; pas++) {
+          let _epoch = tabEpoch[pas];
+          let _sharePrice = list[pas].sharePrice;
+          let _gav = list[pas].gav;
           render.push({
             epoch: _epoch,
             sharePrice: _sharePrice,
             gav: _gav,
           });
         }
+        setChartData(render);
       }
-      for (let pas = closestIndexM; pas < tabEpoch.length; pas++) {
-        let _epoch = tabEpoch[pas];
-        let _sharePrice = list[pas].sharePrice;
-        let _gav = list[pas].gav;
-        render.push({
-          epoch: _epoch,
-          sharePrice: _sharePrice,
-          gav: _gav,
-        });
+      if (timeframe == 3) {
+        for (let pas = 0; pas < tabEpoch.length; pas++) {
+          let _epoch = tabEpoch[pas];
+          let _sharePrice = list[pas].sharePrice;
+          let _gav = list[pas].gav;
+          render.push({
+            epoch: _epoch,
+            sharePrice: _sharePrice,
+            gav: _gav,
+          });
+        }
+        setChartData(render);
       }
-      setChartData(render);
     }
-    if (timeframe == 3) {
-      for (let pas = 0; pas < tabEpoch.length; pas++) {
-        let _epoch = tabEpoch[pas];
-        let _sharePrice = list[pas].sharePrice;
-        let _gav = list[pas].gav;
-        render.push({
-          epoch: _epoch,
-          sharePrice: _sharePrice,
-          gav: _gav,
-        });
-      }
-      setChartData(render);
-    }
-  }
     console.log(render);
   }, [timeframe, vaultInfo]);
 
@@ -1462,7 +1482,6 @@ const vault: NextPage = () => {
       console.log("connected");
       multicall2(Tab);
     }
-
   };
 
   const multicall2 = async (_tab: any[]) => {
@@ -1501,217 +1520,218 @@ const vault: NextPage = () => {
   return (
     <>
       <Box padding={"4vw"}>
-        {loading == true ? 
-        <Text alignSelf={"center"} fontSize={"5xl"}>Just A moment ⌛⏳</Text>
-        :
-        fundExist == true ? 
-        <Flex direction={"column"} gap={"2vw"}>
-          <Flex direction={"row"} justifyContent={"space-between"}>
-            <Flex direction={"column"} gap={"1vw"}>
-              <Flex direction={"row"} gap={"2vw"} alignItems={"center"}>
-                <Box
-                  style={{
-                    width: "120px",
-                    height: "120px",
-                    borderRadius: "30px",
-                    overflow: "hidden",
-                    backgroundColor: "black",
-                  }}
-                >
-                  <img
-                    src={vaultInfo?.image}
-                    style={{ objectFit: "cover" }}
-                  />
-                </Box>
-                <Flex direction={"column"}>
-                  <Flex direction={"row"} alignItems={"center"}>
-                    <Text fontWeight={"extrabold"} fontSize={"4xl"}>
-                      {" "}
-                      {name}
-                    </Text>
-                    <Text
-                      fontWeight={"semibold"}
-                      fontSize={"1xl"}
-                      marginLeft={"5px"}
-                    >
-                      ({symbol})
+        {loading == true ? (
+          <Text alignSelf={"center"} fontSize={"5xl"}>
+            Just A moment ⌛⏳
+          </Text>
+        ) : fundExist == true ? (
+          <Flex direction={"column"} gap={"2vw"}>
+            <Flex direction={"row"} justifyContent={"space-between"}>
+              <Flex direction={"column"} gap={"1vw"}>
+                <Flex direction={"row"} gap={"2vw"} alignItems={"center"}>
+                  <Box
+                    style={{
+                      width: "120px",
+                      height: "120px",
+                      borderRadius: "30px",
+                      overflow: "hidden",
+                      backgroundColor: "black",
+                    }}
+                  >
+                    <img
+                      src={vaultInfo?.image}
+                      style={{ objectFit: "cover" }}
+                    />
+                  </Box>
+                  <Flex direction={"column"}>
+                    <Flex direction={"row"} alignItems={"center"}>
+                      <Text fontWeight={"extrabold"} fontSize={"4xl"}>
+                        {" "}
+                        {name}
+                      </Text>
+                      <Text
+                        fontWeight={"semibold"}
+                        fontSize={"1xl"}
+                        marginLeft={"5px"}
+                      >
+                        ({symbol})
+                      </Text>
+                    </Flex>
+
+                    {vaultInfo !== undefined && (
+                      <Stack direction={"row"}>
+                        {[...Array(Object.keys(vaultInfo.tags).length)].map(
+                          (e, i) => {
+                            return (
+                              <Text fontWeight={"semibold"} fontSize={"1.5rem"}>
+                                {"#" + vaultInfo.tags[i]}
+                              </Text>
+                            );
+                          }
+                        )}
+                      </Stack>
+                    )}
+                    <Text fontWeight={"light"} fontSize={"1rem"}>
+                      <Link
+                        href={"https://goerli.voyager.online/contract/" + vad}
+                      >
+                        <a>
+                          <>
+                            {vad && typeof vad == "string" && (
+                              <>
+                                {vad.substring(0, 5)}
+                                ...
+                              </>
+                            )}
+                            <ExternalLinkIcon mx="2px" marginTop={"-2px"} />
+                          </>
+                        </a>
+                      </Link>
                     </Text>
                   </Flex>
-
-                  {vaultInfo !== undefined &&
-                    <Stack direction={"row"}>
-                      {[...Array(Object.keys(vaultInfo.tags).length)].map(
-                        (e, i) => {
-                          return (
-                            <Text fontWeight={"semibold"} fontSize={"1.5rem"}>
-                              {"#" + vaultInfo.tags[i]}
-                            </Text>
-                          );
-                        }
-                      )}
-                    </Stack>
-                  }
-                  <Text fontWeight={"light"} fontSize={"1rem"}>
-                    <Link
-                      href={"https://goerli.voyager.online/contract/" + vad}
-                    >
-                      <a>
-                        <>
-                          {vad && typeof vad == "string" && (
-                            <>
-                              {vad.substring(0, 5)}
-                              ...
-
-                            </>
-                          )}
-                          <ExternalLinkIcon mx="2px" marginTop={"-2px"} />
-                        </>
-                      </a>
-                    </Link>
+                </Flex>
+                <Box maxWidth={"40vw"} marginLeft={"1vw"}>
+                  <Text fontWeight={"light"} fontSize={"2xl"}>
+                    {vaultInfo?.strategy}
                   </Text>
+                </Box>
+              </Flex>
+
+              <Flex
+                direction={"column"}
+                padding={"1vw"}
+                marginRight={"1vw"}
+                alignItems={"center"}
+                gap={"2vh"}
+                marginTop={"-50px"}
+              >
+                <Flex direction={"row"} alignItems={"center"} gap={"0.5vw"}>
+                  {denominationAsset != "deno" && (
+                    <Box
+                      style={{
+                        width: "80px",
+                        height: "80px",
+                        borderRadius: "15px",
+                        overflow: "hidden",
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      <Image
+                        src={returnImagefromAddress(denominationAssetAddress)}
+                      />
+                    </Box>
+                  )}
+                  <Flex direction={"column"}>
+                    <Text
+                      fontSize={"4xl"}
+                      color={
+                        totalIncome
+                          ? totalIncome < 0
+                            ? "rgb(237,33,49)"
+                            : "#31c48d"
+                          : "#31c48d"
+                      }
+                    >
+                      {totalIncome == 0 ? "--" : totalIncome?.toPrecision(4)}%
+                    </Text>
+                    <Text
+                      fontSize={"-moz-initial"}
+                      marginTop={"-10px"}
+                      marginLeft={"60px"}
+                    >
+                      Projected APR
+                    </Text>
+                  </Flex>
+                </Flex>
+
+                <Flex
+                  direction={"row"}
+                  borderRadius={"20px"}
+                  gap={"2vw"}
+                  padding={"2vh"}
+                  borderTop={" 2px solid #f6643c; "}
+                  borderBottom={" 2px solid #f6643c; "}
+                  backgroundColor={"#01000dc7"}
+                  className={` bg__dotted`}
+                >
+                  <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
+                    <Text fontWeight={"light"} fontSize={"-moz-initial"}>
+                      Risk
+                    </Text>
+                    <Text fontWeight={"bold"} fontSize={"2xl"}>
+                      Low
+                    </Text>
+                  </Flex>
+                  <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
+                    <Text fontWeight={"light"} fontSize={"-moz-initial"}>
+                      GAV
+                    </Text>
+                    <Text fontWeight={"bold"} fontSize={"2xl"}>
+                      {parseFloat(gav) < 0.01
+                        ? parseFloat(gav).toExponential(2)
+                        : parseFloat(gav)}
+                    </Text>
+                  </Flex>
+                  <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
+                    <Text fontWeight={"light"} fontSize={"-moz-initial"}>
+                      Rank
+                    </Text>
+                    <Text fontWeight={"bold"} fontSize={"2xl"}>
+                      --
+                    </Text>
+                  </Flex>
+                  <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
+                    <Text fontWeight={"light"} fontSize={"-moz-initial"}>
+                      Access
+                    </Text>
+                    <Text fontWeight={"bold"} fontSize={"2xl"}>
+                      {isPublic == "1" ? "Public" : "Private"}
+                    </Text>
+                  </Flex>
                 </Flex>
               </Flex>
-              <Box maxWidth={"40vw"} marginLeft={"1vw"}>
-                <Text fontWeight={"light"} fontSize={"2xl"}>
-                  {vaultInfo?.strategy}
-                </Text>
-              </Box>
             </Flex>
-
-            <Flex
-              direction={"column"}
-              padding={"1vw"}
-              marginRight={"1vw"}
-              alignItems={"center"}
-              gap={"2vh"}
-              marginTop={"-50px"}
+            <Box
+              className={` bg__dotted`}
+              padding={"3vh"}
+              backgroundColor={"#01000dc7"}
+              borderRadius={"25px"}
+              display={"flex"}
+              flexDirection={"column"}
+              gap={"1vh"}
             >
-              <Flex direction={"row"} alignItems={"center"} gap={"0.5vw"}>
-                {
-                  denominationAsset != "deno" &&
-
+              <Flex
+                direction={"row"}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+              >
+                <Flex direction={"row"} gap={"1vw"}>
                   <Box
                     style={{
                       width: "80px",
                       height: "80px",
-                      borderRadius: "15px",
+                      borderRadius: "50%",
                       overflow: "hidden",
-                      backgroundColor: "transparent",
+                      backgroundColor: "black",
                     }}
                   >
-                    <Image src={returnImagefromAddress(denominationAssetAddress)} />
+                    <img
+                      src={assetManagerImage}
+                      style={{ objectFit: "cover" }}
+                    />
                   </Box>
-                }
-                <Flex direction={"column"}>
-                  <Text
-                    fontSize={"4xl"}
-                    color={
-                      totalIncome
-                        ? totalIncome < 0
-                          ? "rgb(237,33,49)"
-                          : "#31c48d"
-                        : "#31c48d"
-                    }
-                  >
-                    {totalIncome == 0 ? "--" : totalIncome?.toPrecision(4)}%
-                  </Text>
-                  <Text
-                    fontSize={"-moz-initial"}
-                    marginTop={"-10px"}
-                    marginLeft={"60px"}
-                  >
-                    Projected APR
-                  </Text>
-                </Flex>
-              </Flex>
-
-              <Flex
-                direction={"row"}
-                borderRadius={"20px"}
-                gap={"2vw"}
-                padding={"2vh"}
-                borderTop={" 2px solid #f6643c; "}
-                borderBottom={" 2px solid #f6643c; "}
-                backgroundColor={"#01000dc7"}
-                className={` bg__dotted`}
-              >
-                <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
-                  <Text fontWeight={"light"} fontSize={"-moz-initial"}>
-                    Risk
-                  </Text>
-                  <Text fontWeight={"bold"} fontSize={"2xl"}>
-                    Low
-                  </Text>
-                </Flex>
-                <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
-                  <Text fontWeight={"light"} fontSize={"-moz-initial"}>
-                    GAV
-                  </Text>
-                  <Text fontWeight={"bold"} fontSize={"2xl"}>
-                    {parseFloat(gav) < 0.01 ? parseFloat(gav).toExponential(2) : parseFloat(gav)}
-                  </Text>
-                </Flex>
-                <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
-                  <Text fontWeight={"light"} fontSize={"-moz-initial"}>
-                    Rank
-                  </Text>
-                  <Text fontWeight={"bold"} fontSize={"2xl"}>
-                    --
-                  </Text>
-                </Flex>
-                <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
-                  <Text fontWeight={"light"} fontSize={"-moz-initial"}>
-                    Access
-                  </Text>
-                  <Text fontWeight={"bold"} fontSize={"2xl"}>
-                    {isPublic == "1" ? "Public" : "Private"}
-                  </Text>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Flex>
-          <Box
-            className={` bg__dotted`}
-            padding={"3vh"}
-            backgroundColor={"#01000dc7"}
-            borderRadius={"25px"}
-            display={"flex"}
-            flexDirection={"column"}
-            gap={"1vh"}
-          >
-            <Flex
-              direction={"row"}
-              alignItems={"center"}
-              justifyContent={"space-between"}
-            >
-              <Flex direction={"row"} gap={"1vw"}>
-                <Box
-                  style={{
-                    width: "80px",
-                    height: "80px",
-                    borderRadius: "50%",
-                    overflow: "hidden",
-                    backgroundColor: "black",
-                  }}
-                >
-                  <img
-                    src={assetManagerImage}
-                    style={{ objectFit: "cover" }}
-                  />
-                </Box>
-                <Flex direction={"column"}>
-                  <div>
-                    <Flex direction={"row"} gap={"0.5rem"}>
-                      <Text fontWeight={"light"} fontSize={"2xl"}>
-                        Managed by{" "}
-                      </Text>
-                      <Text fontWeight={"semibold"} fontSize={"2xl"}>
-                        <Link href={"../user/" + assetManager}>
-                          <a>
-                            {
-                              assetManagerName != "" ?
+                  <Flex direction={"column"}>
+                    <div>
+                      <Flex direction={"row"} gap={"0.5rem"}>
+                        <Text fontWeight={"light"} fontSize={"2xl"}>
+                          Managed by{" "}
+                        </Text>
+                        <Text fontWeight={"semibold"} fontSize={"2xl"}>
+                          <Link href={"../user/" + assetManager}>
+                            <a>
+                              {assetManagerName != "" ? (
                                 assetManagerName
-                                :
+                              ) : (
                                 <>
                                   {assetManager.substring(0, 5)}
                                   ...
@@ -1720,531 +1740,601 @@ const vault: NextPage = () => {
                                     assetManager.length
                                   )}
                                 </>
-                            }
-
-                          </a>
-                        </Link>
-                      </Text>
-                    </Flex>
-                  </div>
-                  <Flex direction={"column"}>
-                    <Flex direction={"row"} gap={"2px"}>
-                      <Text fontSize={"0.8rem"} fontWeight={"light"}>
-                        Last active{" "}
-                      </Text>
-                      <Text fontSize={"0.8rem"} style={{ fontWeight: "bold" }}>
-                        18 days ago{" "}
-                      </Text>
-                    </Flex>
-                    <Flex direction={"row"} gap={"2px"}>
-                      <Text fontSize={"0.8rem"} fontWeight={"light"}>
-                        Fund's allocation{" "}
-                      </Text>
-                      <Text fontSize={"0.8rem"} style={{ fontWeight: "bold" }}>
-                        {" "}
-                        {assetManagerShareAmount ? (parseFloat(shareSupply) / assetManagerShareAmount) * 100 : "--"}%
-                      </Text>
+                              )}
+                            </a>
+                          </Link>
+                        </Text>
+                      </Flex>
+                    </div>
+                    <Flex direction={"column"}>
+                      <Flex direction={"row"} gap={"2px"}>
+                        <Text fontSize={"0.8rem"} fontWeight={"light"}>
+                          Last active{" "}
+                        </Text>
+                        <Text
+                          fontSize={"0.8rem"}
+                          style={{ fontWeight: "bold" }}
+                        >
+                          18 days ago{" "}
+                        </Text>
+                      </Flex>
+                      <Flex direction={"row"} gap={"2px"}>
+                        <Text fontSize={"0.8rem"} fontWeight={"light"}>
+                          Fund's allocation{" "}
+                        </Text>
+                        <Text
+                          fontSize={"0.8rem"}
+                          style={{ fontWeight: "bold" }}
+                        >
+                          {" "}
+                          {assetManagerShareAmount
+                            ? (parseFloat(shareSupply) /
+                                assetManagerShareAmount) *
+                              100
+                            : "--"}
+                          %
+                        </Text>
+                      </Flex>
                     </Flex>
                   </Flex>
                 </Flex>
-              </Flex>
-              <Flex
-                direction={"row"}
-                gap={"1vw"}
-                marginRight={"2vw"}
-                marginTop={"-25px"}
-              >
-                <Button backgroundColor={"#030135"} padding={"10px"}>
-                  <Icon as={BsShare} w={6} h={6} />
-                </Button>
-                {menuSelected == 1 ? (
-                  <Button
-                    backgroundColor={"#f6643c"}
-                    padding={"10px"}
-                    onClick={() => setMenuSelected(0)}
-                  >
-                    <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                      <Icon as={BiArrowBack} w={6} h={6} />
-                      <Text fontWeight={"bold"} fontSize={"2xl"}>
-                        Back
-                      </Text>
-                    </Flex>
+                <Flex
+                  direction={"row"}
+                  gap={"1vw"}
+                  marginRight={"2vw"}
+                  marginTop={"-25px"}
+                >
+                  <Button backgroundColor={"#030135"} padding={"10px"}>
+                    <Icon as={BsShare} w={6} h={6} />
                   </Button>
-                ) : (
-                  <Button
-                    backgroundColor={"#f6643c"}
-                    padding={"10px"}
-                    onClick={() => setMenuSelected(1)}
-                  >
-                    <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                      <Icon as={GiPayMoney} w={6} h={6} />
-                      <Text fontWeight={"bold"} fontSize={"2xl"}>
-                        Invest
-                      </Text>
-                    </Flex>
-                  </Button>
-                )}
-                {assetManager != acccountAddress && menuSelected == 5 ? (
-                  <Button
-                    backgroundColor={"#f6643c"}
-                    padding={"10px"}
-                    onClick={() => setMenuSelected(0)}
-                  >
-                    <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                      <Icon as={BiArrowBack} w={6} h={6} />
-                      <Text fontWeight={"bold"} fontSize={"2xl"}>
-                        Back
-                      </Text>
-                    </Flex>
-                  </Button>
-                ) : (
-                  <Button
-                    backgroundColor={"#f6643c"}
-                    padding={"10px"}
-                    onClick={() => setMenuSelected(5)}
-                  >
-                    <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                      <Icon as={MdManageSearch} w={6} h={6} />
-                      <Text fontWeight={"bold"} fontSize={"2xl"}>
-                        Manage
-                      </Text>
-                    </Flex>
-                  </Button>
-                )}
-              </Flex>
-            </Flex>
-            <Box
-              backgroundColor={"#0f0b1f"}
-              padding={"1vw"}
-              borderTop={"solid 1px #f6643c"}
-            >
-              {menuSelected == 0 ?
-                <Tabs >
-                  <Flex direction={"column"} alignItems={"center"} gap={"1vw"}>
-                    <TabList >
-                      <Flex direction={"row"} alignItems={"center"}>
-                        <Tab fontSize={"1xl"} fontWeight={"bold"}>
-                          Overview
-                        </Tab>
-                        <Tab fontSize={"1xl"} fontWeight={"bold"}>
-                          Holdings
-                        </Tab>
-                        <Tab fontSize={"1xl"} fontWeight={"bold"}>
-                          Fees
-                        </Tab>
-                        <Tab fontSize={"1xl"} fontWeight={"bold"}>
-                          Policies
-                        </Tab>
-                        <Tab fontSize={"1xl"} fontWeight={"bold"}>
-                          Financial
-                        </Tab>
-                        <Tab fontSize={"1xl"} fontWeight={"bold"}>
-                          Activity
-                        </Tab>
-                        <Tab fontSize={"1xl"} fontWeight={"bold"}>
-                          Depositors
-                        </Tab>
-                        <Tab fontSize={"1xl"} fontWeight={"bold"}>
-                          Social
-                        </Tab>
+                  {menuSelected == 1 ? (
+                    <Button
+                      backgroundColor={"#f6643c"}
+                      padding={"10px"}
+                      onClick={() => setMenuSelected(0)}
+                    >
+                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                        <Icon as={BiArrowBack} w={6} h={6} />
+                        <Text fontWeight={"bold"} fontSize={"2xl"}>
+                          Back
+                        </Text>
                       </Flex>
-                    </TabList >
-                    <Box width={"60vw"} minHeight={"30vw"} borderRadius='10%' borderTop={"solid 2px #f6643c"} borderBottom={"solid 2px #f6643c"} backgroundColor="blackAlpha.400" padding={"2%"}>
-                      <TabPanels>
-                        <TabPanel>
-                          <Flex flexDirection={"column"} gap={"1rem"}>
-                            <Flex
-                              justifyContent={"space-between"}
-                              direction={"row"}
-                            >
-                              <Flex direction={"row"} gap={"1vw"} alignItems={"center"}>
-                                <Flex direction={"column"}>
-                                  <Flex direction={"row"}>
-                                    <Text fontSize={"4xl"}>
-                                      {" "}
-                                      {chartSelected == 1
-                                        ? `${parseFloat(sharePrice) < 1 ? parseFloat(sharePrice).toExponential(2) : parseFloat(sharePrice)}`
-                                        : `GAV: ${parseFloat(gav) < 1 ? parseFloat(gav).toExponential(2) : parseFloat(gav)}`}
-                                    </Text>
-                                    {denominationAsset != "deno" &&
-                                      <Box
-                                        style={{
-                                          width: "50px",
-                                          height: "50px",
-                                          borderRadius: "15px",
-                                          overflow: "hidden",
-                                          backgroundColor: "transparent",
-                                        }}
-                                      >
-                                        <Image src={returnImagefromAddress(denominationAssetAddress)} />
-                                      </Box>
-                                    }
+                    </Button>
+                  ) : (
+                    <Button
+                      backgroundColor={"#f6643c"}
+                      padding={"10px"}
+                      onClick={() => setMenuSelected(1)}
+                    >
+                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                        <Icon as={GiPayMoney} w={6} h={6} />
+                        <Text fontWeight={"bold"} fontSize={"2xl"}>
+                          Invest
+                        </Text>
+                      </Flex>
+                    </Button>
+                  )}
+                  {assetManager != acccountAddress && menuSelected == 5 ? (
+                    <Button
+                      backgroundColor={"#f6643c"}
+                      padding={"10px"}
+                      onClick={() => setMenuSelected(0)}
+                    >
+                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                        <Icon as={BiArrowBack} w={6} h={6} />
+                        <Text fontWeight={"bold"} fontSize={"2xl"}>
+                          Back
+                        </Text>
+                      </Flex>
+                    </Button>
+                  ) : (
+                    <Button
+                      backgroundColor={"#f6643c"}
+                      padding={"10px"}
+                      onClick={() => setMenuSelected(5)}
+                    >
+                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                        <Icon as={MdManageSearch} w={6} h={6} />
+                        <Text fontWeight={"bold"} fontSize={"2xl"}>
+                          Manage
+                        </Text>
+                      </Flex>
+                    </Button>
+                  )}
+                </Flex>
+              </Flex>
+              <Box
+                backgroundColor={"#0f0b1f"}
+                padding={"1vw"}
+                borderTop={"solid 1px #f6643c"}
+              >
+                {menuSelected == 0 ? (
+                  <Tabs>
+                    <Flex
+                      direction={"column"}
+                      alignItems={"center"}
+                      gap={"1vw"}
+                    >
+                      <TabList>
+                        <Flex direction={"row"} alignItems={"center"}>
+                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                            Overview
+                          </Tab>
+                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                            Holdings
+                          </Tab>
+                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                            Fees
+                          </Tab>
+                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                            Policies
+                          </Tab>
+                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                            Financial
+                          </Tab>
+                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                            Activity
+                          </Tab>
+                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                            Depositors
+                          </Tab>
+                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                            Social
+                          </Tab>
+                        </Flex>
+                      </TabList>
+                      <Box
+                        width={"60vw"}
+                        minHeight={"30vw"}
+                        borderRadius="10%"
+                        borderTop={"solid 2px #f6643c"}
+                        borderBottom={"solid 2px #f6643c"}
+                        backgroundColor="blackAlpha.400"
+                        padding={"2%"}
+                      >
+                        <TabPanels>
+                          <TabPanel>
+                            <Flex flexDirection={"column"} gap={"1rem"}>
+                              <Flex
+                                justifyContent={"space-between"}
+                                direction={"row"}
+                              >
+                                <Flex
+                                  direction={"row"}
+                                  gap={"1vw"}
+                                  alignItems={"center"}
+                                >
+                                  <Flex direction={"column"}>
+                                    <Flex direction={"row"}>
+                                      <Text fontSize={"4xl"}>
+                                        {" "}
+                                        {chartSelected == 1
+                                          ? `${
+                                              parseFloat(sharePrice) < 1
+                                                ? parseFloat(
+                                                    sharePrice
+                                                  ).toExponential(2)
+                                                : parseFloat(sharePrice)
+                                            }`
+                                          : `GAV: ${
+                                              parseFloat(gav) < 1
+                                                ? parseFloat(gav).toExponential(
+                                                    2
+                                                  )
+                                                : parseFloat(gav)
+                                            }`}
+                                      </Text>
+                                      {denominationAsset != "deno" && (
+                                        <Box
+                                          style={{
+                                            width: "50px",
+                                            height: "50px",
+                                            borderRadius: "15px",
+                                            overflow: "hidden",
+                                            backgroundColor: "transparent",
+                                          }}
+                                        >
+                                          <Image
+                                            src={returnImagefromAddress(
+                                              denominationAssetAddress
+                                            )}
+                                          />
+                                        </Box>
+                                      )}
+                                    </Flex>
+                                    {chartSelected == 1 && (
+                                      <Text fontSize={"2xl"}>/ Share</Text>
+                                    )}
                                   </Flex>
-                                  {
-                                    chartSelected == 1 &&
-                                    <Text fontSize={"2xl"}>
-                                      / Share
-                                    </Text>
-                                  }
-                                </Flex>
-                                <Text
-                                  fontSize={"4xl"}
-                                  color={
-                                    timeframe == 0
-                                      ? dailyIncome
-                                        ? dailyIncome > 0
-                                          ? "#31c48d"
-                                          : "rgb(237,33,49)"
-                                        : "#31c48d"
-                                      : timeframe == 1
+                                  <Text
+                                    fontSize={"4xl"}
+                                    color={
+                                      timeframe == 0
+                                        ? dailyIncome
+                                          ? dailyIncome > 0
+                                            ? "#31c48d"
+                                            : "rgb(237,33,49)"
+                                          : "#31c48d"
+                                        : timeframe == 1
                                         ? weeklyIncome
                                           ? weeklyIncome > 0
                                             ? "#31c48d"
                                             : "rgb(237,33,49)"
                                           : "#31c48d"
                                         : timeframe == 2
-                                          ? monthlyIncome
-                                            ? monthlyIncome > 0
-                                              ? "#31c48d"
-                                              : "rgb(237,33,49)"
-                                            : "#31c48d"
-                                          : timeframe == 3
-                                            ? totalIncome
-                                              ? totalIncome > 0
-                                                ? "#31c48d"
-                                                : "rgb(237,33,49)"
-                                              : "#31c48d"
-                                            : "31c48d"
-                                  }
-                                >
-                                  {" "}
-                                  {timeframe == 0
-                                    ? dailyIncome == 0
-                                      ? "--"
-                                      : dailyIncome?.toPrecision(4)
-                                    : timeframe == 1
+                                        ? monthlyIncome
+                                          ? monthlyIncome > 0
+                                            ? "#31c48d"
+                                            : "rgb(237,33,49)"
+                                          : "#31c48d"
+                                        : timeframe == 3
+                                        ? totalIncome
+                                          ? totalIncome > 0
+                                            ? "#31c48d"
+                                            : "rgb(237,33,49)"
+                                          : "#31c48d"
+                                        : "31c48d"
+                                    }
+                                  >
+                                    {" "}
+                                    {timeframe == 0
+                                      ? dailyIncome == 0
+                                        ? "--"
+                                        : dailyIncome?.toPrecision(4)
+                                      : timeframe == 1
                                       ? weeklyIncome == 0
                                         ? "--"
                                         : weeklyIncome?.toPrecision(4)
                                       : timeframe == 2
-                                        ? monthlyIncome == 0
-                                          ? "--"
-                                          : monthlyIncome?.toPrecision(4)
-                                        : timeframe == 3
-                                          ? totalIncome == 0
-                                            ? "--"
-                                            : totalIncome?.toPrecision(4)
-                                          : "--"}
-                                  %{" "}
-                                </Text>
-                              </Flex>
-                              <Flex
-                                direction={"row"}
-                                alignItems={"center"}
-                                gap={"1rem"}
-                              >
-                                <Select onChange={handleInputChange}>
-                                  <option value={1}>Share price</option>
-                                  <option value={2}>Gross Asset value</option>
-                                </Select>
-                                <Flex direction={"row"} gap={"1px"}>
-                                  <Button
-                                    borderRadius={"25% 0% 0% 25%"}
-                                    backgroundColor={
-                                      timeframe == 0 ? "#f6643c" : "#030135"
-                                    }
-                                    onClick={() => setTimeframe(0)}
-                                  >
-                                    1D
-                                  </Button>
-                                  <Button
-                                    borderRadius={"0px"}
-                                    backgroundColor={
-                                      timeframe == 1 ? "#f6643c" : "#030135"
-                                    }
-                                    onClick={() => setTimeframe(1)}
-                                  >
-                                    1W
-                                  </Button>
-                                  <Button
-                                    borderRadius={"0px"}
-                                    backgroundColor={
-                                      timeframe == 2 ? "#f6643c" : "#030135"
-                                    }
-                                    onClick={() => setTimeframe(2)}
-                                  >
-                                    1M
-                                  </Button>
+                                      ? monthlyIncome == 0
+                                        ? "--"
+                                        : monthlyIncome?.toPrecision(4)
+                                      : timeframe == 3
+                                      ? totalIncome == 0
+                                        ? "--"
+                                        : totalIncome?.toPrecision(4)
+                                      : "--"}
+                                    %{" "}
+                                  </Text>
+                                </Flex>
+                                <Flex
+                                  direction={"row"}
+                                  alignItems={"center"}
+                                  gap={"1rem"}
+                                >
+                                  <Select onChange={handleInputChange}>
+                                    <option value={1}>Share price</option>
+                                    <option value={2}>Gross Asset value</option>
+                                  </Select>
+                                  <Flex direction={"row"} gap={"1px"}>
+                                    <Button
+                                      borderRadius={"25% 0% 0% 25%"}
+                                      backgroundColor={
+                                        timeframe == 0 ? "#f6643c" : "#030135"
+                                      }
+                                      onClick={() => setTimeframe(0)}
+                                    >
+                                      1D
+                                    </Button>
+                                    <Button
+                                      borderRadius={"0px"}
+                                      backgroundColor={
+                                        timeframe == 1 ? "#f6643c" : "#030135"
+                                      }
+                                      onClick={() => setTimeframe(1)}
+                                    >
+                                      1W
+                                    </Button>
+                                    <Button
+                                      borderRadius={"0px"}
+                                      backgroundColor={
+                                        timeframe == 2 ? "#f6643c" : "#030135"
+                                      }
+                                      onClick={() => setTimeframe(2)}
+                                    >
+                                      1M
+                                    </Button>
 
-                                  <Button
-                                    borderRadius={"0% 25% 25% 0%"}
-                                    backgroundColor={
-                                      timeframe == 3 ? "#f6643c" : "#030135"
-                                    }
-                                    onClick={() => setTimeframe(3)}
-                                  >
-                                    ALL
-                                  </Button>
+                                    <Button
+                                      borderRadius={"0% 25% 25% 0%"}
+                                      backgroundColor={
+                                        timeframe == 3 ? "#f6643c" : "#030135"
+                                      }
+                                      onClick={() => setTimeframe(3)}
+                                    >
+                                      ALL
+                                    </Button>
+                                  </Flex>
                                 </Flex>
                               </Flex>
-                            </Flex>
-                            <ResponsiveContainer width="100%" aspect={9.0 / 3.0}>
-                              <AreaChart data={chartData}>
-                                <XAxis
-                                  dataKey="epoch"
-                                  tickFormatter={dateFormatter}
-                                  minTickGap={25}
-                                />
-                                {/* <YAxis dataKey="sharePrice"/> */}
-                                <Tooltip />
-                                <defs>
-                                  <linearGradient
-                                    id="splitColor"
-                                    x1="0"
-                                    y1="0"
-                                    x2="0"
-                                    y2="1"
-                                  >
-                                    <stop
-                                      offset="5%"
-                                      stopColor={
-                                        chartSelected == 1
-                                          ? chartData[0]
-                                            ? chartData[0].sharePrice >
-                                              chartData[chartData.length - 1]
-                                                .sharePrice
-                                              ? "rgb(237,33,49)"
-                                              : "#31c48d"
-                                            : "rgb(237,33,49)"
-                                          : chartData[0]
+                              <ResponsiveContainer
+                                width="100%"
+                                aspect={9.0 / 3.0}
+                              >
+                                <AreaChart data={chartData}>
+                                  <XAxis
+                                    dataKey="epoch"
+                                    tickFormatter={dateFormatter}
+                                    minTickGap={25}
+                                  />
+                                  {/* <YAxis dataKey="sharePrice"/> */}
+                                  <Tooltip />
+                                  <defs>
+                                    <linearGradient
+                                      id="splitColor"
+                                      x1="0"
+                                      y1="0"
+                                      x2="0"
+                                      y2="1"
+                                    >
+                                      <stop
+                                        offset="5%"
+                                        stopColor={
+                                          chartSelected == 1
+                                            ? chartData[0]
+                                              ? chartData[0].sharePrice >
+                                                chartData[chartData.length - 1]
+                                                  .sharePrice
+                                                ? "rgb(237,33,49)"
+                                                : "#31c48d"
+                                              : "rgb(237,33,49)"
+                                            : chartData[0]
                                             ? chartData[0].gav >
-                                              chartData[chartData.length - 1].gav
+                                              chartData[chartData.length - 1]
+                                                .gav
                                               ? "rgb(237,33,49)"
                                               : "#31c48d"
                                             : "rgb(237,33,49)"
-                                      }
-                                      stopOpacity={0.9}
-                                    />
-                                    <stop
-                                      offset="90%"
-                                      stopColor="#31c48d"
-                                      stopOpacity={0}
-                                    />
-                                    {/* <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.1}/> */}
-                                  </linearGradient>
-                                </defs>
-                                <Area
-                                  type="monotone"
-                                  dataKey={
-                                    chartSelected == 1 ? "sharePrice" : "gav"
-                                  }
-                                  stroke={
-                                    chartSelected == 1
-                                      ? chartData[0]
-                                        ? chartData[0].sharePrice >
-                                          chartData[chartData.length - 1]
-                                            .sharePrice
-                                          ? "rgb(237,33,49)"
-                                          : "#31c48d"
-                                        : "rgb(237,33,49)"
-                                      : chartData[0]
+                                        }
+                                        stopOpacity={0.9}
+                                      />
+                                      <stop
+                                        offset="90%"
+                                        stopColor="#31c48d"
+                                        stopOpacity={0}
+                                      />
+                                      {/* <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.1}/> */}
+                                    </linearGradient>
+                                  </defs>
+                                  <Area
+                                    type="monotone"
+                                    dataKey={
+                                      chartSelected == 1 ? "sharePrice" : "gav"
+                                    }
+                                    stroke={
+                                      chartSelected == 1
+                                        ? chartData[0]
+                                          ? chartData[0].sharePrice >
+                                            chartData[chartData.length - 1]
+                                              .sharePrice
+                                            ? "rgb(237,33,49)"
+                                            : "#31c48d"
+                                          : "rgb(237,33,49)"
+                                        : chartData[0]
                                         ? chartData[0].gav >
                                           chartData[chartData.length - 1].gav
                                           ? "rgb(237,33,49)"
                                           : "#31c48d"
                                         : "rgb(237,33,49)"
-                                  }
-                                  fill="url(#splitColor)"
-                                  fillOpacity={0.6}
-                                  strokeWidth={2}
-                                />
-                                {/* <Area type="monotone" dataKey="sharePriceInitial" stroke="" fill="url(#splitColor2)" /> */}
-                              </AreaChart>
-                            </ResponsiveContainer>
-                            <Flex
-                              direction={"row"}
-                              justifyContent={"space-between"}
-                            >
-                              <Flex direction={"column"} gap={".200rem"}>
-                                <Text fontWeight={"light"} fontSize={".875rem"}>
-                                  Creation Date
-                                </Text>
-                                <Text fontWeight={"bold"} fontSize={"1.125rem"}>
-                                {vaultInfo?.dataFinance != undefined && moment(vaultInfo?.dataFinance[0].date).format('dddd, MMMM Do, YYYY h:mm:ss A')}
-                                </Text>
+                                    }
+                                    fill="url(#splitColor)"
+                                    fillOpacity={0.6}
+                                    strokeWidth={2}
+                                  />
+                                  {/* <Area type="monotone" dataKey="sharePriceInitial" stroke="" fill="url(#splitColor2)" /> */}
+                                </AreaChart>
+                              </ResponsiveContainer>
+                              <Flex
+                                direction={"row"}
+                                justifyContent={"space-between"}
+                              >
+                                <Flex direction={"column"} gap={".200rem"}>
+                                  <Text
+                                    fontWeight={"light"}
+                                    fontSize={".875rem"}
+                                  >
+                                    Creation Date
+                                  </Text>
+                                  <Text
+                                    fontWeight={"bold"}
+                                    fontSize={"1.125rem"}
+                                  >
+                                    {vaultInfo?.dataFinance != undefined &&
+                                      moment(
+                                        vaultInfo?.dataFinance[0].date
+                                      ).format("dddd, MMMM Do, YYYY h:mm:ss A")}
+                                  </Text>
+                                </Flex>
+                                <Flex direction={"row"} gap={"1rem"}>
+                                  <Flex direction={"column"} gap={".200rem"}>
+                                    <Text
+                                      fontWeight={"light"}
+                                      fontSize={".875rem"}
+                                    >
+                                      Last Day
+                                    </Text>
+                                    <Text
+                                      fontWeight={"bold"}
+                                      fontSize={"1.125rem"}
+                                      color={
+                                        dailyIncome
+                                          ? dailyIncome < 0
+                                            ? "rgb(237,33,49)"
+                                            : "#31c48d"
+                                          : "#31c48d"
+                                      }
+                                    >
+                                      {dailyIncome == 0
+                                        ? "--"
+                                        : dailyIncome?.toPrecision(4)}
+                                      %
+                                    </Text>
+                                  </Flex>
+                                  <Flex direction={"column"} gap={".200rem"}>
+                                    <Text
+                                      fontWeight={"light"}
+                                      fontSize={".875rem"}
+                                    >
+                                      Last Week
+                                    </Text>
+                                    <Text
+                                      fontWeight={"bold"}
+                                      fontSize={"1.125rem"}
+                                      color={
+                                        weeklyIncome
+                                          ? weeklyIncome < 0
+                                            ? "rgb(237,33,49)"
+                                            : "#31c48d"
+                                          : "#31c48d"
+                                      }
+                                    >
+                                      {weeklyIncome == 0
+                                        ? "--"
+                                        : weeklyIncome?.toPrecision(4)}
+                                      %
+                                    </Text>
+                                  </Flex>
+                                  <Flex direction={"column"} gap={".200rem"}>
+                                    <Text
+                                      fontWeight={"light"}
+                                      fontSize={".875rem"}
+                                    >
+                                      Last Month
+                                    </Text>
+                                    <Text
+                                      fontWeight={"bold"}
+                                      fontSize={"1.125rem"}
+                                      color={
+                                        monthlyIncome
+                                          ? monthlyIncome < 0
+                                            ? "rgb(237,33,49)"
+                                            : "#31c48d"
+                                          : "#31c48d"
+                                      }
+                                    >
+                                      {monthlyIncome == 0
+                                        ? "--"
+                                        : monthlyIncome?.toPrecision(4)}
+                                      %
+                                    </Text>
+                                  </Flex>
+                                  <Flex direction={"column"} gap={".200rem"}>
+                                    <Text
+                                      fontWeight={"light"}
+                                      fontSize={".875rem"}
+                                    >
+                                      Since Creation
+                                    </Text>
+                                    <Text
+                                      fontWeight={"bold"}
+                                      fontSize={"1.125rem"}
+                                      color={
+                                        totalIncome
+                                          ? totalIncome < 0
+                                            ? "rgb(237,33,49)"
+                                            : "#31c48d"
+                                          : "#31c48d"
+                                      }
+                                    >
+                                      {totalIncome == 0
+                                        ? "--"
+                                        : totalIncome?.toPrecision(4)}
+                                      %
+                                    </Text>
+                                  </Flex>
+                                </Flex>
                               </Flex>
-                              <Flex direction={"row"} gap={"1rem"}>
-                                <Flex direction={"column"} gap={".200rem"}>
-                                  <Text fontWeight={"light"} fontSize={".875rem"}>
-                                    Last Day
-                                  </Text>
-                                  <Text
-                                    fontWeight={"bold"}
-                                    fontSize={"1.125rem"}
-                                    color={
-                                      dailyIncome
-                                        ? dailyIncome < 0
-                                          ? "rgb(237,33,49)"
-                                          : "#31c48d"
-                                        : "#31c48d"
-                                    }
-                                  >
-                                    {dailyIncome == 0
-                                      ? "--"
-                                      : dailyIncome?.toPrecision(4)}
-                                    %
-                                  </Text>
-                                </Flex>
-                                <Flex direction={"column"} gap={".200rem"}>
-                                  <Text fontWeight={"light"} fontSize={".875rem"}>
-                                    Last Week
-                                  </Text>
-                                  <Text
-                                    fontWeight={"bold"}
-                                    fontSize={"1.125rem"}
-                                    color={
-                                      weeklyIncome
-                                        ? weeklyIncome < 0
-                                          ? "rgb(237,33,49)"
-                                          : "#31c48d"
-                                        : "#31c48d"
-                                    }
-                                  >
-                                    {weeklyIncome == 0
-                                      ? "--"
-                                      : weeklyIncome?.toPrecision(4)}
-                                    %
-                                  </Text>
-                                </Flex>
-                                <Flex direction={"column"} gap={".200rem"}>
-                                  <Text fontWeight={"light"} fontSize={".875rem"}>
-                                    Last Month
-                                  </Text>
-                                  <Text
-                                    fontWeight={"bold"}
-                                    fontSize={"1.125rem"}
-                                    color={
-                                      monthlyIncome
-                                        ? monthlyIncome < 0
-                                          ? "rgb(237,33,49)"
-                                          : "#31c48d"
-                                        : "#31c48d"
-                                    }
-                                  >
-                                    {monthlyIncome == 0
-                                      ? "--"
-                                      : monthlyIncome?.toPrecision(4)}
-                                    %
-                                  </Text>
-                                </Flex>
-                                <Flex direction={"column"} gap={".200rem"}>
-                                  <Text fontWeight={"light"} fontSize={".875rem"}>
-                                    Since Creation
-                                  </Text>
-                                  <Text
-                                    fontWeight={"bold"}
-                                    fontSize={"1.125rem"}
-                                    color={
-                                      totalIncome
-                                        ? totalIncome < 0
-                                          ? "rgb(237,33,49)"
-                                          : "#31c48d"
-                                        : "#31c48d"
-                                    }
-                                  >
-                                    {totalIncome == 0
-                                      ? "--"
-                                      : totalIncome?.toPrecision(4)}
-                                    %
-                                  </Text>
-                                </Flex>
-                              </Flex>
+                              {/* </Box> */}
                             </Flex>
-                            {/* </Box> */}
-                          </Flex>
-                        </TabPanel>
-                        <TabPanel>
-                          <Flex direction={"column"} gap={"2vw"}>
-                            <div>
-                              {trackedAssetsLen > 0 ? (
-                                <div
-                                  className={`${styles.portfolioTable} bg__dotted`}
-                                >
-                                  <table cellSpacing="0" cellPadding="0">
-                                    <thead>
-                                      <tr>
-                                        <th>Assets</th>
-                                        <th>Balance</th>
-                                        <th>Value</th>
-                                        <th>Allocation</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {trackedAssets.map((p, index) => (
-                                        <tr key={index}>
-                                          <td>
-                                            <Box
-                                              style={{
-                                                width: "50px",
-                                                height: "50px",
-                                                borderRadius: "15px",
-                                                overflow: "hidden",
-                                                backgroundColor: "transparent",
-                                              }}
-                                            >
-                                              <Image src={returnImagefromAddress(p.address)} />
-                                            </Box>
-                                            {/* <FakeImage
+                          </TabPanel>
+                          <TabPanel>
+                            <Flex direction={"column"} gap={"2vw"}>
+                              <div>
+                                {trackedAssetsLen > 0 ? (
+                                  <div
+                                    className={`${styles.portfolioTable} bg__dotted`}
+                                  >
+                                    <table cellSpacing="0" cellPadding="0">
+                                      <thead>
+                                        <tr>
+                                          <th>Assets</th>
+                                          <th>Balance</th>
+                                          <th>Value</th>
+                                          <th>Allocation</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {trackedAssets.map((p, index) => (
+                                          <tr key={index}>
+                                            <td>
+                                              <Box
+                                                style={{
+                                                  width: "50px",
+                                                  height: "50px",
+                                                  borderRadius: "15px",
+                                                  overflow: "hidden",
+                                                  backgroundColor:
+                                                    "transparent",
+                                                }}
+                                              >
+                                                <Image
+                                                  src={returnImagefromAddress(
+                                                    p.address
+                                                  )}
+                                                />
+                                              </Box>
+                                              {/* <FakeImage
                                               width="50px"
                                               height="50px"
                                               fillColor="var(--color-secondary)"
                                               borderRadius="50%"
                                             ></FakeImage> */}
-                                            <div>
-                                              <span> {p.coinName} </span>
-                                              <span> {p.coinSymbol} </span>
-                                            </div>
-                                          </td>
+                                              <div>
+                                                <span> {p.coinName} </span>
+                                                <span> {p.coinSymbol} </span>
+                                              </div>
+                                            </td>
+                                            <td>
+                                              {" "}
+                                              {p.balance} {p.coinSymbol}
+                                            </td>
+                                            <td>
+                                              {p.value} {denominationAsset}
+                                            </td>
+                                            <td>{p.allocation}</td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                ) : (
+                                  <div
+                                    className={`${styles.portfolioTable} bg__dotted`}
+                                  >
+                                    <table cellSpacing="0" cellPadding="0">
+                                      <thead>
+                                        <tr>
+                                          <th></th>
+                                          <th></th>
+                                          <th></th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr key={1}>
+                                          <td> .</td>
+                                          <td> .</td>
                                           <td>
                                             {" "}
-                                            {p.balance} {p.coinSymbol}
+                                            Fetching Tracked Assets, please
+                                            wait..
                                           </td>
-                                          <td>
-                                            {p.value} {denominationAsset}
-                                          </td>
-                                          <td>{p.allocation}</td>
                                         </tr>
-                                      ))}
-                                    </tbody>
-                                  </table>
-                                </div>
-                              ) : (
-                                <div
-                                  className={`${styles.portfolioTable} bg__dotted`}
-                                >
-                                  <table cellSpacing="0" cellPadding="0">
-                                    <thead>
-                                      <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr key={1}>
-                                        <td> .</td>
-                                        <td> .</td>
-                                        <td>
-                                          {" "}
-                                          Fetching Tracked Assets, please wait..
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                              )}
-                            </div>
-                            {/* <div>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                )}
+                              </div>
+                              {/* <div>
                               {trackedAssetsLen > 0 ? (
                                 <div
                                   className={`${styles.portfolioTable} bg__dotted`}
@@ -2308,249 +2398,283 @@ const vault: NextPage = () => {
                                 </div>
                               )}
                             </div> */}
-                          </Flex>
-                        </TabPanel>
-                        <TabPanel>
-                          <div className={`${styles.feesTable} bg__dotted`}>
-                            <table cellSpacing="0" cellPadding="0">
-                              <thead>
-                                <tr>
-                                  <th>Fee Type</th>
-                                  <th>Fee Value</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr key={1}>
-                                  <td>Entrance Fee</td>
-                                  <td>
-                                    <div>
-                                      <div> {entranceFee}%</div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr key={2}>
-                                  <td>Exit Fee</td>
-                                  <td>
-                                    <div>
-                                      <div> {exitFee}%</div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr key={3}>
-                                  <td>Performance Fee</td>
-                                  <td>
-                                    <div>
-                                      <div> {performanceFee}%</div>
-                                    </div>
-                                  </td>
-                                </tr>
-                                <tr key={4}>
-                                  <td>Management Fee</td>
-                                  <td>
-                                    <div>
-                                      <div> {managementFee}%</div>
-                                    </div>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </TabPanel>
-                        <TabPanel>
-                          <div
-                            className={`bg__dotted ${styles.policiesTabContent}`}
-                          >
-                            {isPublic == "1" ? (
+                            </Flex>
+                          </TabPanel>
+                          <TabPanel>
+                            <div className={`${styles.feesTable} bg__dotted`}>
+                              <table cellSpacing="0" cellPadding="0">
+                                <thead>
+                                  <tr>
+                                    <th>Fee Type</th>
+                                    <th>Fee Value</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr key={1}>
+                                    <td>Entrance Fee</td>
+                                    <td>
+                                      <div>
+                                        <div> {entranceFee}%</div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                  <tr key={2}>
+                                    <td>Exit Fee</td>
+                                    <td>
+                                      <div>
+                                        <div> {exitFee}%</div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                  <tr key={3}>
+                                    <td>Performance Fee</td>
+                                    <td>
+                                      <div>
+                                        <div> {performanceFee}%</div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                  <tr key={4}>
+                                    <td>Management Fee</td>
+                                    <td>
+                                      <div>
+                                        <div> {managementFee}%</div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </TabPanel>
+                          <TabPanel>
+                            <div
+                              className={`bg__dotted ${styles.policiesTabContent}`}
+                            >
+                              {isPublic == "1" ? (
+                                <div>
+                                  <div className="fs-24 fw-600">
+                                    {name} is a public fund
+                                  </div>
+                                </div>
+                              ) : (
+                                <div>
+                                  <div className="fs-24 fw-600">
+                                    {name} is a private fund
+                                  </div>
+                                </div>
+                              )}
                               <div>
                                 <div className="fs-24 fw-600">
-                                  {name} is a public fund
+                                  Deposit Limits
+                                </div>
+                                <div className="fs-20 fw-600">
+                                  minimum : {minAmount} {denominationAsset}
+                                </div>
+                                <div className="fs-20 fw-600">
+                                  maximum : {maxAmount} {denominationAsset}
                                 </div>
                               </div>
-                            ) : (
                               <div>
-                                <div className="fs-24 fw-600">
-                                  {name} is a private fund
+                                <div className="fs-24 fw-600">Timelock</div>
+                                <div className="fs-20 fw-600">
+                                  After minting shares, you'll have to wait :{" "}
+                                  {timeLock} seconds before you can sell it
                                 </div>
                               </div>
-                            )}
-                            <div>
-                              <div className="fs-24 fw-600">Deposit Limits</div>
-                              <div className="fs-20 fw-600">
-                                minimum : {minAmount} {denominationAsset}
-                              </div>
-                              <div className="fs-20 fw-600">
-                                maximum : {maxAmount} {denominationAsset}
-                              </div>
-                            </div>
-                            <div>
-                              <div className="fs-24 fw-600">Timelock</div>
-                              <div className="fs-20 fw-600">
-                                After minting shares, you'll have to wait :{" "}
-                                {timeLock} seconds before you can sell it
-                              </div>
-                            </div>
-                            <div>
-                              <Flex direction={"column"}>
-                                <div className="fs-24 fw-600">
-                                  Allowed Asset to Track
-                                </div>
-                                <Flex direction={"row"} gap={"10px"} alignItems={"center"}>
-                                  {allowedTrackedAsset.map((p, index) => (
-                                    <Box
-                                      style={{
-                                        width: "50px",
-                                        height: "50px",
-                                        borderRadius: "15px",
-                                        overflow: "hidden",
-                                        backgroundColor: "transparent",
-                                      }}
-                                    >
-                                      <Image src={returnImagefromAddress(p)} />
-                                    </Box>
-                                  ))}
-                                </Flex>
-                              </Flex>
-                            </div>
-                            <div>
-                              <Flex direction={"column"}>
-                                <div className="fs-24 fw-600">
-                                  Allowed Integrations
-                                </div>
-                                <Flex direction={"row"} gap={"10px"} alignItems={"center"}>
-                                  {allowedIntegration.map((p, index) => (
-                                    <Flex direction={"column"} justifyContent={"center"} alignItems={"center"} gap={"10px"}>
+                              <div>
+                                <Flex direction={"column"}>
+                                  <div className="fs-24 fw-600">
+                                    Allowed Asset to Track
+                                  </div>
+                                  <Flex
+                                    direction={"row"}
+                                    gap={"10px"}
+                                    alignItems={"center"}
+                                  >
+                                    {allowedTrackedAsset.map((p, index) => (
                                       <Box
                                         style={{
-                                          width: "100px",
-                                          height: "100px",
+                                          width: "50px",
+                                          height: "50px",
                                           borderRadius: "15px",
                                           overflow: "hidden",
                                           backgroundColor: "transparent",
                                         }}
                                       >
-                                        <Image src={returnImagefromAddress(p[0])} />
+                                        <Image
+                                          src={returnImagefromAddress(p)}
+                                        />
                                       </Box>
-                                      <Text> {returnSelectorfromAddress(p[1])}</Text>
-                                    </Flex>
-                                  ))}
+                                    ))}
+                                  </Flex>
                                 </Flex>
-                              </Flex>
-
-                            </div>
-                          </div>
-                        </TabPanel>
-                        <TabPanel>
-                          <div
-                            className={`bg__dotted ${styles.financialTabContent}`}
-                          >
-                            <div>
-                              <div className="fs-24 fw-600">
-                                General Information
                               </div>
                               <div>
-                                <div className="fw-600">
-                                  General Assets Vault (GAV)
-                                </div>
-                                <div>
-                                  <span className="fw-700">
-                                    1,993,516.452 MGTY
-                                  </span>
-                                  <span>$1,993,516.452</span>
-                                </div>
+                                <Flex direction={"column"}>
+                                  <div className="fs-24 fw-600">
+                                    Allowed Integrations
+                                  </div>
+                                  <Flex
+                                    direction={"row"}
+                                    gap={"10px"}
+                                    alignItems={"center"}
+                                  >
+                                    {allowedIntegration.map((p, index) => (
+                                      <Flex
+                                        direction={"column"}
+                                        justifyContent={"center"}
+                                        alignItems={"center"}
+                                        gap={"10px"}
+                                      >
+                                        <Box
+                                          style={{
+                                            width: "100px",
+                                            height: "100px",
+                                            borderRadius: "15px",
+                                            overflow: "hidden",
+                                            backgroundColor: "transparent",
+                                          }}
+                                        >
+                                          <Image
+                                            src={returnImagefromAddress(p[0])}
+                                          />
+                                        </Box>
+                                        <Text>
+                                          {" "}
+                                          {returnSelectorfromAddress(p[1])}
+                                        </Text>
+                                      </Flex>
+                                    ))}
+                                  </Flex>
+                                </Flex>
                               </div>
                             </div>
-                            <div>
+                          </TabPanel>
+                          <TabPanel>
+                            <div
+                              className={`bg__dotted ${styles.financialTabContent}`}
+                            >
                               <div>
-                                <div className="fw-600">
-                                  Net Assets Valut (NAV)
+                                <div className="fs-24 fw-600">
+                                  General Information
                                 </div>
                                 <div>
-                                  <span className="fw-700">
-                                    1,993,516.452 MGTY
-                                  </span>
-                                  <span>$1,993,516.452</span>
-                                </div>
-                              </div>
-                            </div>
-                            <div>
-                              <div className="fs-24 fw-600">
-                                Financial Metrics
-                              </div>
-                              <div>
-                                <div className="fw-600">Return Month-to-Date</div>
-                                <div>
-                                  <span className="text-success">+0.5%</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </TabPanel>
-                        <TabPanel>
-                          <div className={`${styles.depositorsTable} bg__dotted`}>
-                            <table cellSpacing="0" cellPadding="0">
-                              <thead>
-                                <tr>
-                                  <th>Depositor</th>
-                                  <th>Since</th>
-                                  <th>Number of Shares</th>
-                                  <th>Percentage</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {depositorsData.map((d, index) => (
-                                  <tr key={index}>
-                                    <td>{d.depositor}</td>
-                                    <td>{d.Since}</td>
-                                    <td>{d.numberOfShares}</td>
-                                    <td>{d.percentage} %</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        </TabPanel>
-                        <TabPanel>
-                          <div className={`${styles.activitiesContainer}`}>
-                            <div className="bg__dotted">
-                              <div>
-                                <div>
-                                  <div>
-                                    <div className="fs-12">29 Apr 2022 01:22</div>
-                                    <div className="fs-24 fw-600">Deposit</div>
+                                  <div className="fw-600">
+                                    General Assets Vault (GAV)
                                   </div>
                                   <div>
-                                    <FakeImage
-                                      height="50px"
-                                      width="50px"
-                                      borderRadius="50%"
-                                      fillColor="black"
-                                    />
+                                    <span className="fw-700">
+                                      1,993,516.452 MGTY
+                                    </span>
+                                    <span>$1,993,516.452</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div>
+                                <div>
+                                  <div className="fw-600">
+                                    Net Assets Valut (NAV)
+                                  </div>
+                                  <div>
+                                    <span className="fw-700">
+                                      1,993,516.452 MGTY
+                                    </span>
+                                    <span>$1,993,516.452</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div>
+                                <div className="fs-24 fw-600">
+                                  Financial Metrics
+                                </div>
+                                <div>
+                                  <div className="fw-600">
+                                    Return Month-to-Date
+                                  </div>
+                                  <div>
+                                    <span className="text-success">+0.5%</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </TabPanel>
+                          <TabPanel>
+                            <div
+                              className={`${styles.depositorsTable} bg__dotted`}
+                            >
+                              <table cellSpacing="0" cellPadding="0">
+                                <thead>
+                                  <tr>
+                                    <th>Depositor</th>
+                                    <th>Since</th>
+                                    <th>Number of Shares</th>
+                                    <th>Percentage</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {depositorsData.map((d, index) => (
+                                    <tr key={index}>
+                                      <td>{d.depositor}</td>
+                                      <td>{d.Since}</td>
+                                      <td>{d.numberOfShares}</td>
+                                      <td>{d.percentage} %</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </TabPanel>
+                          <TabPanel>
+                            <div className={`${styles.activitiesContainer}`}>
+                              <div className="bg__dotted">
+                                <div>
+                                  <div>
                                     <div>
-                                      <div className="fs-20 fw-700">
-                                        Vault name
+                                      <div className="fs-12">
+                                        29 Apr 2022 01:22
                                       </div>
-                                      <div className="fs-12">0x4s21...1452</div>
+                                      <div className="fs-24 fw-600">
+                                        Deposit
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <FakeImage
+                                        height="50px"
+                                        width="50px"
+                                        borderRadius="50%"
+                                        fillColor="black"
+                                      />
+                                      <div>
+                                        <div className="fs-20 fw-700">
+                                          Vault name
+                                        </div>
+                                        <div className="fs-12">
+                                          0x4s21...1452
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                                <div>
-                                  <div>Amount</div>
-                                  <div>Shares received</div>
-                                  <div>Depositor</div>
+                                  <div>
+                                    <div>Amount</div>
+                                    <div>Shares received</div>
+                                    <div>Depositor</div>
+                                  </div>
                                 </div>
                               </div>
+                              <div className="bg__dotted"></div>
                             </div>
-                            <div className="bg__dotted"></div>
-                          </div>
-                        </TabPanel>
-                      </TabPanels>
-                    </Box>
-                  </Flex>
-                </Tabs>
-                :
-                menuSelected == 1 ?
-                  <Tabs >
-                    <Flex direction={"column"} alignItems={"center"} gap={"1vw"}>
+                          </TabPanel>
+                        </TabPanels>
+                      </Box>
+                    </Flex>
+                  </Tabs>
+                ) : menuSelected == 1 ? (
+                  <Tabs>
+                    <Flex
+                      direction={"column"}
+                      alignItems={"center"}
+                      gap={"1vw"}
+                    >
                       <TabList borderBottom={"0px solid "}>
                         <Flex direction={"row"} alignItems={"center"}>
                           <Tab fontSize={"1xl"} fontWeight={"bold"}>
@@ -2561,12 +2685,17 @@ const vault: NextPage = () => {
                           </Tab>
                         </Flex>
                       </TabList>
-                      <Box borderRadius='10%' borderTop={"solid 2px #f6643c"} borderBottom={"solid 2px #f6643c"} backgroundColor="blackAlpha.400" padding={"2%"}>
+                      <Box
+                        borderRadius="10%"
+                        borderTop={"solid 2px #f6643c"}
+                        borderBottom={"solid 2px #f6643c"}
+                        backgroundColor="blackAlpha.400"
+                        padding={"2%"}
+                      >
                         <TabPanels>
                           <TabPanel>
-                          <Box>
-
-{/* <div className={`${styles.mint}`}>
+                            <Box>
+                              {/* <div className={`${styles.mint}`}>
   <div className='fs-14' style={{ fontWeight: "bold" }}>
     <div>
       {acccountAddress.substring(0, 7)}...
@@ -2577,242 +2706,481 @@ const vault: NextPage = () => {
   </div>
 </div> */}
 
-<Flex direction={"column"} gap={"20px"} alignItems={"center"}>
-  <Text> {isAllowedDepositor ? "Allowed to Mint 🎉" : "not allowed to mint"} </Text>
+                              <Flex
+                                direction={"column"}
+                                gap={"20px"}
+                                alignItems={"center"}
+                              >
+                                <Text>
+                                  {" "}
+                                  {isAllowedDepositor
+                                    ? "Allowed to Mint 🎉"
+                                    : "not allowed to mint"}{" "}
+                                </Text>
 
+                                <Flex
+                                  direction={"column"}
+                                  gap={"20px"}
+                                  alignItems={"center"}
+                                >
+                                  <Flex
+                                    justifyContent={"space-between"}
+                                    alignItems="center"
+                                    backgroundColor={"blackAlpha.400"}
+                                    width={"90%"}
+                                    borderRadius={"20px"}
+                                    padding={"10px"}
+                                  >
+                                    <NumberInput
+                                      height={"50px"}
+                                      variant={"unstyled"}
+                                      fontFamily={"IBM Plex Mono, sans-serif"}
+                                      padding={"10px 10px"}
+                                      alignSelf={"center"}
+                                      value={buyValue}
+                                      onChange={handleChange}
+                                      defaultValue={0}
+                                      max={parseFloat(userBalance)}
+                                    >
+                                      <NumberInputField />
+                                    </NumberInput>
+                                    <Flex direction={"row"}>
+                                      {denominationAsset != "deno" && (
+                                        <Flex alignItems={"center"} gap={"5px"}>
+                                          <Text
+                                            fontSize={"1xl"}
+                                            fontWeight={"bold"}
+                                          >
+                                            {denominationAsset}
+                                          </Text>
+                                          <Box
+                                            style={{
+                                              width: "50px",
+                                              height: "50px",
+                                              borderRadius: "10px",
+                                              overflow: "hidden",
+                                            }}
+                                          >
+                                            <Image
+                                              src={returnImagefromAddress(
+                                                denominationAssetAddress
+                                              )}
+                                            />
+                                          </Box>
+                                        </Flex>
+                                      )}
+                                      <Flex
+                                        marginLeft={"30px"}
+                                        flexDir={"column"}
+                                      >
+                                        <Text
+                                          color={"whiteAlpha.300"}
+                                          fontSize={"sm"}
+                                        >
+                                          Balance{" "}
+                                        </Text>
+                                        <Text
+                                          color={"whiteAlpha.700"}
+                                          fontSize={"sm"}
+                                        >
+                                          {parseFloat(userBalance).toPrecision(
+                                            2
+                                          )}
+                                        </Text>
+                                      </Flex>
+                                    </Flex>
+                                  </Flex>
+                                  <Flex
+                                    justifyContent={"space-between"}
+                                    alignItems="center"
+                                    backgroundColor={"blackAlpha.400"}
+                                    width={"90%"}
+                                    borderRadius={"20px"}
+                                    padding={"10px"}
+                                  >
+                                    <Text
+                                      height={"50px"}
+                                      variant={"unstyled"}
+                                      fontFamily={"IBM Plex Mono, sans-serif"}
+                                      padding={"10px 10px"}
+                                      alignSelf={"center"}
+                                      width={"50%"}
+                                    >
+                                      {buyValue / sharePrice -
+                                        (buyValue / parseFloat(sharePrice)) *
+                                          parseFloat(entranceFee)}
+                                    </Text>
+                                    {denominationAsset != "deno" && (
+                                      <Flex alignItems={"center"} gap={"15px"}>
+                                        <Text
+                                          fontSize={"1xl"}
+                                          fontWeight={"bold"}
+                                        >
+                                          {symbol}
+                                        </Text>
 
+                                        <Box
+                                          style={{
+                                            width: "50px",
+                                            height: "50px",
+                                            borderRadius: "10px",
+                                            overflow: "hidden",
+                                            backgroundColor: "black",
+                                          }}
+                                        >
+                                          <img
+                                            src={vaultInfo?.image}
+                                            style={{ objectFit: "cover" }}
+                                          />
+                                        </Box>
+                                      </Flex>
+                                    )}
+                                    <Flex
+                                      marginLeft={"30px"}
+                                      flexDir={"column"}
+                                    >
+                                      <Text
+                                        color={"whiteAlpha.300"}
+                                        fontSize={"sm"}
+                                      >
+                                        Balance{" "}
+                                      </Text>
+                                      <Text
+                                        color={"whiteAlpha.700"}
+                                        fontSize={"sm"}
+                                      >
+                                        {" "}
+                                        ~{getUserTotalShare().toPrecision(2)}
+                                      </Text>
+                                    </Flex>
+                                  </Flex>
 
-<Flex direction={"column"} gap={"20px"} alignItems={"center"}>
-  <Flex justifyContent={'space-between'} alignItems='center' backgroundColor={"blackAlpha.400"} width={'90%'}
-    borderRadius={'20px'} padding={'10px'}>
-    <NumberInput height={'50px'} variant={'unstyled'} fontFamily={'IBM Plex Mono, sans-serif'} padding={"10px 10px"}
-      alignSelf={"center"} value={buyValue} onChange={handleChange} defaultValue={0} max={parseFloat(userBalance)}>
-      <NumberInputField />
-    </NumberInput>
-    <Flex direction={"row"}>
-    {denominationAsset != "deno" &&
-      <Flex alignItems={"center"}  gap={"5px"}>
-        <Text fontSize={"1xl"} fontWeight={"bold"}>
-          {denominationAsset}
-        </Text>
-        <Box
-                  style={{
-                    width: "50px",
-                    height: "50px",
-                    borderRadius: "10px",
-                    overflow: "hidden",
-                   
-                  }}
-                >
-                  <Image src={returnImagefromAddress(denominationAssetAddress)} />
-                </Box>
-      </Flex>
-    }
-    <Flex marginLeft={'30px'} flexDir={'column'}>
-      <Text color={"whiteAlpha.300"} fontSize={'sm'}>Balance </Text>
-      <Text color={"whiteAlpha.700"} fontSize={'sm'}>{parseFloat(userBalance).toPrecision(2)}</Text>
-    </Flex>
-    </Flex>
-  </Flex>
-  <Flex justifyContent={'space-between'} alignItems='center' backgroundColor={"blackAlpha.400"} width={'90%'}
-    borderRadius={'20px'} padding={'10px'} >
-    <Text height={'50px'} variant={'unstyled'} fontFamily={'IBM Plex Mono, sans-serif'} padding={"10px 10px"}
-      alignSelf={"center"} width={"50%"}>
-      {(buyValue / sharePrice) - (((buyValue) / parseFloat(sharePrice)) * parseFloat(entranceFee))}
-    </Text>
-    {denominationAsset != "deno" &&
-      <Flex alignItems={"center"} gap={"15px"}>
-        <Text fontSize={"1xl"} fontWeight={"bold"}>
-          {symbol}
-        </Text>
-
-        <Box
-                  style={{
-                    width: "50px",
-                    height: "50px",
-                    borderRadius: "10px",
-                    overflow: "hidden",
-                    backgroundColor: "black",
-                  }}
-                >
-                  <img
-                    src={vaultInfo?.image}
-                    style={{ objectFit: "cover" }}
-                  />
-                </Box>
-
-      </Flex>
-    }
-    <Flex marginLeft={'30px'} flexDir={'column'}>
-      
-    <Text color={"whiteAlpha.300"} fontSize={'sm'}>Balance </Text>
-    <Text color={"whiteAlpha.700"} fontSize={'sm'}> ~{getUserTotalShare().toPrecision(2)}</Text>
-    </Flex>
-  </Flex>
-
-  <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => handleMintShare()} size='md'> Mint</Button>
-
-</Flex>
-</Flex>
-
-
-</Box>
+                                  <Button
+                                    backgroundColor={"#f6643c"}
+                                    color={"white"}
+                                    onClick={() => handleMintShare()}
+                                    size="md"
+                                  >
+                                    {" "}
+                                    Mint
+                                  </Button>
+                                </Flex>
+                              </Flex>
+                            </Box>
                           </TabPanel>
                           <TabPanel>
-                <Box width='40vh'>
-                  <div className={`${styles.mint}`}>
+                            <Flex minWidth={"60vh"} direction={"column"} gap={"40px"}>
+                            <Box >
+                              <Flex
+                                direction={"column"}
+                                gap={"20px"}
+                                alignItems={"center"}
+                              >
+                                <Text>
+                                  {userShareBalance == ""
+                                    ? "Fetching your shares"
+                                    : userShareBalance == "0"
+                                    ? "you don't have any shares"
+                                    : "See below your shares"}
+                                </Text>
+                                {userShareInfo.length != 0 &&
+                                  userShareInfo.map((p, index) => (
+                                    <Flex
+                                      direction={"column"}
+                                      alignItems={"center"}
+                                    >
+                                      <Box
+                                        style={{
+                                          width: "100px",
+                                          height: "100px",
+                                          borderRadius: "20px",
+                                          overflow: "hidden",
+                                          backgroundColor: "black",
+                                        }}
+                                      >
+                                        <img
+                                          src={vaultInfo?.image}
+                                          style={{ objectFit: "cover" }}
+                                        />
+                                      </Box>
+                                      <Flex
+                                        direction={"column"}
+                                        justifyContent={"space-between"}
+                                        alignItems={"center"}
+                                      >
+                                        <Text> ID : {p.tokenId}</Text>
+                                        <Text>
+                                          Amount :{" "}
+                                          {parseFloat(p.shareAmount) /
+                                            1000000000000000000}
+                                        </Text>
+                                      </Flex>
+                                      <Button
+                                        backgroundColor={"#f6643c"}
+                                        onClick={() =>
+                                          setSellTokenId(p.tokenId)
+                                        }
+                                      >
+                                        Sell
+                                      </Button>
+                                    </Flex>
+                                  ))}
+                              </Flex>
+                            </Box>
 
-                    <div className='fs-14' style={{ fontWeight: "bold" }}>
-                     
-                      <div className='fs-14 '>
-                        &nbsp;&nbsp;&nbsp;{userShareBalance == "" ? "Fetching your shares" : userShareBalance == '0' ? "you don't have any shares" : "See below your shares"}
-                      </div>
-                    </div>
-                    {userShareInfo.length != 0 &&
-                      userShareInfo.map((p, index) => (
-                        <div>
-                          <div>
-                            tokenID : {p.tokenId}
-                          </div>
-                          <div>
-                            Share amount: {p.shareAmount}
-                          </div>
-                          <div>
-                            <Button backgroundColor={"#f6643c"} style={{ margin: '8px auto' }} onClick={() => setSellTokenId(p.tokenId)}>Sell</Button>
-                          </div>
-                        </div>
-                      ))
-                    }
+                            {sellTokenId != "" && (
+                              <Box borderTop={"solid 2px #f6643c"} padding={"2vw"}>
+                                <Flex direction={"column"} gap={"10px"} alignItems={"center"}>
+                                  <Text>
+                                    ID {sellTokenId} : Allowed to sell 🎉
+                                  </Text>
+                                  <Text>
+                                    Selling{" "}
+                                    {(
 
-                  </div>
-                </Box>
-
-                {sellTokenId != "" &&
-                <Box>
-                  <div className={`${styles.mint}`}>
-
-                    <div className='fs-14' style={{ fontWeight: "bold" }}>
-                      <div>
-                        tokenID : {sellTokenId}
-                      </div>
-                    </div>
-                    <Text>You are allowed to sell this share</Text>
-                    <Text>Selling {(parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100)).toPrecision(5)} {symbol} Shares</Text>
-                    <Slider
-                      flex='1'
-                      focusThumbOnChange={false}
-                      value={parseFloat(percentShare)}
-                      onChange={handleChange2}
-                      width={"80%"}
-                      colorScheme='#f6643c'
-                    >
-                      <SliderTrack>
-                        <SliderFilledTrack />
-                      </SliderTrack>
-                      <SliderThumb fontSize='sm' boxSize='32px' children={parseFloat(percentShare)} />
-                    </Slider>
-                    <div>
-                      {percentShare == "0" ?
-                        <>
-                          ~ {userShareInfo[parseFloat(sellTokenId)].shareAmount} shares available
-                        </>
-                        :
-                        <>
-                          ~ {(((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) - ((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) * (((parseFloat(sharePrice) - parseFloat(userShareInfo[parseFloat(sellTokenId)].pricePurchased)) / (parseFloat(sharePrice))) * (parseFloat(performanceFee) / 100)))) - (((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) - ((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) * (((parseFloat(sharePrice) - parseFloat(userShareInfo[parseFloat(sellTokenId)].pricePurchased)) / (parseFloat(sharePrice))) * (parseFloat(performanceFee) / 100)))) * (parseFloat(exitFee) / 100))).toPrecision(2)} {denominationAsset} including Performance and exit fees
-                        </>
-                      }
-
-                    </div>
-                    <div>
-                      <div>
-                        Reedem funds with
-                      </div>
-                      {onChange == true ?
-                        <div>
-                          {trackedAssets.map((p, index) => (
-                            <div>
-                              <div>
-                                <button type="button" style={{ width: "50px" }} onClick={() => handleSelected(index)}>
-                                  {console.log(index)}
-                                  {returnImagefromSymbol(p.coinSymbol)}
-
-                                </button>
-                                {
-
-                                }
-                                {p.selected == true &&
-                                  <Flex direction={"row"}>
-                                    <NumberInput size='md' maxW={24} defaultValue={15} min={10} value={sellValue
-                                    } onChange={handleChange3}>
-                                      <NumberInputField />
-                                      <NumberInputStepper>
-                                        <NumberIncrementStepper />
-                                        <NumberDecrementStepper />
-                                      </NumberInputStepper>
-                                    </NumberInput>
-                                    <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => addPercent(p.coinSymbol, p.address, index)} > Set</Button>
+                                      (parseFloat(
+                                        userShareInfo[parseFloat(sellTokenId)]
+                                          .shareAmount
+                                      ) *
+                                      (parseFloat(percentShare) / 100)) / 1000000000000000000
+                                   
+                                   ).toPrecision(5)}{" "}
+                                    {symbol}
+                                  </Text>
+                                  <Slider
+                                    flex="1"
+                                    focusThumbOnChange={false}
+                                    value={parseFloat(percentShare)}
+                                    onChange={handleChange2}
+                                    width={"80%"}
+                                    colorScheme="#f6643c"
+                                  >
+                                    <SliderTrack  bg="red.100">
+                                      <SliderFilledTrack  bg="tomato"/>
+                                    </SliderTrack>
+                                    <SliderThumb
+                                      fontSize="sm"
+                                      boxSize="32px"
+                                      children={parseFloat(percentShare)}
+                                    />
+                                  </Slider>
+                                  <div>
+                                    {percentShare == "0" ? (
+                                      <>
+                                        ~{" "}
+                                        {
+                                          userShareInfo[parseFloat(sellTokenId)]
+                                            .shareAmount / 1000000000000000000
+                                        }{" "}
+                                        shares available
+                                      </>
+                                    ) : (
+                                      <>
+                                        ~{" "}
+                                        {((
+                                          parseFloat(
+                                            userShareInfo[
+                                              parseFloat(sellTokenId)
+                                            ].shareAmount
+                                          ) *
+                                            (parseFloat(percentShare) / 100) *
+                                            parseFloat(sharePrice) -
+                                          parseFloat(
+                                            userShareInfo[
+                                              parseFloat(sellTokenId)
+                                            ].shareAmount
+                                          ) *
+                                            (parseFloat(percentShare) / 100) *
+                                            parseFloat(sharePrice) *
+                                            (((parseFloat(sharePrice) -
+                                              parseFloat(
+                                                userShareInfo[
+                                                  parseFloat(sellTokenId)
+                                                ].pricePurchased
+                                              )) /
+                                              parseFloat(sharePrice)) *
+                                              (parseFloat(performanceFee) /
+                                                100)) -
+                                          (parseFloat(
+                                            userShareInfo[
+                                              parseFloat(sellTokenId)
+                                            ].shareAmount
+                                          ) *
+                                            (parseFloat(percentShare) / 100) *
+                                            parseFloat(sharePrice) -
+                                            parseFloat(
+                                              userShareInfo[
+                                                parseFloat(sellTokenId)
+                                              ].shareAmount
+                                            ) *
+                                              (parseFloat(percentShare) / 100) *
+                                              parseFloat(sharePrice) *
+                                              (((parseFloat(sharePrice) -
+                                                parseFloat(
+                                                  userShareInfo[
+                                                    parseFloat(sellTokenId)
+                                                  ].pricePurchased
+                                                )) /
+                                                parseFloat(sharePrice)) *
+                                                (parseFloat(performanceFee) /
+                                                  100))) *
+                                            (parseFloat(exitFee) / 100)
+                                         ) / 1000000000000000000 ).toPrecision(2)}{" "}
+                                        {denominationAsset} including
+                                        Performance and exit fees
+                                      </>
+                                    )}
+                                  </div>
+                                  <div>
+                                    <div>Reedem funds with</div>
+                                    {onChange == true ? (
+                                      <div>
+                                        {trackedAssets.map((p, index) => (
+                                          <div>
+                                            <div>
+                                              <button
+                                                type="button"
+                                                style={{ width: "50px" }}
+                                                onClick={() =>
+                                                  handleSelected(index)
+                                                }
+                                              >
+                                                {console.log(index)}
+                                                {returnImagefromSymbol(
+                                                  p.coinSymbol
+                                                )}
+                                              </button>
+                                              {}
+                                              {p.selected == true && (
+                                                <Flex direction={"row"}>
+                                                  <NumberInput
+                                                    size="md"
+                                                    maxW={24}
+                                                    defaultValue={15}
+                                                    min={10}
+                                                    value={sellValue}
+                                                    onChange={handleChange3}
+                                                  >
+                                                    <NumberInputField />
+                                                    <NumberInputStepper>
+                                                      <NumberIncrementStepper />
+                                                      <NumberDecrementStepper />
+                                                    </NumberInputStepper>
+                                                  </NumberInput>
+                                                  <Button
+                                                    backgroundColor={"#f6643c"}
+                                                    color={"white"}
+                                                    onClick={() =>
+                                                      addPercent(
+                                                        p.coinSymbol,
+                                                        p.address,
+                                                        index
+                                                      )
+                                                    }
+                                                  >
+                                                    {" "}
+                                                    Set
+                                                  </Button>
+                                                </Flex>
+                                              )}
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    ) : (
+                                      <div>
+                                        {trackedAssets.map((p, index) => (
+                                          <div>
+                                            <div>
+                                              <button
+                                                type="button"
+                                                style={{ width: "50px" }}
+                                                onClick={() =>
+                                                  handleSelected(index)
+                                                }
+                                              >
+                                                {returnImagefromSymbol(
+                                                  p.coinSymbol
+                                                )}
+                                              </button>
+                                              {p.selected == true && (
+                                                <Flex direction={"row"}>
+                                                  <NumberInput
+                                                    size="md"
+                                                    maxW={24}
+                                                    defaultValue={100}
+                                                    min={1}
+                                                    value={sellValue}
+                                                    onChange={handleChange3}
+                                                  >
+                                                    <NumberInputField />
+                                                    <NumberInputStepper>
+                                                      <NumberIncrementStepper />
+                                                      <NumberDecrementStepper />
+                                                    </NumberInputStepper>
+                                                  </NumberInput>
+                                                  <Button
+                                                    backgroundColor={"#f6643c"}
+                                                    color={"white"}
+                                                    onClick={() =>
+                                                      addPercent(
+                                                        p.coinSymbol,
+                                                        p.address,
+                                                        index
+                                                      )
+                                                    }
+                                                  >
+                                                    {" "}
+                                                    Set
+                                                  </Button>
+                                                </Flex>
+                                              )}
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <Flex>
+                                    <Text>Sum must be 100% : </Text>
+                                    {sellShareTab.map((p, index) => (
+                                      <Text>
+                                        {console.log(index)}
+                                        {console.log(sellShareTab)}
+                                        {p.percent}% {p.symbol}{" "}
+                                        {index == sellShareTab.length - 1
+                                          ? ""
+                                          : "+"}
+                                      </Text>
+                                    ))}
                                   </Flex>
-                                }
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        :
-                        <div>
-                          {trackedAssets.map((p, index) => (
-                            <div>
-                              <div>
-                                <button type="button" style={{ width: "50px" }} onClick={() => handleSelected(index)}>
-                                  {returnImagefromSymbol(p.coinSymbol)}
-                                </button>
-                                {p.selected == true &&
-                                  <Flex direction={"row"}>
-                                    <NumberInput size='md' maxW={24} defaultValue={100} min={1} value={sellValue
-                                    } onChange={handleChange3}>
-                                      <NumberInputField />
-                                      <NumberInputStepper>
-                                        <NumberIncrementStepper />
-                                        <NumberDecrementStepper />
-                                      </NumberInputStepper>
-                                    </NumberInput>
-                                    <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => addPercent(p.coinSymbol, p.address, index)}> Set</Button>
-                                  </Flex>
-                                }
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      }
 
-
-                    </div>
-                    <Flex>
-                      <Text>Sum must be 100% : </Text>
-                      {sellShareTab.map((p, index) => (
-                        <Text>
-                          {console.log(index)}
-                          {console.log(sellShareTab)}
-                          {p.percent}% {p.symbol} {index == sellShareTab.length - 1 ? "" : "+"}
-                        </Text>
-                      ))}
-                    </Flex>
-
-                    <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => handleSellShare()} size='md'> Sell</Button>
-
-
-                  </div>
-                </Box>}
-                
-              
+                                  <Button
+                                    backgroundColor={"#f6643c"}
+                                    color={"white"}
+                                    onClick={() => handleSellShare()}
+                                    size="md"
+                                  >
+                                    {" "}
+                                    Sell
+                                  </Button>
+                                </Flex>
+                              </Box>
+                            )}
+                            </Flex>
                           </TabPanel>
                         </TabPanels>
                       </Box>
                     </Flex>
                   </Tabs>
-                  :
+                ) : (
                   <div>
-                    <Tabs >
-                      <Flex direction={"column"} alignItems={"center"} gap={"1vw"}>
+                    <Tabs>
+                      <Flex
+                        direction={"column"}
+                        alignItems={"center"}
+                        gap={"1vw"}
+                      >
                         <TabList borderBottom={"0px solid "}>
                           <Flex direction={"row"} alignItems={"center"}>
                             <Tab fontSize={"1xl"} fontWeight={"bold"}>
@@ -2829,33 +3197,34 @@ const vault: NextPage = () => {
                             </Tab>
                           </Flex>
                         </TabList>
-                        <Box width={"60vw"} minHeight={"30vw"} borderRadius='10%' borderTop={"solid 2px #f6643c"} borderBottom={"solid 2px #f6643c"} backgroundColor="blackAlpha.400" padding={"2%"}>
+                        <Box
+                          width={"60vw"}
+                          minHeight={"30vw"}
+                          borderRadius="10%"
+                          borderTop={"solid 2px #f6643c"}
+                          borderBottom={"solid 2px #f6643c"}
+                          backgroundColor="blackAlpha.400"
+                          padding={"2%"}
+                        >
                           <TabPanels>
-                            <TabPanel>
-                              DeFi
-                            </TabPanel>
-                            <TabPanel>
-                              Fees
-                            </TabPanel>
-                            <TabPanel>
-                              Integration
-                            </TabPanel>
-                            <TabPanel>
-                              Policies
-                            </TabPanel>
+                            <TabPanel>DeFi</TabPanel>
+                            <TabPanel>Fees</TabPanel>
+                            <TabPanel>Integration</TabPanel>
+                            <TabPanel>Policies</TabPanel>
                           </TabPanels>
                         </Box>
                       </Flex>
                     </Tabs>
                   </div>
-
-              }
+                )}
+              </Box>
             </Box>
-          </Box>
-        </Flex>
-        :
-        <Text alignSelf={"center"} fontSize={"5xl"}>Fund not found 😥</Text>
-      }
+          </Flex>
+        ) : (
+          <Text alignSelf={"center"} fontSize={"5xl"}>
+            Fund not found 😥
+          </Text>
+        )}
       </Box>
     </>
   );
