@@ -2659,13 +2659,11 @@ const vault: NextPage = () => {
 </Box>
                           </TabPanel>
                           <TabPanel>
-                <Box>
+                <Box width='40vh'>
                   <div className={`${styles.mint}`}>
 
                     <div className='fs-14' style={{ fontWeight: "bold" }}>
-                      <div>
-                        {acccountAddress.substring(0, 7)}...
-                      </div>
+                     
                       <div className='fs-14 '>
                         &nbsp;&nbsp;&nbsp;{userShareBalance == "" ? "Fetching your shares" : userShareBalance == '0' ? "you don't have any shares" : "See below your shares"}
                       </div>
@@ -2805,7 +2803,7 @@ const vault: NextPage = () => {
                   </div>
                 </Box>}
                 
-              }
+              
                           </TabPanel>
                         </TabPanels>
                       </Box>
