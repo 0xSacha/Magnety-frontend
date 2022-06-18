@@ -18,12 +18,23 @@ import {
 } from "@chakra-ui/react";
 import { starknetKeccak } from "starknet/dist/utils/hash";
 import Link from "next/link";
+import { contractAddress } from "~/registry/address";
+
 
 import Twitter from "../image/twitter.svg";
 import Discord from "../image/discord.svg";
 import Linkedin from "../image/linkedin.svg";
 import Medium from "../image/medium.svg";
 import Notion from "../image/notion.svg";
+import { hexToDecimalString } from "starknet/dist/utils/number";
+
+type fundInfo = {
+  image: string;
+  name: string;
+  address: string;
+}[];
+
+
 
 const Layout = (props: PropsWithChildren<unknown>) => {
   const dispatch = useAppDispatch();
@@ -32,9 +43,14 @@ const Layout = (props: PropsWithChildren<unknown>) => {
   const [isConnected, setIsConnected] = useState(false);
   let [address, setAddress] = useState("connect wallet");
   const [userInfo, setUserInfo] = useState<any>(undefined);
-
+  const [userFundInfo, setUserFundInfo] = useState<fundInfo>([]);
+  const [userFundAmount, setUserFundAmount] = useState<number>(-1);
+  const { provider } = getStarknet();
+  const [showFunds, setShowFunds] = useState(false);
+  
   async function getUserInfo() {
     const res = await fetch("http://localhost:3000/api/user/" + address);
+
     if (res.status == 200) {
       const { data } = await res.json();
       setUserInfo(data);
@@ -42,9 +58,75 @@ const Layout = (props: PropsWithChildren<unknown>) => {
     }
   }
 
+  async function getFundInfo(address: string, amount:number) {
+    let currentFundInfo = userFundInfo
+    const res = await fetch("http://localhost:3000/api/contract/" + address);
+    if (res.status == 200) {
+      const { data } = await res.json();
+      currentFundInfo.push(
+        {
+          image:data.image,
+          name:data.name,
+          address:address,
+        }
+      )
+      setUserFundInfo(data);
+    } else {
+      currentFundInfo.push(
+        {
+          image:"",
+          name:address.substring(0,5),
+          address:address,
+        }
+      )
+    }
+    setUserFundInfo(currentFundInfo)
+    console.log(amount)
+    console.log(currentFundInfo.length)
+    if(currentFundInfo.length == amount) {
+      console.log("donnnnnnne")
+      setShowFunds(true)
+    }
+    console.log(currentFundInfo)
+  }
+
   useEffect(() => {
     if (address !== "connect wallet") {
       getUserInfo();
+      console.log(address)
+      const res = provider.callContract({
+        contractAddress: contractAddress.VaultFactory,
+        entrypoint: "getUserVaultAmount",
+        calldata: [hexToDecimalString(address)],
+      });
+      res
+        .then((value) => {
+          console.log(value)
+          const amount = parseFloat(hexToDecimalString(value.result[0]))
+          setUserFundAmount(amount)
+          for (let index = 0; index < amount; index++) {
+            const res2 = provider.callContract({
+              contractAddress: contractAddress.VaultFactory,
+              entrypoint: "getUserVault",
+              calldata: [
+                hexToDecimalString(address),
+                index.toString()
+              ],
+            });
+            res2
+              .then((value) => {
+                console.log(value)
+                getFundInfo(value.result[0], amount)
+            
+          }) .catch((err) => {
+            console.log(err);
+          });
+
+        }}
+          )
+        .catch((err) => {
+          console.log(err);
+        });
     }
     console.log("fff");
     console.log(address);
@@ -134,12 +216,37 @@ const Layout = (props: PropsWithChildren<unknown>) => {
                       </Text>
                     </Flex>
                   ) : (
-                    <Text fontWeight={"bold"} fontSize={"1xl"}>
-                      GM {userInfo.name}
+                    <Flex direction={"column"} alignItems={"center"} justifyContent={"center"}  gap={"15px"}>
+                      {/* <Text fontWeight={"bold"} fontSize={"1.5rem"}>
+                      GM 
+                    </Text> */}
+                    <Button  padding={"5px"} borderRadius={"15px"}  border={"solid 1px #f6643c"}>
+                    <Link href={`/user/${address}`}>
+                    <Flex direction={"row"} gap={"7px"} alignItems={"center"}>
+                      <Box
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                      overflow: "hidden",
+                      backgroundColor: "black",
+                    }}
+                  >
+                    <img
+                      src={userInfo.profilePic}
+                      style={{ objectFit: "cover" }}
+                    />
+                  </Box>
+                      <Text fontWeight={"semibold"} fontSize={"1.25rem"}>
+                      {userInfo.name}
                     </Text>
+                    </Flex>
+                    </Link>
+                    </Button>
+                    </Flex>
                   )}
 
-                  <Button>
+                  {/* <Button>
                     <Link href={`/user/${address}`}>
                       <Box
                         backgroundColor={"#f6643c"}
@@ -150,7 +257,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
                         <Text fontWeight={"bold"}>My profile</Text>
                       </Box>
                     </Link>
-                  </Button>
+                  </Button> */}
                   <Spacer />
                   <Spacer />
                   <Flex
@@ -215,12 +322,54 @@ const Layout = (props: PropsWithChildren<unknown>) => {
                   </Flex>
                   <Spacer />
                     <Spacer />
-                    <Text
-                          fontWeight={"bold"}
-                        >
-                          My Funds
+                    {userFundAmount == -1 ?
+                    <Text>Fetching your funds</Text>
+                      :
+                      userFundAmount > 0 ?
+                      <Flex direction={"column"}>
+                      <Text fontWeight={"bold"}>
+                        You are managing {userFundAmount} funds
+                      </Text>
+                      {showFunds == true ?
+                        <Flex direction={"column"} overflowY={"scroll"} maxHeight={"120px"} padding={"15px"} gap={"7px"}>
+                      {userFundInfo.map((p,index) => (
+                        <Button  padding={"3px"} borderRadius={"15px"}  border={"solid 1px #f6643c"}>
+                        <Link href={`/vault/${p.address}`}>
+                        <Flex direction={"row"} alignItems={"center"} justifyContent={"space-between"} minWidth={"120px"}>
+                          <Box
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          borderRadius: "50%",
+                          overflow: "hidden",
+                          backgroundColor: "black",
+                        }}
+                      >
+                        <img
+                          src={p.image}
+                          style={{ objectFit: "cover" }}
+                        />
+                      </Box>
+                          <Text fontWeight={"semibold"} fontSize={"0.7rem"}>
+                          {p.name.length > 10 ? `${p.name.substring(0,10)}...` : p.name}
                         </Text>
+                        </Flex>
+                        </Link>
+                        </Button>
+
+                      ))}
+                      </Flex>
+                      :
+                      <Text>⌛⏳</Text>
+                      }
+                      </Flex>
+                      :
+                      <Text fontWeight={"bold"}>
+                        You are not Managing any funds
+                      </Text>
+                    }
                 </Flex>
+                
               </>
             )}
             <div
