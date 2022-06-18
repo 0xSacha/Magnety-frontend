@@ -18,7 +18,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
-import ERC20 from '../abi/erc20.json'
+import ERC20 from '../abi/ERC20.json'
 import VF from '../abi/VaultFactory.json'
 import {
   Button,
@@ -112,7 +112,7 @@ const Contract: NextPage = () => {
 
   const [txAccepted, settxAccepted] = useState(0);
   const [txAcceptedTransac, settxAcceptedTransac] = useState(0);
-  
+
 
   const handleInputTagEnterKeyPress = (
     event: React.KeyboardEvent<HTMLInputElement>,
@@ -167,21 +167,21 @@ const Contract: NextPage = () => {
     setIsOpenError(true);
   };
 
-  const handleTransaction = async (tx:any, _tabDB: ContractInfo) => {
+  const handleTransaction = async (tx: any, _tabDB: ContractInfo) => {
     setIsOpen(true)
     await library
-    .waitForTransaction(tx)
-    .then(() => handleTransactionAfter(_tabDB));
+      .waitForTransaction(tx)
+      .then(() => handleTransactionAfter(_tabDB));
   };
 
-  const handleTransactionAfter = async (_tabDB:ContractInfo) => {
+  const handleTransactionAfter = async (_tabDB: ContractInfo) => {
     await fetch(`http://localhost:3000/api/contract/${deployedVaultAddress}`, {
       method: "put",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(_tabDB),
-    }).then(()=> settxAcceptedTransac(1))
+    }).then(() => settxAcceptedTransac(1))
   };
 
   // async function postDB(data: ContractInfo) {
@@ -200,7 +200,7 @@ const Contract: NextPage = () => {
     console.log(_tabA)
     console.log(account.address)
     try {
-       await account.execute([
+      await account.execute([
         {
           contractAddress: Asset[denominationAsset].address.toString(),
           entrypoint: "approve",
@@ -220,8 +220,8 @@ const Contract: NextPage = () => {
         { maxFee: 500000000000000000000000000 }
 
 
-      ).then((tx)=> handleTransaction(tx.transaction_hash,_tabDB))
-    } catch (error:any) {
+      ).then((tx) => handleTransaction(tx.transaction_hash, _tabDB))
+    } catch (error: any) {
       handleErrorMessage(error)
     }
   };
@@ -338,7 +338,7 @@ const Contract: NextPage = () => {
   };
 
 
-  
+
 
 
 
@@ -428,7 +428,7 @@ const Contract: NextPage = () => {
 
 
   useEffect(() => {
-    if(account != undefined && account?.address != ""){
+    if (account != undefined && account?.address != "") {
       const assetAddress = Asset[denominationAsset].address.toString()
       console.log(account.address)
       console.log(assetAddress)
@@ -437,11 +437,11 @@ const Contract: NextPage = () => {
         entrypoint: "balanceOf",
         calldata: [hexToDecimalString(account.address)],
       })
-      .then((value) =>(
-        setUserBalance(parseFloat(hexToDecimalString(value.result[0]))  / 1000000000000000000)
-      ))
+        .then((value) => (
+          setUserBalance(parseFloat(hexToDecimalString(value.result[0])) / 1000000000000000000)
+        ))
     }
-    
+
   }, [account, denominationAsset]);
 
   return (
@@ -1178,36 +1178,36 @@ const Contract: NextPage = () => {
                   </Text>
                   <Flex direction={"row"} justifyContent={"space-evenly"} alignItems={"center"}>
                     <Flex direction={"column"} gap={"20px"} width={"40%"}>
-                      <Flex direction={"column-reverse"}>                      
+                      <Flex direction={"column-reverse"}>
                         <Text>User Balance : {userBalance}</Text>
                         <Field name="amount">
-                        {({ field, form }) => (
-                          <FormControl>
-                            <FormLabel htmlFor="amount">
-                              Initial Investment (
-                              {Asset[denominationAsset].id.toString()}){" "}
-                            </FormLabel>
-                            <NumberInput
-                              size={"lg"}
-                              onChange={(v) => {
-                                props.setFieldValue("amount", v);
-                              }}
-                              id="amount"
-                              defaultValue={props.values.amount}
-                              isRequired
-                              step={0.0000001}
-                              min={0.0001}
-                              max={userBalance == 0 ? 100000 : userBalance}
-                            >
-                              <NumberInputField />
-                              <NumberInputStepper>
-                                <NumberIncrementStepper />
-                                <NumberDecrementStepper />
-                              </NumberInputStepper>
-                            </NumberInput>
-                          </FormControl>
-                        )}
-                      </Field>
+                          {({ field, form }) => (
+                            <FormControl>
+                              <FormLabel htmlFor="amount">
+                                Initial Investment (
+                                {Asset[denominationAsset].id.toString()}){" "}
+                              </FormLabel>
+                              <NumberInput
+                                size={"lg"}
+                                onChange={(v) => {
+                                  props.setFieldValue("amount", v);
+                                }}
+                                id="amount"
+                                defaultValue={props.values.amount}
+                                isRequired
+                                step={0.0000001}
+                                min={0.0001}
+                                max={userBalance == 0 ? 100000 : userBalance}
+                              >
+                                <NumberInputField />
+                                <NumberInputStepper>
+                                  <NumberIncrementStepper />
+                                  <NumberDecrementStepper />
+                                </NumberInputStepper>
+                              </NumberInput>
+                            </FormControl>
+                          )}
+                        </Field>
                       </Flex>
 
                       <Field name="shareAmount">
@@ -1245,7 +1245,7 @@ const Contract: NextPage = () => {
 
                   </Flex>
                   <div>
-                  {/* <TransactionList /> */}
+                    {/* <TransactionList /> */}
                   </div>
                 </Flex>
 
@@ -1255,21 +1255,21 @@ const Contract: NextPage = () => {
                 {
                   deployedVaultAddress != "" ?
 
-                  
+
                     txAccepted == 0 ?
-                    <Text>Fund Address : {deployedVaultAddress.substring(0,5)}... waiting for L2 confirmation</Text>
-                    :
-                    <Button
-                    mt={4}
-                    alignSelf={"center"}
-                    backgroundColor="#f6643c"
-                    // isLoading={props.isSubmitting}
-                    type="submit"
-                  >
-                    Create my Fund
-                  </Button>
-                  
-                    
+                      <Text>Fund Address : {deployedVaultAddress.substring(0, 5)}... waiting for L2 confirmation</Text>
+                      :
+                      <Button
+                        mt={4}
+                        alignSelf={"center"}
+                        backgroundColor="#f6643c"
+                        // isLoading={props.isSubmitting}
+                        type="submit"
+                      >
+                        Create my Fund
+                      </Button>
+
+
                     :
                     <Text>
                       ⌛⌛
@@ -1278,60 +1278,60 @@ const Contract: NextPage = () => {
               </Flex>
 
               <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-            <ModalOverlay />
-            <ModalContent backgroundColor={"#0f0b1f"}>
-            {txAcceptedTransac == 0 ?
-              <ModalHeader>  Get Ready ⏳</ModalHeader>
-:
-<ModalHeader> 🎉🎉✨✨✨🎉🎉</ModalHeader>
+                <ModalOverlay />
+                <ModalContent backgroundColor={"#0f0b1f"}>
+                  {txAcceptedTransac == 0 ?
+                    <ModalHeader>  Get Ready ⏳</ModalHeader>
+                    :
+                    <ModalHeader> 🎉🎉✨✨✨🎉🎉</ModalHeader>
 
-            }
-              <ModalCloseButton />
-              <ModalBody>
-                {txAcceptedTransac == 0 ?
-                <Flex direction={"column"}>
-                <Text fontWeight={"2x1"}>Your transaction is about to be confirmed on L2</Text>
-                {/* <Link href={targetLink}>
+                  }
+                  <ModalCloseButton />
+                  <ModalBody>
+                    {txAcceptedTransac == 0 ?
+                      <Flex direction={"column"}>
+                        <Text fontWeight={"2x1"}>Your transaction is about to be confirmed on L2</Text>
+                        {/* <Link href={targetLink}>
                   <Button backgroundColor={"#f6643c"}>
                   Fund on Goerli
                   </Button>
                 </Link> */}
-                <Text>
-                  Fund Address : {deployedVaultAddress}
-                </Text>
-                </Flex>
-                :
-                <Flex direction={"column"}>
-                <Text fontWeight={"2x1"}>Congrats, your fund has been Initalized, so Bullish 🙌</Text>
-                <Text>
-                  Fund Address : {deployedVaultAddress}
-                </Text>
-                <Link href={`/vault/${deployedVaultAddress}`}>
-                  <Button backgroundColor={"#f6643c"}>
-                  LFG ? 
-                  </Button>
-                </Link>
-                </Flex>
-              }
-              </ModalBody>
-              <ModalFooter>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+                        <Text>
+                          Fund Address : {deployedVaultAddress}
+                        </Text>
+                      </Flex>
+                      :
+                      <Flex direction={"column"}>
+                        <Text fontWeight={"2x1"}>Congrats, your fund has been Initalized, so Bullish 🙌</Text>
+                        <Text>
+                          Fund Address : {deployedVaultAddress}
+                        </Text>
+                        <Link href={`/vault/${deployedVaultAddress}`}>
+                          <Button backgroundColor={"#f6643c"}>
+                            LFG ?
+                          </Button>
+                        </Link>
+                      </Flex>
+                    }
+                  </ModalBody>
+                  <ModalFooter>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
 
-          <Modal isOpen={isOpenError} onClose={() => setIsOpenError(false)}>
-            <ModalOverlay />
-            <ModalContent backgroundColor={"#f6643c"}>
-              <ModalHeader>Transaction has been canceled</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                {/* <Text>Error : {errorMessage}</Text> */}
-              </ModalBody>
+              <Modal isOpen={isOpenError} onClose={() => setIsOpenError(false)}>
+                <ModalOverlay />
+                <ModalContent backgroundColor={"#f6643c"}>
+                  <ModalHeader>Transaction has been canceled</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    {/* <Text>Error : {errorMessage}</Text> */}
+                  </ModalBody>
 
-              <ModalFooter>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+                  <ModalFooter>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
             </Flex>
 
           </Form>
