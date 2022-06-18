@@ -2689,8 +2689,8 @@ const vault: NextPage = () => {
                   </div>
                 </Box>
 
-                :
-                <div className={` bg__dotted`}>
+                {sellTokenId != "" &&
+                <Box>
                   <div className={`${styles.mint}`}>
 
                     <div className='fs-14' style={{ fontWeight: "bold" }}>
@@ -2803,7 +2803,8 @@ const vault: NextPage = () => {
 
 
                   </div>
-                </div>
+                </Box>}
+                
               }
                           </TabPanel>
                         </TabPanels>
