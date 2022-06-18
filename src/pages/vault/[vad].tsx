@@ -132,7 +132,10 @@ const vault: NextPage = () => {
   const [vaultAddress, setVaultAddess] = React.useState<string>("");
   const [assetManagerImage, setAssetManagerImage] = React.useState<string>("");
   const [assetManagerName, setAssetManagerName] = React.useState<string>("");
+  const [fundExist, setFundExist] = React.useState<Boolean>(true);
+  const [loading, setLoading] = React.useState<Boolean>(true);
 
+  
 
   const [vaultInfo, setVaultInfo] = React.useState<ContractInfo>();
   useEffect(() => {
@@ -155,6 +158,11 @@ const vault: NextPage = () => {
       const { data } = await res.json();
       console.log(data)
       setVaultInfo(data)
+      setLoading(false)
+    }
+    else {
+      setFundExist(false)
+      setLoading(false)
     }
   };
 
@@ -307,6 +315,15 @@ const vault: NextPage = () => {
     ) {
       return <Image src={Ether} alt="eth" />;
     }
+  }
+
+  function getUserTotalShare() {
+    let userTotalShare_ = 0
+    for (let index = 0; index < userShareInfo.length; index++) {
+       userTotalShare_ = userTotalShare_ + parseFloat(userShareInfo[index].shareAmount);
+    }
+    userTotalShare_ = userTotalShare_ /1000000000000000000
+    return(userTotalShare_)
   }
 
   function returnImagefromAddress(address: string) {
@@ -1213,13 +1230,15 @@ const vault: NextPage = () => {
   ];
 
   useEffect(() => {
+    if(vaultInfo?.dataFinance != undefined)
+    {
     setChartData([]);
-    let list = data;
+    let list = vaultInfo?.dataFinance;
     let render: DataChart = [];
     let tabEpoch: number[] = [];
     //convert date in epoch
     list.forEach((d) => {
-      tabEpoch.push(moment(d.date).valueOf()); // date -> epoch
+      tabEpoch.push(d.date); // date -> epoch
     });
 
     if (list.length != 0) {
@@ -1378,8 +1397,9 @@ const vault: NextPage = () => {
       }
       setChartData(render);
     }
+  }
     console.log(render);
-  }, [timeframe]);
+  }, [timeframe, vaultInfo]);
 
   const gradientOffset = () => {
     const dataMax = Math.max(...data.map((i) => i.sharePrice));
@@ -1442,6 +1462,7 @@ const vault: NextPage = () => {
       console.log("connected");
       multicall2(Tab);
     }
+
   };
 
   const multicall2 = async (_tab: any[]) => {
@@ -1480,6 +1501,10 @@ const vault: NextPage = () => {
   return (
     <>
       <Box padding={"4vw"}>
+        {loading == true ? 
+        <Text alignSelf={"center"} fontSize={"5xl"}>Just A moment ⌛⏳</Text>
+        :
+        fundExist == true ? 
         <Flex direction={"column"} gap={"2vw"}>
           <Flex direction={"row"} justifyContent={"space-between"}>
             <Flex direction={"column"} gap={"1vw"}>
@@ -2045,7 +2070,7 @@ const vault: NextPage = () => {
                                   Creation Date
                                 </Text>
                                 <Text fontWeight={"bold"} fontSize={"1.125rem"}>
-                                  Oct 8, 2021
+                                {vaultInfo?.dataFinance != undefined && moment(vaultInfo?.dataFinance[0].date).format('dddd, MMMM Do, YYYY h:mm:ss A')}
                                 </Text>
                               </Flex>
                               <Flex direction={"row"} gap={"1rem"}>
@@ -2536,13 +2561,250 @@ const vault: NextPage = () => {
                           </Tab>
                         </Flex>
                       </TabList>
-                      <Box width={"60vw"} minHeight={"30vw"}>
+                      <Box borderRadius='10%' borderTop={"solid 2px #f6643c"} borderBottom={"solid 2px #f6643c"} backgroundColor="blackAlpha.400" padding={"2%"}>
                         <TabPanels>
                           <TabPanel>
-                            buy
+                          <Box>
+
+{/* <div className={`${styles.mint}`}>
+  <div className='fs-14' style={{ fontWeight: "bold" }}>
+    <div>
+      {acccountAddress.substring(0, 7)}...
+    </div>
+    <div className='fs-14 '>
+      &nbsp;&nbsp;&nbsp;{isAllowedDepositor ? "allowed depositor" : "not allowed to mint"}
+    </div>
+  </div>
+</div> */}
+
+<Flex direction={"column"} gap={"20px"} alignItems={"center"}>
+  <Text> {isAllowedDepositor ? "Allowed to Mint 🎉" : "not allowed to mint"} </Text>
+
+
+
+<Flex direction={"column"} gap={"20px"} alignItems={"center"}>
+  <Flex justifyContent={'space-between'} alignItems='center' backgroundColor={"blackAlpha.400"} width={'90%'}
+    borderRadius={'20px'} padding={'10px'}>
+    <NumberInput height={'50px'} variant={'unstyled'} fontFamily={'IBM Plex Mono, sans-serif'} padding={"10px 10px"}
+      alignSelf={"center"} value={buyValue} onChange={handleChange} defaultValue={0} max={parseFloat(userBalance)}>
+      <NumberInputField />
+    </NumberInput>
+    <Flex direction={"row"}>
+    {denominationAsset != "deno" &&
+      <Flex alignItems={"center"}  gap={"5px"}>
+        <Text fontSize={"1xl"} fontWeight={"bold"}>
+          {denominationAsset}
+        </Text>
+        <Box
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    borderRadius: "10px",
+                    overflow: "hidden",
+                   
+                  }}
+                >
+                  <Image src={returnImagefromAddress(denominationAssetAddress)} />
+                </Box>
+      </Flex>
+    }
+    <Flex marginLeft={'30px'} flexDir={'column'}>
+      <Text color={"whiteAlpha.300"} fontSize={'sm'}>Balance </Text>
+      <Text color={"whiteAlpha.700"} fontSize={'sm'}>{parseFloat(userBalance).toPrecision(2)}</Text>
+    </Flex>
+    </Flex>
+  </Flex>
+  <Flex justifyContent={'space-between'} alignItems='center' backgroundColor={"blackAlpha.400"} width={'90%'}
+    borderRadius={'20px'} padding={'10px'} >
+    <Text height={'50px'} variant={'unstyled'} fontFamily={'IBM Plex Mono, sans-serif'} padding={"10px 10px"}
+      alignSelf={"center"} width={"50%"}>
+      {(buyValue / sharePrice) - (((buyValue) / parseFloat(sharePrice)) * parseFloat(entranceFee))}
+    </Text>
+    {denominationAsset != "deno" &&
+      <Flex alignItems={"center"} gap={"15px"}>
+        <Text fontSize={"1xl"} fontWeight={"bold"}>
+          {symbol}
+        </Text>
+
+        <Box
+                  style={{
+                    width: "50px",
+                    height: "50px",
+                    borderRadius: "10px",
+                    overflow: "hidden",
+                    backgroundColor: "black",
+                  }}
+                >
+                  <img
+                    src={vaultInfo?.image}
+                    style={{ objectFit: "cover" }}
+                  />
+                </Box>
+
+      </Flex>
+    }
+    <Flex marginLeft={'30px'} flexDir={'column'}>
+      
+    <Text color={"whiteAlpha.300"} fontSize={'sm'}>Balance </Text>
+    <Text color={"whiteAlpha.700"} fontSize={'sm'}> ~{getUserTotalShare().toPrecision(2)}</Text>
+    </Flex>
+  </Flex>
+
+  <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => handleMintShare()} size='md'> Mint</Button>
+
+</Flex>
+</Flex>
+
+
+</Box>
                           </TabPanel>
                           <TabPanel>
-                            sell
+                <Box>
+                  <div className={`${styles.mint}`}>
+
+                    <div className='fs-14' style={{ fontWeight: "bold" }}>
+                      <div>
+                        {acccountAddress.substring(0, 7)}...
+                      </div>
+                      <div className='fs-14 '>
+                        &nbsp;&nbsp;&nbsp;{userShareBalance == "" ? "Fetching your shares" : userShareBalance == '0' ? "you don't have any shares" : "See below your shares"}
+                      </div>
+                    </div>
+                    {userShareInfo.length != 0 &&
+                      userShareInfo.map((p, index) => (
+                        <div>
+                          <div>
+                            tokenID : {p.tokenId}
+                          </div>
+                          <div>
+                            Share amount: {p.shareAmount}
+                          </div>
+                          <div>
+                            <Button backgroundColor={"#f6643c"} style={{ margin: '8px auto' }} onClick={() => setSellTokenId(p.tokenId)}>Sell</Button>
+                          </div>
+                        </div>
+                      ))
+                    }
+
+                  </div>
+                </Box>
+
+                :
+                <div className={` bg__dotted`}>
+                  <div className={`${styles.mint}`}>
+
+                    <div className='fs-14' style={{ fontWeight: "bold" }}>
+                      <div>
+                        tokenID : {sellTokenId}
+                      </div>
+                    </div>
+                    <Text>You are allowed to sell this share</Text>
+                    <Text>Selling {(parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100)).toPrecision(5)} {symbol} Shares</Text>
+                    <Slider
+                      flex='1'
+                      focusThumbOnChange={false}
+                      value={parseFloat(percentShare)}
+                      onChange={handleChange2}
+                      width={"80%"}
+                      colorScheme='#f6643c'
+                    >
+                      <SliderTrack>
+                        <SliderFilledTrack />
+                      </SliderTrack>
+                      <SliderThumb fontSize='sm' boxSize='32px' children={parseFloat(percentShare)} />
+                    </Slider>
+                    <div>
+                      {percentShare == "0" ?
+                        <>
+                          ~ {userShareInfo[parseFloat(sellTokenId)].shareAmount} shares available
+                        </>
+                        :
+                        <>
+                          ~ {(((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) - ((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) * (((parseFloat(sharePrice) - parseFloat(userShareInfo[parseFloat(sellTokenId)].pricePurchased)) / (parseFloat(sharePrice))) * (parseFloat(performanceFee) / 100)))) - (((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) - ((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) * (((parseFloat(sharePrice) - parseFloat(userShareInfo[parseFloat(sellTokenId)].pricePurchased)) / (parseFloat(sharePrice))) * (parseFloat(performanceFee) / 100)))) * (parseFloat(exitFee) / 100))).toPrecision(2)} {denominationAsset} including Performance and exit fees
+                        </>
+                      }
+
+                    </div>
+                    <div>
+                      <div>
+                        Reedem funds with
+                      </div>
+                      {onChange == true ?
+                        <div>
+                          {trackedAssets.map((p, index) => (
+                            <div>
+                              <div>
+                                <button type="button" style={{ width: "50px" }} onClick={() => handleSelected(index)}>
+                                  {console.log(index)}
+                                  {returnImagefromSymbol(p.coinSymbol)}
+
+                                </button>
+                                {
+
+                                }
+                                {p.selected == true &&
+                                  <Flex direction={"row"}>
+                                    <NumberInput size='md' maxW={24} defaultValue={15} min={10} value={sellValue
+                                    } onChange={handleChange3}>
+                                      <NumberInputField />
+                                      <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                      </NumberInputStepper>
+                                    </NumberInput>
+                                    <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => addPercent(p.coinSymbol, p.address, index)} > Set</Button>
+                                  </Flex>
+                                }
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        :
+                        <div>
+                          {trackedAssets.map((p, index) => (
+                            <div>
+                              <div>
+                                <button type="button" style={{ width: "50px" }} onClick={() => handleSelected(index)}>
+                                  {returnImagefromSymbol(p.coinSymbol)}
+                                </button>
+                                {p.selected == true &&
+                                  <Flex direction={"row"}>
+                                    <NumberInput size='md' maxW={24} defaultValue={100} min={1} value={sellValue
+                                    } onChange={handleChange3}>
+                                      <NumberInputField />
+                                      <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                      </NumberInputStepper>
+                                    </NumberInput>
+                                    <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => addPercent(p.coinSymbol, p.address, index)}> Set</Button>
+                                  </Flex>
+                                }
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      }
+
+
+                    </div>
+                    <Flex>
+                      <Text>Sum must be 100% : </Text>
+                      {sellShareTab.map((p, index) => (
+                        <Text>
+                          {console.log(index)}
+                          {console.log(sellShareTab)}
+                          {p.percent}% {p.symbol} {index == sellShareTab.length - 1 ? "" : "+"}
+                        </Text>
+                      ))}
+                    </Flex>
+
+                    <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => handleSellShare()} size='md'> Sell</Button>
+
+
+                  </div>
+                </div>
+              }
                           </TabPanel>
                         </TabPanels>
                       </Box>
@@ -2568,7 +2830,7 @@ const vault: NextPage = () => {
                             </Tab>
                           </Flex>
                         </TabList>
-                        <Box width={"60vw"} minHeight={"30vw"}>
+                        <Box width={"60vw"} minHeight={"30vw"} borderRadius='10%' borderTop={"solid 2px #f6643c"} borderBottom={"solid 2px #f6643c"} backgroundColor="blackAlpha.400" padding={"2%"}>
                           <TabPanels>
                             <TabPanel>
                               DeFi
@@ -2592,6 +2854,9 @@ const vault: NextPage = () => {
             </Box>
           </Box>
         </Flex>
+        :
+        <Text alignSelf={"center"} fontSize={"5xl"}>Fund not found 😥</Text>
+      }
       </Box>
     </>
   );
