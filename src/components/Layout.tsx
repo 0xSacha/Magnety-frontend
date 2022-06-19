@@ -47,7 +47,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
   const [userFundAmount, setUserFundAmount] = useState<number>(-1);
   const { provider } = getStarknet();
   const [showFunds, setShowFunds] = useState(false);
-  
+
   async function getUserInfo() {
     const res = await fetch("http://localhost:3000/api/user/" + address);
 
@@ -58,32 +58,32 @@ const Layout = (props: PropsWithChildren<unknown>) => {
     }
   }
 
-  async function getFundInfo(address: string, amount:number) {
+  async function getFundInfo(address: string, amount: number) {
     let currentFundInfo = userFundInfo
     const res = await fetch("http://localhost:3000/api/contract/" + address);
     if (res.status == 200) {
       const { data } = await res.json();
       currentFundInfo.push(
         {
-          image:data.image,
-          name:data.name,
-          address:address,
+          image: data.image,
+          name: data.name,
+          address: address,
         }
       )
       setUserFundInfo(data);
     } else {
       currentFundInfo.push(
         {
-          image:"",
-          name:address.substring(0,5),
-          address:address,
+          image: "",
+          name: address.substring(0, 5),
+          address: address,
         }
       )
     }
     setUserFundInfo(currentFundInfo)
     console.log(amount)
     console.log(currentFundInfo.length)
-    if(currentFundInfo.length == amount) {
+    if (currentFundInfo.length == amount) {
       console.log("donnnnnnne")
       setShowFunds(true)
     }
@@ -117,13 +117,14 @@ const Layout = (props: PropsWithChildren<unknown>) => {
               .then((value) => {
                 console.log(value)
                 getFundInfo(value.result[0], amount)
-            
-          }) .catch((err) => {
-            console.log(err);
-          });
 
-        }}
-          )
+              }).catch((err) => {
+                console.log(err);
+              });
+
+          }
+        }
+        )
         .catch((err) => {
           console.log(err);
         });
@@ -184,9 +185,8 @@ const Layout = (props: PropsWithChildren<unknown>) => {
           <div className="page__content">{props.children}</div>
         </div>
         <div
-          className={`page__sidebar_wrapper ${
-            isSidebarOpen ? "page__sidebar_open" : ""
-          }`}
+          className={`page__sidebar_wrapper ${isSidebarOpen ? "page__sidebar_open" : ""
+            }`}
         >
           <div className="page__sidebar">
             {!isSidebarOpen && !isConnected && (
@@ -205,7 +205,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
             )}
             {!isSidebarOpen && isConnected && (
               <>
-                <Flex direction={"column"} gap={"2vh"} alignItems={"center"}>
+                <Flex direction={"column"} gap={"2vh"} alignItems={"center"} justifyContent={"center"}>
                   {userInfo == undefined ? (
                     <Flex direction={"column"} textAlign="center" gap={"2vh"}>
                       <Text fontWeight={"bold"} fontSize={"1xl"}>
@@ -216,33 +216,33 @@ const Layout = (props: PropsWithChildren<unknown>) => {
                       </Text>
                     </Flex>
                   ) : (
-                    <Flex direction={"column"} alignItems={"center"} justifyContent={"center"}  gap={"15px"}>
+                    <Flex direction={"column"} alignItems={"center"} justifyContent={"center"} gap={"15px"}>
                       {/* <Text fontWeight={"bold"} fontSize={"1.5rem"}>
                       GM 
                     </Text> */}
-                    <Button  padding={"5px"} borderRadius={"15px"}  border={"solid 1px #f6643c"}>
-                    <Link href={`/user/${address}`}>
-                    <Flex direction={"row"} gap={"7px"} alignItems={"center"}>
-                      <Box
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                      overflow: "hidden",
-                      backgroundColor: "black",
-                    }}
-                  >
-                    <img
-                      src={userInfo.profilePic}
-                      style={{ objectFit: "cover" }}
-                    />
-                  </Box>
-                      <Text fontWeight={"semibold"} fontSize={"1.25rem"}>
-                      {userInfo.name}
-                    </Text>
-                    </Flex>
-                    </Link>
-                    </Button>
+                      <Button padding={"5px"} borderRadius={"15px"} border={"solid 1px #f6643c"}>
+                        <Link href={`/user/${address}`}>
+                          <Flex direction={"row"} gap={"7px"} alignItems={"center"}>
+                            <Box
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                borderRadius: "50%",
+                                overflow: "hidden",
+                                backgroundColor: "black",
+                              }}
+                            >
+                              <img
+                                src={userInfo.profilePic}
+                                style={{ objectFit: "cover" }}
+                              />
+                            </Box>
+                            <Text fontWeight={"semibold"} fontSize={"1.25rem"}>
+                              {userInfo.name}
+                            </Text>
+                          </Flex>
+                        </Link>
+                      </Button>
                     </Flex>
                   )}
 
@@ -321,55 +321,55 @@ const Layout = (props: PropsWithChildren<unknown>) => {
                     </Flex>
                   </Flex>
                   <Spacer />
-                    <Spacer />
-                    {userFundAmount == -1 ?
+                  <Spacer />
+                  {userFundAmount == -1 ?
                     <Text>Fetching your funds</Text>
-                      :
-                      userFundAmount > 0 ?
+                    :
+                    userFundAmount > 0 ?
                       <Flex direction={"column"}>
-                      <Text fontWeight={"bold"}>
-                        You are managing {userFundAmount} funds
-                      </Text>
-                      {showFunds == true ?
-                        <Flex direction={"column"} overflowY={"scroll"} maxHeight={"120px"} padding={"15px"} gap={"7px"}>
-                      {userFundInfo.map((p,index) => (
-                        <Button  padding={"3px"} borderRadius={"15px"}  border={"solid 1px #f6643c"}>
-                        <Link href={`/vault/${p.address}`}>
-                        <Flex direction={"row"} alignItems={"center"} justifyContent={"space-between"} minWidth={"120px"}>
-                          <Box
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          borderRadius: "50%",
-                          overflow: "hidden",
-                          backgroundColor: "black",
-                        }}
-                      >
-                        <img
-                          src={p.image}
-                          style={{ objectFit: "cover" }}
-                        />
-                      </Box>
-                          <Text fontWeight={"semibold"} fontSize={"0.7rem"}>
-                          {p.name.length > 10 ? `${p.name.substring(0,10)}...` : p.name}
+                        <Text fontWeight={"bold"}>
+                          You are managing {userFundAmount} funds
                         </Text>
-                        </Flex>
-                        </Link>
-                        </Button>
+                        {showFunds == true ?
+                          <Flex direction={"column"} overflowY={"scroll"} maxHeight={"120px"} padding={"15px"} gap={"7px"}>
+                            {userFundInfo.map((p, index) => (
+                              <Button padding={"3px"} borderRadius={"15px"} border={"solid 1px #f6643c"}>
+                                <Link href={`/vault/${p.address}`}>
+                                  <Flex direction={"row"} alignItems={"center"} justifyContent={"space-between"} minWidth={"120px"}>
+                                    <Box
+                                      style={{
+                                        width: "30px",
+                                        height: "30px",
+                                        borderRadius: "50%",
+                                        overflow: "hidden",
+                                        backgroundColor: "black",
+                                      }}
+                                    >
+                                      <img
+                                        src={p.image}
+                                        style={{ objectFit: "cover" }}
+                                      />
+                                    </Box>
+                                    <Text fontWeight={"semibold"} fontSize={"0.7rem"}>
+                                      {p.name.length > 10 ? `${p.name.substring(0, 10)}...` : p.name}
+                                    </Text>
+                                  </Flex>
+                                </Link>
+                              </Button>
 
-                      ))}
+                            ))}
+                          </Flex>
+                          :
+                          <Text textAlign={"center"}>⌛⏳</Text>
+                        }
                       </Flex>
                       :
-                      <Text>⌛⏳</Text>
-                      }
-                      </Flex>
-                      :
-                      <Text fontWeight={"bold"}>
+                      <Text fontWeight={"bold"} textAlign={"center"}>
                         You are not Managing any funds
                       </Text>
-                    }
+                  }
                 </Flex>
-                
+
               </>
             )}
             <div

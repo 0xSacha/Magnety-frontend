@@ -208,6 +208,30 @@
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "getDaoTreasury",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getStackingVault",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "name": "_user",
@@ -446,6 +470,21 @@
     {
         "inputs": [
             {
+                "name": "_externalPositionList_len",
+                "type": "felt"
+            },
+            {
+                "name": "_externalPositionList",
+                "type": "felt*"
+            }
+        ],
+        "name": "addGlobalAllowedExternalPosition",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "name": "_integrationList_len",
                 "type": "felt"
             },
@@ -633,25 +672,6 @@
             }
         ],
         "name": "initializeFund",
-        "outputs": [],
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "name": "_vault",
-                "type": "felt"
-            },
-            {
-                "name": "_depositors_len",
-                "type": "felt"
-            },
-            {
-                "name": "_depositors",
-                "type": "felt*"
-            }
-        ],
-        "name": "__addAllowedDepositors",
         "outputs": [],
         "type": "function"
     }

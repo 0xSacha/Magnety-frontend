@@ -135,7 +135,6 @@ const vault: NextPage = () => {
 
   const [vaultInfo, setVaultInfo] = React.useState<ContractInfo>();
   useEffect(() => {
-    console.log(vad);
     if (vad !== undefined && typeof vad == "string") {
       setVaultAddess(vad);
       console.log("fff");
@@ -150,9 +149,7 @@ const vault: NextPage = () => {
       "http://localhost:3000/api/contract/" + String(vad)
     );
     if (res.status == 200) {
-      console.log(res);
       const { data } = await res.json();
-      console.log(data);
       setVaultInfo(data);
       setLoading(false);
     } else {
@@ -162,7 +159,6 @@ const vault: NextPage = () => {
   };
 
   const loadDataAssetManager = async (assetManager_: string) => {
-    console.log("loading assetManager Data");
     const res = await fetch(
       "http://localhost:3000/api/user/" + `${assetManager_}`
     );
@@ -180,7 +176,7 @@ const vault: NextPage = () => {
   /* TODO : check if address is correct else use stakingvault address ! */
 
   const comptroller = contractAddress.Comptroller;
-  const valueIntepretor = contractAddress.valueInterpretor;
+  const valueIntepretor = contractAddress.ValueInterpreter;
   const feeManager = contractAddress.FeeManager;
   const policyManager = contractAddress.PolicyManager;
   const [name, setName] = React.useState<string>("name");
@@ -257,8 +253,8 @@ const vault: NextPage = () => {
 
     for (let pas = 0; pas < currentSaleTabe.length; pas++) {
       if (newElem.symbol == currentSaleTabe[pas].symbol) {
-        let currentTab: PortfolioData = trackedAssets;
-        currentTab[index].selected = false;
+        currentSaleTabe[pas].percent = sellValue
+        setSellShareTab(currentSaleTabe)
         setOnChange(!onChange);
         return;
       }
@@ -303,7 +299,7 @@ const vault: NextPage = () => {
       symb == "Ether" ||
       symb == "ETH" ||
       symb ==
-        "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+      "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
     ) {
       return <Image src={Ether} alt="eth" />;
     }
@@ -320,7 +316,6 @@ const vault: NextPage = () => {
   }
 
   function returnImagefromAddress(address: string) {
-    console.log(address);
     if (
       address ==
       "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
@@ -388,7 +383,6 @@ const vault: NextPage = () => {
   }
 
   function returnSelectorfromAddress(address: string) {
-    console.log(address);
     if (
       address ==
       "0x3f35dbce7a07ce455b128890d383c554afbc1b07cf7390a13e2d602a38c1a0a"
@@ -412,7 +406,6 @@ const vault: NextPage = () => {
   }
 
   useEffect(() => {
-    console.log(vaultAddress);
     if (vaultAddress != "") {
       const res = provider.callContract({
         contractAddress: vaultAddress,
@@ -1047,208 +1040,7 @@ const vault: NextPage = () => {
     },
   ];
 
-  const data = [
-    {
-      date: "2022-06-09T00:00:00Z",
-      sharePrice: 0.02,
-      gav: 0.001,
-    },
-    {
-      date: "2022-06-09T01:00:00Z",
-      sharePrice: 0.012,
-      gav: 0.001,
-    },
-    {
-      date: "2022-06-09T02:00:00Z",
-      sharePrice: 0.033,
-      gav: 0.001,
-    },
-    {
-      date: "2022-06-09T03:00:00Z",
-      sharePrice: 0.042,
-      gav: 0.001,
-    },
-    {
-      date: "2022-06-09T04:00:00Z",
-      sharePrice: 0.002,
-      gav: 0.001,
-    },
-    {
-      date: "2022-06-09T05:00:00Z",
-      sharePrice: 0.003,
-      gav: 0.001,
-    },
-    {
-      date: "2022-06-09T06:00:00Z",
-      sharePrice: 0.002,
-      gav: 0.001,
-    },
-    {
-      date: "2022-06-09T07:00:00Z",
-      sharePrice: 0.004,
-      gav: 0.001,
-    },
-    {
-      date: "2022-06-09T08:00:00Z",
-      sharePrice: 0.005,
-      gav: 0.001,
-    },
-    {
-      date: "2022-06-09T09:00:00Z",
-      sharePrice: 0.006,
-      gav: 0.001,
-    },
-    {
-      date: "2022-06-09T10:00:00Z",
-      sharePrice: 0.004,
-      gav: 0.001,
-    },
-    {
-      date: "2022-06-09T11:00:00Z",
-      sharePrice: 0.012,
-      gav: 0.002,
-    },
-    {
-      date: "2022-06-09T12:00:00Z",
-      sharePrice: 0.014,
-      gav: 0.002,
-    },
-    {
-      date: "2022-06-09T13:00:00Z",
-      sharePrice: 0.006,
-      gav: 0.002,
-    },
-    {
-      date: "2022-06-09T14:00:00Z",
-      sharePrice: 0.182,
-      gav: 0.002,
-    },
-    {
-      date: "2022-06-09T15:00:00Z",
-      sharePrice: 0.0001,
-      gav: 0.002,
-    },
-    {
-      date: "2022-06-09T16:00:00Z",
-      sharePrice: 0.002,
-      gav: 0.002,
-    },
-    {
-      date: "2022-06-09T17:00:00Z",
-      sharePrice: 0.003,
-      gav: 0.002,
-    },
-    {
-      date: "2022-06-09T18:00:00Z",
-      sharePrice: 0.002,
-      gav: 0.002,
-    },
-    {
-      date: "2022-06-09T19:00:00Z",
-      sharePrice: 0.004,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-09T20:00:00Z",
-      sharePrice: 0.005,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-09T21:00:00Z",
-      sharePrice: 0.006,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-09T22:00:00Z",
-      sharePrice: 0.004,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-09T23:00:00Z",
-      sharePrice: 0.012,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-09T24:00:00Z",
-      sharePrice: 0.014,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T00:00:00Z",
-      sharePrice: 0.02,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T01:00:00Z",
-      sharePrice: 0.012,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T02:00:00Z",
-      sharePrice: 0.033,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T03:00:00Z",
-      sharePrice: 0.042,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T04:00:00Z",
-      sharePrice: 0.002,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T05:00:00Z",
-      sharePrice: 0.003,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T06:00:00Z",
-      sharePrice: 0.002,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T07:00:00Z",
-      sharePrice: 0.004,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T08:00:00Z",
-      sharePrice: 0.005,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T09:00:00Z",
-      sharePrice: 0.006,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T10:00:00Z",
-      sharePrice: 0.004,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T11:00:00Z",
-      sharePrice: 0.012,
-      gav: 0.003,
-    },
-    {
-      date: "2022-06-10T12:00:00Z",
-      sharePrice: 0.014,
-      gav: 0.004,
-    },
-    {
-      date: "2022-06-10T13:00:00Z",
-      sharePrice: 0.006,
-      gav: 0.004,
-    },
-    {
-      date: "2022-06-10T14:00:00Z",
-      sharePrice: 0.002,
-      gav: 0.004,
-    },
-  ];
+
 
   useEffect(() => {
     if (vaultInfo?.dataFinance != undefined) {
@@ -1265,7 +1057,7 @@ const vault: NextPage = () => {
         setTotalIncome(
           ((list[list.length - 1].sharePrice - list[0].sharePrice) /
             list[0].sharePrice) *
-            100
+          100
         );
       } else {
         setTotalIncome(0);
@@ -1273,9 +1065,6 @@ const vault: NextPage = () => {
 
       let day_epoch = moment().subtract(1, "days").valueOf();
       let now = moment().valueOf();
-      console.log(day_epoch);
-      console.log(now);
-      console.log(tabEpoch);
       const closestD = tabEpoch.reduce((a, b) => {
         return Math.abs(b - day_epoch) < Math.abs(a - day_epoch) ? b : a;
       });
@@ -1285,14 +1074,11 @@ const vault: NextPage = () => {
         setDailyIncome(
           ((list[list.length - 1].sharePrice - list[closestIndexD].sharePrice) /
             list[closestIndexD].sharePrice) *
-            100
+          100
         );
       } else {
         setDailyIncome(0);
       }
-      console.log("clothest index");
-      console.log(list[list.length - 1].sharePrice);
-      console.log(list[closestIndexD].sharePrice);
 
       let week_epoch = moment().subtract(1, "weeks").valueOf();
       const closestW = tabEpoch.reduce((a, b) => {
@@ -1304,7 +1090,7 @@ const vault: NextPage = () => {
         setWeeklyIncome(
           ((list[list.length - 1].sharePrice - list[closestIndexW].sharePrice) /
             list[closestIndexW].sharePrice) *
-            100
+          100
         );
       } else {
         setWeeklyIncome(0);
@@ -1320,7 +1106,7 @@ const vault: NextPage = () => {
         setMonthlyIncome(
           ((list[list.length - 1].sharePrice - list[closestIndexM].sharePrice) /
             list[closestIndexM].sharePrice) *
-            100
+          100
         );
       } else {
         setMonthlyIncome(0);
@@ -1418,31 +1204,14 @@ const vault: NextPage = () => {
         setChartData(render);
       }
     }
-    console.log(render);
   }, [timeframe, vaultInfo]);
 
-  const gradientOffset = () => {
-    const dataMax = Math.max(...data.map((i) => i.sharePrice));
-    const dataMin = Math.min(...data.map((i) => i.sharePrice));
-
-    if (dataMax <= 0) {
-      return 0;
-    }
-    if (dataMin >= 0) {
-      return 1;
-    }
-
-    return dataMax / (dataMax - dataMin);
-  };
-
-  const off = gradientOffset();
 
   const handleMintShare = () => {
     const newAmount = parseFloat(buyValue) * 1000000000000000000;
 
     let Tab: string[] = [];
     Tab.push(hexToDecimalString(vaultAddress));
-    Tab.push(hexToDecimalString(denominationAssetAddress));
     Tab.push(newAmount.toString());
     Tab.push("0");
 
@@ -1450,6 +1219,7 @@ const vault: NextPage = () => {
     TabA.push(hexToDecimalString(comptroller));
     TabA.push(newAmount.toString());
     TabA.push("0");
+
 
     if (!accountInterface.address) {
       console.log("no account detected");
@@ -1464,16 +1234,22 @@ const vault: NextPage = () => {
     Tab.push(hexToDecimalString(vaultAddress));
     Tab.push(sellTokenId);
     Tab.push("0");
-    Tab.push(percentShare);
+    Tab.push("20000000000000000000");
+
+    // Tab.push(parseFloat(percentShare) * parseFloat(userShareInfo[userShareInfo.findIndex(item => item.tokenId = sellTokenId)].shareAmount))
     Tab.push("0");
-    Tab.push(sellShareTab.length.toString());
-    sellShareTab.forEach((element) => {
-      Tab.push(hexToDecimalString(element.address));
-    });
-    Tab.push(sellShareTab.length.toString());
-    sellShareTab.forEach((element) => {
-      Tab.push(hexToDecimalString(element.percent));
-    });
+    Tab.push("1");
+    Tab.push(hexToDecimalString("0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"));
+    Tab.push("1");
+    Tab.push("100");
+    // Tab.push(sellShareTab.length.toString());
+    // sellShareTab.forEach((element) => {
+    //   Tab.push(hexToDecimalString(element.address));
+    // });
+    // Tab.push(sellShareTab.length.toString());
+    // sellShareTab.forEach((element) => {
+    //   Tab.push(hexToDecimalString(element.percent));
+    // });
     console.log(Tab);
 
     if (!accountInterface.address) {
@@ -1498,9 +1274,6 @@ const vault: NextPage = () => {
   };
 
   const multicall = async (_tab: any[], _tabA: any[]) => {
-    console.log("invoke");
-    console.log(denominationAssetAddress);
-    console.log(comptroller);
     let tx1 = await accountInterface.execute([
       {
         contractAddress: denominationAssetAddress,
@@ -1766,11 +1539,11 @@ const vault: NextPage = () => {
                           fontSize={"0.8rem"}
                           style={{ fontWeight: "bold" }}
                         >
-                          {" "}
+                          {console.log(shareSupply)}
                           {assetManagerShareAmount
-                            ? (parseFloat(shareSupply) /
-                                assetManagerShareAmount) *
-                              100
+                            ? (assetManagerShareAmount / (parseFloat(shareSupply))
+                            ) *
+                            100
                             : "--"}
                           %
                         </Text>
@@ -1909,20 +1682,18 @@ const vault: NextPage = () => {
                                       <Text fontSize={"4xl"}>
                                         {" "}
                                         {chartSelected == 1
-                                          ? `${
-                                              parseFloat(sharePrice) < 1
-                                                ? parseFloat(
-                                                    sharePrice
-                                                  ).toExponential(2)
-                                                : parseFloat(sharePrice)
-                                            }`
-                                          : `GAV: ${
-                                              parseFloat(gav) < 1
-                                                ? parseFloat(gav).toExponential(
-                                                    2
-                                                  )
-                                                : parseFloat(gav)
-                                            }`}
+                                          ? `${parseFloat(sharePrice) < 1
+                                            ? parseFloat(
+                                              sharePrice
+                                            ).toExponential(2)
+                                            : parseFloat(sharePrice)
+                                          }`
+                                          : `GAV: ${parseFloat(gav) < 1
+                                            ? parseFloat(gav).toExponential(
+                                              2
+                                            )
+                                            : parseFloat(gav)
+                                          }`}
                                       </Text>
                                       {denominationAsset != "deno" && (
                                         <Box
@@ -1956,24 +1727,24 @@ const vault: NextPage = () => {
                                             : "rgb(237,33,49)"
                                           : "#31c48d"
                                         : timeframe == 1
-                                        ? weeklyIncome
-                                          ? weeklyIncome > 0
-                                            ? "#31c48d"
-                                            : "rgb(237,33,49)"
-                                          : "#31c48d"
-                                        : timeframe == 2
-                                        ? monthlyIncome
-                                          ? monthlyIncome > 0
-                                            ? "#31c48d"
-                                            : "rgb(237,33,49)"
-                                          : "#31c48d"
-                                        : timeframe == 3
-                                        ? totalIncome
-                                          ? totalIncome > 0
-                                            ? "#31c48d"
-                                            : "rgb(237,33,49)"
-                                          : "#31c48d"
-                                        : "31c48d"
+                                          ? weeklyIncome
+                                            ? weeklyIncome > 0
+                                              ? "#31c48d"
+                                              : "rgb(237,33,49)"
+                                            : "#31c48d"
+                                          : timeframe == 2
+                                            ? monthlyIncome
+                                              ? monthlyIncome > 0
+                                                ? "#31c48d"
+                                                : "rgb(237,33,49)"
+                                              : "#31c48d"
+                                            : timeframe == 3
+                                              ? totalIncome
+                                                ? totalIncome > 0
+                                                  ? "#31c48d"
+                                                  : "rgb(237,33,49)"
+                                                : "#31c48d"
+                                              : "31c48d"
                                     }
                                   >
                                     {" "}
@@ -1982,18 +1753,18 @@ const vault: NextPage = () => {
                                         ? "--"
                                         : dailyIncome?.toPrecision(4)
                                       : timeframe == 1
-                                      ? weeklyIncome == 0
-                                        ? "--"
-                                        : weeklyIncome?.toPrecision(4)
-                                      : timeframe == 2
-                                      ? monthlyIncome == 0
-                                        ? "--"
-                                        : monthlyIncome?.toPrecision(4)
-                                      : timeframe == 3
-                                      ? totalIncome == 0
-                                        ? "--"
-                                        : totalIncome?.toPrecision(4)
-                                      : "--"}
+                                        ? weeklyIncome == 0
+                                          ? "--"
+                                          : weeklyIncome?.toPrecision(4)
+                                        : timeframe == 2
+                                          ? monthlyIncome == 0
+                                            ? "--"
+                                            : monthlyIncome?.toPrecision(4)
+                                          : timeframe == 3
+                                            ? totalIncome == 0
+                                              ? "--"
+                                              : totalIncome?.toPrecision(4)
+                                            : "--"}
                                     %{" "}
                                   </Text>
                                 </Flex>
@@ -2079,12 +1850,12 @@ const vault: NextPage = () => {
                                                 : "#31c48d"
                                               : "rgb(237,33,49)"
                                             : chartData[0]
-                                            ? chartData[0].gav >
-                                              chartData[chartData.length - 1]
-                                                .gav
-                                              ? "rgb(237,33,49)"
-                                              : "#31c48d"
-                                            : "rgb(237,33,49)"
+                                              ? chartData[0].gav >
+                                                chartData[chartData.length - 1]
+                                                  .gav
+                                                ? "rgb(237,33,49)"
+                                                : "#31c48d"
+                                              : "rgb(237,33,49)"
                                         }
                                         stopOpacity={0.9}
                                       />
@@ -2111,11 +1882,11 @@ const vault: NextPage = () => {
                                             : "#31c48d"
                                           : "rgb(237,33,49)"
                                         : chartData[0]
-                                        ? chartData[0].gav >
-                                          chartData[chartData.length - 1].gav
-                                          ? "rgb(237,33,49)"
-                                          : "#31c48d"
-                                        : "rgb(237,33,49)"
+                                          ? chartData[0].gav >
+                                            chartData[chartData.length - 1].gav
+                                            ? "rgb(237,33,49)"
+                                            : "#31c48d"
+                                          : "rgb(237,33,49)"
                                     }
                                     fill="url(#splitColor)"
                                     fillOpacity={0.6}
@@ -2711,7 +2482,7 @@ const vault: NextPage = () => {
                                 gap={"20px"}
                                 alignItems={"center"}
                               >
-                                <Text>
+                                <Text fontSize={"2xl"}>
                                   {" "}
                                   {isAllowedDepositor
                                     ? "Allowed to Mint 🎉"
@@ -2808,7 +2579,7 @@ const vault: NextPage = () => {
                                     >
                                       {buyValue / sharePrice -
                                         (buyValue / parseFloat(sharePrice)) *
-                                          parseFloat(entranceFee)}
+                                        parseFloat(entranceFee)}
                                     </Text>
                                     {denominationAsset != "deno" && (
                                       <Flex alignItems={"center"} gap={"15px"}>
@@ -2870,303 +2641,327 @@ const vault: NextPage = () => {
                           </TabPanel>
                           <TabPanel>
                             <Flex minWidth={"60vh"} direction={"column"} gap={"40px"}>
-                            <Box >
-                              <Flex
-                                direction={"column"}
-                                gap={"20px"}
-                                alignItems={"center"}
-                              >
-                                <Text>
-                                  {userShareBalance == ""
-                                    ? "Fetching your shares"
-                                    : userShareBalance == "0"
-                                    ? "you don't have any shares"
-                                    : "See below your shares"}
-                                </Text>
-                                {userShareInfo.length != 0 &&
-                                  userShareInfo.map((p, index) => (
-                                    <Flex
-                                      direction={"column"}
-                                      alignItems={"center"}
-                                    >
-                                      <Box
-                                        style={{
-                                          width: "100px",
-                                          height: "100px",
-                                          borderRadius: "20px",
-                                          overflow: "hidden",
-                                          backgroundColor: "black",
-                                        }}
+                              <Box >
+                                <Flex
+                                  direction={"column"}
+                                  gap={"20px"}
+                                  alignItems={"center"}
+                                >
+                                  <Text fontSize={"2xl"}>
+                                    {userShareBalance == ""
+                                      ? "Fetching your shares"
+                                      : userShareBalance == "0"
+                                        ? "you don't have any shares"
+                                        : "See below your shares "}
+                                  </Text>
+                                  <Flex direction={"row"} gap={"10px"}>
+                                    {userShareInfo.length != 0 &&
+                                      userShareInfo.map((p, index) => (
+                                        <Flex
+                                          direction={"column"}
+                                          alignItems={"center"}
+                                        >
+                                          <Box
+                                            style={{
+                                              width: "100px",
+                                              height: "100px",
+                                              borderRadius: "20px",
+                                              overflow: "hidden",
+                                              backgroundColor: "black",
+                                            }}
+                                          >
+                                            <img
+                                              src={vaultInfo?.image}
+                                              style={{ objectFit: "cover" }}
+                                            />
+                                          </Box>
+                                          <Flex
+                                            direction={"column"}
+                                            justifyContent={"space-between"}
+                                            alignItems={"center"}
+                                          >
+                                            <Text> ID : {p.tokenId}</Text>
+                                            <Text>
+                                              Amount :{" "}
+                                              {parseFloat(p.shareAmount) /
+                                                1000000000000000000}
+                                            </Text>
+                                          </Flex>
+                                          <Button
+                                            backgroundColor={"#f6643c"}
+                                            onClick={() =>
+                                              setSellTokenId(p.tokenId)
+                                            }
+                                          >
+                                            Sell
+                                          </Button>
+                                        </Flex>
+                                      ))}
+                                  </Flex>
+                                </Flex>
+                              </Box>
+
+                              {sellTokenId && (
+                                <Flex direction={"column"} gap={"40px"}>
+                                  <Box borderTop={"solid 2px #f6643c"} padding={"2vw"} borderBottom={"solid 2px #f6643c"}>
+                                    <Flex direction={"column"} gap={"20px"} alignItems={"center"}>
+                                      <Text fontSize={"2xl"}>
+                                        ID {sellTokenId} : Allowed to sell 🎉
+                                      </Text>
+                                      <Text>
+                                        Selling{" "}
+                                        {(
+
+                                          (parseFloat(
+                                            userShareInfo[userShareInfo.findIndex(item => item.tokenId = sellTokenId)]
+                                              .shareAmount
+                                          ) *
+                                            (parseFloat(percentShare) / 100)) / 1000000000000000000
+
+                                        ).toPrecision(5)}{" "}
+                                        {symbol}
+                                      </Text>
+                                      <Slider
+                                        flex="1"
+                                        focusThumbOnChange={false}
+                                        value={parseFloat(percentShare)}
+                                        onChange={handleChange2}
+                                        width={"80%"}
+                                        colorScheme="#f6643c"
                                       >
-                                        <img
-                                          src={vaultInfo?.image}
-                                          style={{ objectFit: "cover" }}
+                                        <SliderTrack bg="red.100">
+                                          <SliderFilledTrack bg="tomato" />
+                                        </SliderTrack>
+                                        <SliderThumb
+                                          fontSize="lg"
+                                          boxSize="50px"
+                                          children={percentShare + "%"}
+                                          color={"#f6643c"}
                                         />
-                                      </Box>
-                                      <Flex
-                                        direction={"column"}
-                                        justifyContent={"space-between"}
-                                        alignItems={"center"}
-                                      >
-                                        <Text> ID : {p.tokenId}</Text>
-                                        <Text>
-                                          Amount :{" "}
-                                          {parseFloat(p.shareAmount) /
-                                            1000000000000000000}
-                                        </Text>
-                                      </Flex>
+                                      </Slider>
+                                      <div>
+                                        {percentShare == "0" ? (
+                                          <Text>
+                                            ~{" "}
+                                            {
+                                              userShareInfo[userShareInfo.findIndex(item => item.tokenId = sellTokenId)]
+                                                .shareAmount / 1000000000000000000
+                                            }{" "}
+                                            shares available
+                                          </Text>
+                                        ) : (
+                                          <Flex direction={"column"} justifyContent={"center"} alignItems={"center"}>
+                                            <Text fontWeight={"bold"}>
+                                              ~{" "}
+                                              {((
+                                                parseFloat(
+                                                  userShareInfo[
+                                                    userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                  ].shareAmount
+                                                ) *
+                                                (parseFloat(percentShare) / 100) *
+                                                parseFloat(sharePrice) -
+                                                parseFloat(
+                                                  userShareInfo[
+                                                    userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                  ].shareAmount
+                                                ) *
+                                                (parseFloat(percentShare) / 100) *
+                                                parseFloat(sharePrice) *
+                                                (((parseFloat(sharePrice) -
+                                                  parseFloat(
+                                                    userShareInfo[
+                                                      userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                    ].pricePurchased
+                                                  )) /
+                                                  parseFloat(sharePrice)) *
+                                                  (parseFloat(performanceFee) /
+                                                    100)) -
+                                                (parseFloat(
+                                                  userShareInfo[
+                                                    userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                  ].shareAmount
+                                                ) *
+                                                  (parseFloat(percentShare) / 100) *
+                                                  parseFloat(sharePrice) -
+                                                  parseFloat(
+                                                    userShareInfo[
+                                                      userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                    ].shareAmount
+                                                  ) *
+                                                  (parseFloat(percentShare) / 100) *
+                                                  parseFloat(sharePrice) *
+                                                  (((parseFloat(sharePrice) -
+                                                    parseFloat(
+                                                      userShareInfo[
+                                                        userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                      ].pricePurchased
+                                                    )) /
+                                                    parseFloat(sharePrice)) *
+                                                    (parseFloat(performanceFee) /
+                                                      100))) *
+                                                (parseFloat(exitFee) / 100)
+                                              ) / 1000000000000000000).toPrecision(2)}{" "}
+                                              {denominationAsset}
+                                            </Text>
+                                            <Text fontSize={"0.75rem"} fontWeight={"light"}>
+                                              including
+                                              Performance and exit fees
+                                            </Text>
+                                          </Flex>
+                                        )}
+                                      </div>
+
+                                    </Flex>
+
+                                  </Box>
+                                  <Box>
+                                    <Flex direction={"column"} gap={"20px"} alignItems={"center"}>
+                                      <Text fontSize={"2xl"}>Reedem funds with</Text>
+                                      {onChange == true ? (
+                                        <div>
+                                          {trackedAssets.map((p, index) => (
+                                            <div>
+                                              <div>
+                                                <button
+                                                  type="button"
+                                                  style={{ width: "50px" }}
+                                                  onClick={() =>
+                                                    handleSelected(index)
+                                                  }
+                                                >
+                                                  <Box
+                                                    style={{
+                                                      width: "50px",
+                                                      height: "50px",
+
+                                                      overflow: "hidden",
+                                                      backgroundColor: "0f0b1f",
+                                                    }}
+                                                  >
+                                                    <Image
+                                                      src={returnImagefromAddress(p.address)}
+                                                    />
+                                                  </Box>
+
+                                                </button>
+                                                { }
+                                                {p.selected == true && (
+                                                  <Flex direction={"row"}>
+                                                    <NumberInput
+                                                      size="md"
+                                                      maxW={24}
+                                                      defaultValue={15}
+                                                      min={10}
+                                                      value={sellValue}
+                                                      onChange={handleChange3}
+                                                    >
+                                                      <NumberInputField />
+                                                      <NumberInputStepper>
+                                                        <NumberIncrementStepper />
+                                                        <NumberDecrementStepper />
+                                                      </NumberInputStepper>
+                                                    </NumberInput>
+                                                    <Button
+                                                      backgroundColor={"#f6643c"}
+                                                      color={"white"}
+                                                      onClick={() =>
+                                                        addPercent(
+                                                          p.coinSymbol,
+                                                          p.address,
+                                                          index
+                                                        )
+                                                      }
+                                                    >
+                                                      {" "}
+                                                      Set
+                                                    </Button>
+                                                  </Flex>
+                                                )}
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      ) : (
+                                        <div>
+                                          {trackedAssets.map((p, index) => (
+                                            <div>
+                                              <div>
+                                                <button
+                                                  type="button"
+                                                  style={{ width: "50px" }}
+                                                  onClick={() =>
+                                                    handleSelected(index)
+                                                  }
+                                                >
+                                                  {returnImagefromSymbol(
+                                                    p.coinSymbol
+                                                  )}
+                                                </button>
+                                                {p.selected == true && (
+                                                  <Flex direction={"row"}>
+                                                    <NumberInput
+                                                      size="md"
+                                                      maxW={24}
+                                                      defaultValue={100}
+                                                      min={1}
+                                                      value={sellValue}
+                                                      onChange={handleChange3}
+                                                    >
+                                                      <NumberInputField />
+                                                      <NumberInputStepper>
+                                                        <NumberIncrementStepper />
+                                                        <NumberDecrementStepper />
+                                                      </NumberInputStepper>
+                                                    </NumberInput>
+                                                    <Button
+                                                      backgroundColor={"#f6643c"}
+                                                      color={"white"}
+                                                      onClick={() =>
+                                                        addPercent(
+                                                          p.coinSymbol,
+                                                          p.address,
+                                                          index
+                                                        )
+                                                      }
+                                                    >
+                                                      {" "}
+                                                      Set
+                                                    </Button>
+                                                  </Flex>
+                                                )}
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
                                       <Button
                                         backgroundColor={"#f6643c"}
-                                        onClick={() =>
-                                          setSellTokenId(p.tokenId)
-                                        }
+                                        color={"white"}
+                                        onClick={() => handleSellShare()}
+                                        size="md"
                                       >
+                                        {" "}
                                         Sell
                                       </Button>
                                     </Flex>
-                                  ))}
-                              </Flex>
-                            </Box>
-
-                            {sellTokenId != "" && (
-                              <Box borderTop={"solid 2px #f6643c"} padding={"2vw"}>
-                                <Flex direction={"column"} gap={"10px"} alignItems={"center"}>
-                                  <Text>
-                                    ID {sellTokenId} : Allowed to sell 🎉
-                                  </Text>
-                                  <Text>
-                                    Selling{" "}
-                                    {(
-
-                                      (parseFloat(
-                                        userShareInfo[parseFloat(sellTokenId)]
-                                          .shareAmount
-                                      ) *
-                                      (parseFloat(percentShare) / 100)) / 1000000000000000000
-                                   
-                                   ).toPrecision(5)}{" "}
-                                    {symbol}
-                                  </Text>
-                                  <Slider
-                                    flex="1"
-                                    focusThumbOnChange={false}
-                                    value={parseFloat(percentShare)}
-                                    onChange={handleChange2}
-                                    width={"80%"}
-                                    colorScheme="#f6643c"
-                                  >
-                                    <SliderTrack  bg="red.100">
-                                      <SliderFilledTrack  bg="tomato"/>
-                                    </SliderTrack>
-                                    <SliderThumb
-                                      fontSize="sm"
-                                      boxSize="32px"
-                                      children={parseFloat(percentShare)}
-                                    />
-                                  </Slider>
-                                  <div>
-                                    {percentShare == "0" ? (
-                                      <>
-                                        ~{" "}
-                                        {
-                                          userShareInfo[parseFloat(sellTokenId)]
-                                            .shareAmount / 1000000000000000000
-                                        }{" "}
-                                        shares available
-                                      </>
-                                    ) : (
-                                      <>
-                                        ~{" "}
-                                        {((
-                                          parseFloat(
-                                            userShareInfo[
-                                              parseFloat(sellTokenId)
-                                            ].shareAmount
-                                          ) *
-                                            (parseFloat(percentShare) / 100) *
-                                            parseFloat(sharePrice) -
-                                          parseFloat(
-                                            userShareInfo[
-                                              parseFloat(sellTokenId)
-                                            ].shareAmount
-                                          ) *
-                                            (parseFloat(percentShare) / 100) *
-                                            parseFloat(sharePrice) *
-                                            (((parseFloat(sharePrice) -
-                                              parseFloat(
-                                                userShareInfo[
-                                                  parseFloat(sellTokenId)
-                                                ].pricePurchased
-                                              )) /
-                                              parseFloat(sharePrice)) *
-                                              (parseFloat(performanceFee) /
-                                                100)) -
-                                          (parseFloat(
-                                            userShareInfo[
-                                              parseFloat(sellTokenId)
-                                            ].shareAmount
-                                          ) *
-                                            (parseFloat(percentShare) / 100) *
-                                            parseFloat(sharePrice) -
-                                            parseFloat(
-                                              userShareInfo[
-                                                parseFloat(sellTokenId)
-                                              ].shareAmount
-                                            ) *
-                                              (parseFloat(percentShare) / 100) *
-                                              parseFloat(sharePrice) *
-                                              (((parseFloat(sharePrice) -
-                                                parseFloat(
-                                                  userShareInfo[
-                                                    parseFloat(sellTokenId)
-                                                  ].pricePurchased
-                                                )) /
-                                                parseFloat(sharePrice)) *
-                                                (parseFloat(performanceFee) /
-                                                  100))) *
-                                            (parseFloat(exitFee) / 100)
-                                         ) / 1000000000000000000 ).toPrecision(2)}{" "}
-                                        {denominationAsset} including
-                                        Performance and exit fees
-                                      </>
-                                    )}
-                                  </div>
-                                  <div>
-                                    <div>Reedem funds with</div>
-                                    {onChange == true ? (
-                                      <div>
-                                        {trackedAssets.map((p, index) => (
-                                          <div>
-                                            <div>
-                                              <button
-                                                type="button"
-                                                style={{ width: "50px" }}
-                                                onClick={() =>
-                                                  handleSelected(index)
-                                                }
-                                              >
-                                                {console.log(index)}
-                                                {returnImagefromSymbol(
-                                                  p.coinSymbol
-                                                )}
-                                              </button>
-                                              {}
-                                              {p.selected == true && (
-                                                <Flex direction={"row"}>
-                                                  <NumberInput
-                                                    size="md"
-                                                    maxW={24}
-                                                    defaultValue={15}
-                                                    min={10}
-                                                    value={sellValue}
-                                                    onChange={handleChange3}
-                                                  >
-                                                    <NumberInputField />
-                                                    <NumberInputStepper>
-                                                      <NumberIncrementStepper />
-                                                      <NumberDecrementStepper />
-                                                    </NumberInputStepper>
-                                                  </NumberInput>
-                                                  <Button
-                                                    backgroundColor={"#f6643c"}
-                                                    color={"white"}
-                                                    onClick={() =>
-                                                      addPercent(
-                                                        p.coinSymbol,
-                                                        p.address,
-                                                        index
-                                                      )
-                                                    }
-                                                  >
-                                                    {" "}
-                                                    Set
-                                                  </Button>
-                                                </Flex>
-                                              )}
-                                            </div>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    ) : (
-                                      <div>
-                                        {trackedAssets.map((p, index) => (
-                                          <div>
-                                            <div>
-                                              <button
-                                                type="button"
-                                                style={{ width: "50px" }}
-                                                onClick={() =>
-                                                  handleSelected(index)
-                                                }
-                                              >
-                                                {returnImagefromSymbol(
-                                                  p.coinSymbol
-                                                )}
-                                              </button>
-                                              {p.selected == true && (
-                                                <Flex direction={"row"}>
-                                                  <NumberInput
-                                                    size="md"
-                                                    maxW={24}
-                                                    defaultValue={100}
-                                                    min={1}
-                                                    value={sellValue}
-                                                    onChange={handleChange3}
-                                                  >
-                                                    <NumberInputField />
-                                                    <NumberInputStepper>
-                                                      <NumberIncrementStepper />
-                                                      <NumberDecrementStepper />
-                                                    </NumberInputStepper>
-                                                  </NumberInput>
-                                                  <Button
-                                                    backgroundColor={"#f6643c"}
-                                                    color={"white"}
-                                                    onClick={() =>
-                                                      addPercent(
-                                                        p.coinSymbol,
-                                                        p.address,
-                                                        index
-                                                      )
-                                                    }
-                                                  >
-                                                    {" "}
-                                                    Set
-                                                  </Button>
-                                                </Flex>
-                                              )}
-                                            </div>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-                                  </div>
+                                  </Box>
                                   <Flex>
-                                    <Text>Sum must be 100% : </Text>
+                                    {/* <Text>Sum must be 100% : </Text>
                                     {sellShareTab.map((p, index) => (
                                       <Text>
-                                        {console.log(index)}
-                                        {console.log(sellShareTab)}
+
                                         {p.percent}% {p.symbol}{" "}
                                         {index == sellShareTab.length - 1
                                           ? ""
                                           : "+"}
                                       </Text>
-                                    ))}
+                                    ))} */}
                                   </Flex>
 
-                                  <Button
-                                    backgroundColor={"#f6643c"}
-                                    color={"white"}
-                                    onClick={() => handleSellShare()}
-                                    size="md"
-                                  >
-                                    {" "}
-                                    Sell
-                                  </Button>
+
                                 </Flex>
-                              </Box>
-                            )}
+                              )}
                             </Flex>
                           </TabPanel>
                         </TabPanels>
