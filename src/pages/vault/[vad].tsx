@@ -3736,7 +3736,7 @@ const vault: NextPage = () => {
                                               </Slider>
                                               :
                                               <Text textAlign={"center"} fontWeight={"bold"}>
-                                                Start by Selecting the LP!
+                                                Start by Selecting LP!
                                               </Text>
                                             }
                                           </Box>
