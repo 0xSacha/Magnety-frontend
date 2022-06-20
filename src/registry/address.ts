@@ -1,17 +1,15 @@
 export const contractAddress =
 {
-    VaultFactory: "0x0436a8b4f46b237fea06cffc2543e325d6a8177416054786aece3ecf67bc0462",
-    alphaRoadFinanceToken: "0x04897da42d9bc2547d215aa45089e78a40036e10c1e7f384083e200d3eeccb78",
-    alphaRoadFinanceLP: "0x053fa0c868e5e4e60dc5057c4a41f7ccef4d1100cf186185f550e880963c5351",
-    FeeManager: "0x076083e9eb5a6693c909f885ff8698f70b96358f519bbaf5e4449fa1a63326b7",
-    PolicyManager: "0x063e18dacb046c2af7afc7c05bd9cb982f84e8b31d54be84551bc921dce10226",
-    Comptroller: "0x001c4c0093d76a0d3ca7c6a749f83fd6368e764bc9ad86b7e00e6220ccc00f24",
-    IntegrationManager: "0x01ecfb722217f3d906e1cd66ae2d15b4b507fa047af5c59e801db0450687608c",
-    ValueInterpreter: "0x0223adc954237e4fae90cb0d9dca12db2cf36cf1e2cda53323b52fcb3a16e376",
+    VaultFactory: "0x02bd1f8da1f976747cb0a671cec5157fb6f3f2285642e6673049ddecff8c231c",
+    alphaRoadFinanceToken: "0x06d12ce4c0a9266b78e00a11c76597cf48caea36a57ae421ed38a0890496ae72",
+    alphaRoadFinanceLP: "0x04bfee1c089173805175f75437c2543a3bad49926d1c5dcfd5683b2759bf7692",
+    FeeManager: "0x057c840744601d320ef4f59e49cb76c9a64667b6183a043ac0355c853bc4e6b2",
+    PolicyManager: "0x006938a189544ec2d4110d2bd8e6b556e8adb9acc6859937891214f73789b8de",
+    Comptroller: "0x025bc7963aa2c95f1934074d7d096028bd611c3af15fcefd8aa0d2cba038cfda",
+    IntegrationManager: "0x06e513b8ccb09c36b2441a391e9baab07a563532e8afdc0dce1f5bbb0672a648",
+    ValueInterpreter: "0x06a5d5708016115dd908e9c8123f190c0327715fa233357b670e7ef080301870",
     Oracle: "0x013befe6eda920ce4af05a50a67bd808d67eee6ba47bb0892bef2d630eaf1bba",
-    PontisPriceFeedMixin: "0x00b0a5cbcea7f63083ffb9eee340a6f8ae50cae467311c75563384dcd0637f62",
+    PontisPriceFeedMixin: "0x07cd501b3087cb8055a3ae1224380c2ad4015b2e4465339659867394d73dc799",
 }
-
-
 
 

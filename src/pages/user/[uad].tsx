@@ -99,7 +99,7 @@ function UserPage(props: UserPageProps) {
     return error;
   }
 
-  async function postDB(data:UserInfo) {
+  async function postDB(data: UserInfo) {
     await fetch(`http://localhost:3000/api/user/${userAddress}`, {
       method: "put",
       headers: {
@@ -193,7 +193,7 @@ function UserPage(props: UserPageProps) {
               backgroundPosition: "center bottom",
             }}
           >
-            <div style={{ objectFit: "cover", backgroundColor:"black" }} />
+            <div style={{ objectFit: "cover", backgroundColor: "black" }} />
           </Box>
           <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
             <ModalOverlay />
@@ -209,7 +209,7 @@ function UserPage(props: UserPageProps) {
             </ModalContent>
           </Modal>
 
-          {acccountAddress == userAddress  && (
+          {acccountAddress == userAddress && (
             <div
               style={{
                 position: "absolute",
@@ -245,13 +245,12 @@ function UserPage(props: UserPageProps) {
               marginLeft: `calc(50% - 90px)`,
               marginTop: "-90px",
               borderRadius: "50%",
-              backgroundColor: "orange",
               backgroundSize: "cover",
               backgroundPosition: "center bottom",
-              
+
             }}
           >
-            <img src={props.user.profilePic} style={{ objectFit: "cover", borderRadius:"50%"}} />
+            <img src={props.user.profilePic} style={{ objectFit: "cover", borderRadius: "50%" }} />
           </Box>
 
           {!editMode ? (
@@ -374,7 +373,7 @@ function UserPage(props: UserPageProps) {
               <Formik
                 initialValues={{
                   name: userInfo.name ? userInfo.name : "George Soros",
-                 profilePic: userInfo.profilePic ? userInfo.profilePic : "",
+                  profilePic: userInfo.profilePic ? userInfo.profilePic : "",
                   description: userInfo.description
                     ? userInfo.description
                     : "currently president of Soros Fund Management, based in New York, I have $25 billion for myself, my family and my foundations",
@@ -388,9 +387,9 @@ function UserPage(props: UserPageProps) {
                   setTimeout(() => {
                     console.log(actions);
                     alert(JSON.stringify(values, null, 2));
-                    const data: UserInfo = 
+                    const data: UserInfo =
                     {
-                      userAddress:userAddress as String,
+                      userAddress: userAddress as String,
                       name: values.name,
                       description: values.description,
                       twitter: values.telegram,
@@ -541,7 +540,7 @@ function UserPage(props: UserPageProps) {
                           />
                         </Box>
                       </Flex> */}
-                     
+
                     </Flex>
 
                     {/* <Button

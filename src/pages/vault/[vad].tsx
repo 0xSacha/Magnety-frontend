@@ -219,9 +219,7 @@ const vault: NextPage = () => {
 
   const [sellShareTab, setSellShareTab] = React.useState<SellShareData>([]);
 
-  const [allowedTrackedAsset, setAllowedTrackedAsset] = React.useState<
-    string[]
-  >([]);
+  const [allowedTrackedAsset, setAllowedTrackedAsset] = React.useState<string[]>([]);
   const [allowedIntegration, setAllowedIntegration] = React.useState<
     Array<string[]>
   >([]);
@@ -284,6 +282,7 @@ const vault: NextPage = () => {
 
   const ARFSWAPTABADDRESS = [ETH_ad, BTC_ad, ZKP_ad, TST_ad]
   const ARFLPTABADDRESS = [Eth_ZKP_ad, ETH_TST_ad, ETH_BTC_ad, BTC_TST_ad]
+
 
   useEffect(() => {
     if (sellSwapToken) {
@@ -393,16 +392,6 @@ const vault: NextPage = () => {
     return newStrB.toString();
   }
 
-  function returnImagefromSymbol(symb: string) {
-    if (
-      symb == "Ether" ||
-      symb == "ETH" ||
-      symb ==
-      "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
-    ) {
-      return <Image src={Ether} alt="eth" />;
-    }
-  }
 
   function getUserTotalShare() {
     let userTotalShare_ = 0;
@@ -859,6 +848,20 @@ const vault: NextPage = () => {
         .catch((err) => {
           console.log(err);
         });
+
+      // const res17 = provider.callContract({
+      //   contractAddress: policyManager,
+      //   entrypoint: "getAllowedTrackedAsset",
+      //   calldata: [hexToDecimalString(vaultAddress)],
+      // });
+      // res17
+      //   .then((value) => {
+      //     const tab__ = value.result[0];
+      //     setTimeLock(_timeLock);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     }
   }, [vaultAddress]);
 
@@ -1396,6 +1399,32 @@ const vault: NextPage = () => {
     }
   };
 
+  const handleTrack = (_address: string) => {
+    let Tab: string[] = [];
+    Tab.push(hexToDecimalString(vaultAddress));
+    Tab.push(hexToDecimalString(_address));
+
+    if (!accountInterface.address) {
+      console.log("no account detected");
+    } else {
+      console.log("connected");
+      multicall3(Tab)
+    }
+  };
+
+  const handleUntrack = (_address: string) => {
+    let Tab: string[] = [];
+    Tab.push(hexToDecimalString(vaultAddress));
+    Tab.push(hexToDecimalString(_address));
+
+    if (!accountInterface.address) {
+      console.log("no account detected");
+    } else {
+      console.log("connected");
+      multicall4(Tab)
+    }
+  };
+
   const handleSellShare = () => {
     let Tab: string[] = [];
     console.log(sellShareDataTab
@@ -1448,6 +1477,29 @@ const vault: NextPage = () => {
     console.log(tx1);
     // return (tx1)
   };
+
+  const multicall3 = async (_tab: string[]) => {
+    let tx1 = await accountInterface.execute([
+      {
+        contractAddress: contractAddress.Comptroller,
+        entrypoint: "addTrackedAsset",
+        calldata: _tab,
+      },
+    ]);
+    console.log(tx1);
+  };
+
+  const multicall4 = async (_tab: string[]) => {
+    let tx1 = await accountInterface.execute([
+      {
+        contractAddress: contractAddress.Comptroller,
+        entrypoint: "removeTrackedAsset",
+        calldata: _tab,
+      },
+    ]);
+    console.log(tx1);
+  };
+
 
   const multicall = async (_tab: any[], _tabA: any[]) => {
     let tx1 = await accountInterface.execute([
@@ -3093,7 +3145,7 @@ const vault: NextPage = () => {
                               DeFi
                             </Tab>
                             <Tab fontSize={"1xl"} fontWeight={"bold"}>
-                              Fees
+                              Track
                             </Tab>
                             <Tab fontSize={"1xl"} fontWeight={"bold"}>
                               Policies
@@ -3136,7 +3188,7 @@ const vault: NextPage = () => {
                                         <Box
 
                                         >
-                                          <div className={styles.asset_container} style={{ position: "absolute", left: "-120px" }}>
+                                          <div className={styles.asset_container} style={{ position: "absolute", left: "-200px", width: "220px" }}>
                                             {ARFSWAPTABADDRESS.filter(item => trackedAssetsAddress.includes(item)).map((item, index) => (
                                               <Button
                                                 key={index}
@@ -3246,7 +3298,7 @@ const vault: NextPage = () => {
                                         <Box
 
                                         >
-                                          <div className={styles.asset_container} style={{ position: "absolute", left: "-120px" }}>
+                                          <div className={styles.asset_container} style={{ position: "absolute", left: "-200px", width: "220px" }}>
                                             {ARFSWAPTABADDRESS.filter(item => trackedAssetsAddress.includes(item)).map((item, index) => (
                                               <Button
                                                 key={index}
@@ -3928,7 +3980,80 @@ const vault: NextPage = () => {
                                   </>}
 
                             </TabPanel>
-                            <TabPanel>Fees</TabPanel>
+                            <TabPanel>
+
+
+                              {
+
+                              }
+
+                              <Flex direction={"column"} gap={"25px"} justifyContent={"center"}>
+                                <Text fontWeight={"bold"} fontSize={"2xl"} textAlign={"center"}>Track and Remove assets to manage your {name} Holdings</Text>
+                                {
+                                  allowedTrackedAsset && trackedAssetsAddress ?
+                                    <Flex direction={"column"} gap={"25px"} justifyContent={"center"} width={"100%"}>
+                                      <Text fontSize={"2xl"} textAlign={"center"}>Assets not tracked yet</Text>
+                                      <Flex direction={"column"} gap={"5px"} justifyContent={"center"} width={"30%"} alignSelf={"center"}>
+                                        {allowedTrackedAsset.filter(item => !trackedAssetsAddress.includes(item)).map((item, index) => (
+                                          <Flex direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
+                                            <Flex direction={"row"} gap={"4px"} alignItems={"center"}>
+                                              <Box
+                                                style={{
+                                                  width: "50px",
+                                                  height: "50px",
+                                                  borderRadius: "10px",
+                                                  overflow: "hidden",
+
+                                                }}
+                                              >
+                                                <Image
+                                                  src={returnImagefromAddress(item)}
+                                                  style={{ objectFit: "cover" }}
+                                                />
+                                              </Box>
+                                              <Text fontWeight={"bold"} fontSize={"2xl"}>{returnSymbolfromAddress(item)}</Text>
+
+                                            </Flex>
+                                            <Button onClick={() => handleTrack(item)} type="undefined" backgroundColor={"#f6643c"}>  Track </Button>
+                                          </Flex>
+                                        ))}
+                                      </Flex>
+
+                                      <Text fontSize={"2xl"} textAlign={"center"}>Tracked Assets</Text>
+
+                                      <Flex direction={"column"} gap={"5px"} justifyContent={"center"} width={"30%"} alignSelf={"center"}>
+                                        {allowedTrackedAsset.filter(item => trackedAssetsAddress.includes(item)).map((item, index) => (
+                                          <Flex direction={"row"} justifyContent={"space-between"}>
+                                            <Flex direction={"row"} gap={"8px"}>
+                                              <Box
+                                                style={{
+                                                  width: "50px",
+                                                  height: "50px",
+                                                  borderRadius: "10px",
+                                                  overflow: "hidden",
+
+                                                }}
+                                              >
+                                                <Image
+                                                  src={returnImagefromAddress(item)}
+                                                  style={{ objectFit: "cover" }}
+                                                />
+                                              </Box>
+                                              <Text fontWeight={"bold"} fontSize={"2xl"}>{returnSymbolfromAddress(item)}</Text>
+
+                                            </Flex>
+                                            <Button onClick={() => handleUntrack(item)} type="undefined" backgroundColor={"#f6643c"}> Untrack </Button>
+                                          </Flex>
+                                        ))}
+                                      </Flex>
+                                    </Flex>
+                                    :
+                                    <Text> Fetching Data </Text>
+                                }
+                                <Flex>
+                                </Flex>
+                              </Flex>
+                            </TabPanel>
                             <TabPanel>Policies</TabPanel>
                           </TabPanels>
                         </Box>
