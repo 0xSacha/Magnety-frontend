@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useAppSelector } from "../../app/hooks";
 import { selectCount } from "../../app/counterSlice";
 // import "chart.js/auto";
+import { IconContext } from "react-icons";
 // import { Chart, Line } from "react-chartjs-2";
 import { background, Button, ButtonGroup, color } from "@chakra-ui/react";
 import { Select } from "@chakra-ui/react";
@@ -15,6 +16,11 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Icon } from "@chakra-ui/react";
 import { BsShare } from "react-icons/bs";
 import { BiArrowBack } from "react-icons/bi";
+
+import { MdOutlineSwapVert, MdArrowCircleDown } from "react-icons/md";
+import { AiOutlinePlus } from "react-icons/ai";
+
+
 
 import { GiPayMoney } from "react-icons/gi";
 import { MdManageSearch } from "react-icons/md";
@@ -119,6 +125,12 @@ type DataChart = {
   gav: number;
 }[];
 
+type sellShareData = {
+  percent: number;
+  address: string;
+  symbol: string;
+}[];
+
 import VDatabase from "./vaults.json";
 import { useDeprecatedAnimatedState } from "framer-motion";
 
@@ -204,7 +216,9 @@ const vault: NextPage = () => {
   const [gav, setGav] = React.useState<string>("0");
   const [trackedAssets, setTrackedAssets] = React.useState<PortfolioData>([]);
   const [userShareInfo, setUserShareInfo] = React.useState<userShareData>([]);
+
   const [sellShareTab, setSellShareTab] = React.useState<SellShareData>([]);
+
   const [allowedTrackedAsset, setAllowedTrackedAsset] = React.useState<
     string[]
   >([]);
@@ -228,50 +242,135 @@ const vault: NextPage = () => {
   const [sellTokenId, setSellTokenId] = React.useState<string>("");
   const [percentShare, setPercentShare] = React.useState<string>("0");
   const [buyValue, setBuyValue] = React.useState<any>(0);
-  const [sellValue, setSellValue] = React.useState<any>(0);
+  const [sellValue, setSellValue] = React.useState<number>(10);
   const [onChange, setOnChange] = React.useState<boolean>(true);
   let [timeframe, setTimeframe] = React.useState<number>(0);
   let [chartSelected, setChartSelected] = React.useState<number>(1);
   let [menuSelected, setMenuSelected] = React.useState<number>(0);
+  let [sellShareDataTab, setSellShareDataTab] = React.useState<sellShareData>([]);
+  const [dataSetChange, setDataSetChange] = React.useState<boolean>(true);
+  const [trackedAssetsAddress, setTrackedAssetsAddress] = React.useState<string[]>();
+  const [sellSwapToken, setSellSwapToken] = React.useState<string>();
+  const [buySwapToken, setBuySwapToken] = React.useState<string>();
+  const [bringLiquidtyToken, setBringLiquidtyToken] = React.useState<string>();
+
+
+  const [defiSelected, setDefiSelected] = React.useState<number>(1);
+
+
+  const [sellSwapTokenBalance, setSellSwapTokenBalance] = React.useState<number>(0);
+  const [buySwapTokenBalance, setBuySwapTokenBalance] = React.useState<number>(0);
+  const [buySwapTokenFundBalance, setBuySwapTokenFundBalance] = React.useState<number>(0);
+  const [bringLiquidityTokenFundBalance, setBringLiquidityTokenFundBalance] = React.useState<number>(0);
+
+
+
+
+
+
+
+  const ETH_ad = "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+  const BTC_ad = "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7"
+  const ZKP_ad = "0x7a6dde277913b4e30163974bf3d8ed263abb7c7700a18524f5edf38a13d39ec"
+  const TST_ad = "0x7394cbe418daa16e42b87ba67372d4ab4a5df0b05c6e554d158458ce245bc10"
+
+  // LP
+  const Eth_ZKP_ad = "0x68f02f0573d85b5d54942eea4c1bf97c38ca0e3e34fe3c974d1a3feef6c33be"
+  const ETH_TST_ad = "0x212040ea46c99455a30b62bfe9239f100271a198a0fdf0e86befc30e510e443"
+  const ETH_BTC_ad = "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945"
+  const BTC_TST_ad = "0x6d0845eb49bcbef8c91f9717623b56331cc4205a5113bddef98ec40f050edc8"
+
+
+
+  const ARFSWAPTABADDRESS = [ETH_ad, BTC_ad, ZKP_ad, TST_ad]
+  const ARFLPTABADDRESS = [Eth_ZKP_ad, ETH_TST_ad, ETH_BTC_ad, BTC_TST_ad]
+
+  useEffect(() => {
+    if (sellSwapToken) {
+      const res1 = provider.callContract({
+        contractAddress: sellSwapToken,
+        entrypoint: "balanceOf",
+        calldata: [hexToDecimalString(vaultAddress)],
+      });
+      res1
+        .then((value) => {
+          const fundBalance__ = hexToDecimalString(value.result[0]);
+          const fundBalance_ = parseFloat(fundBalance__) / 1000000000000000000;
+          setSellSwapTokenBalance(fundBalance_)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [sellSwapToken]);
+
+  useEffect(() => {
+    if (buySwapToken) {
+      const res1 = provider.callContract({
+        contractAddress: buySwapToken,
+        entrypoint: "balanceOf",
+        calldata: [hexToDecimalString(vaultAddress)],
+      });
+      res1
+        .then((value) => {
+          const fundBalance__ = hexToDecimalString(value.result[0]);
+          const fundBalance_ = parseFloat(fundBalance__) / 1000000000000000000;
+          setBuySwapTokenFundBalance(fundBalance_)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [buySwapToken]);
+
+  useEffect(() => {
+    if (sellSwapToken && buySwapToken) {
+      const res1 = provider.callContract({
+        contractAddress: contractAddress.ValueInterpreter,
+        entrypoint: "balanceOf",
+        calldata: [hexToDecimalString(sellSwapToken), (sellSwapTokenBalance * 1000000000000000000).toString(), hexToDecimalString(buySwapToken)],
+      });
+      res1
+        .then((value) => {
+          const fundBalance__ = hexToDecimalString(value.result[0]);
+          const fundBalance_ = parseFloat(fundBalance__) / 1000000000000000000;
+          setBuySwapTokenBalance(fundBalance_)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [buySwapToken, sellSwapToken]);
 
   const [onPopUp, setonPopUp] = React.useState<boolean>(false);
   const handleInputChange = (value) => setChartSelected(value.target.value);
 
+
   const handleChange3 = (value) => setSellValue(value);
 
-  const addPercent = (symbol: string, address: string, index: number) => {
-    console.log("current sell share tab");
-    console.log(sellShareTab);
-
-    let currentSaleTabe = sellShareTab;
-
-    let newElem = {
-      symbol: symbol,
-      percent: sellValue,
-      address: address,
-    };
-
-    for (let pas = 0; pas < currentSaleTabe.length; pas++) {
-      if (newElem.symbol == currentSaleTabe[pas].symbol) {
-        currentSaleTabe[pas].percent = sellValue
-        setSellShareTab(currentSaleTabe)
-        setOnChange(!onChange);
-        return;
-      }
-    }
-    currentSaleTabe.push(newElem);
-    setSellShareTab(currentSaleTabe);
-    console.log("new sell share tab");
-    console.log(sellShareTab);
-
-    let currentTab: PortfolioData = trackedAssets;
-    currentTab[index].selected = false;
-    setOnChange(!onChange);
+  const setSellValueToIndex = (index: number) => {
+    let tab = sellShareDataTab
+    tab[index].percent = sellValue
+    setSellShareDataTab(tab)
+    setDataSetChange(!dataSetChange)
   };
 
-  const clearSellTab = () => {
-    setSellShareTab([]);
-  };
+
+
+  function addNewAsset(address_: string, percent_: number, symbol_: string) {
+
+    setSellShareDataTab((state) => {
+      const elem = { percent: percent_, address: address_, symbol: symbol_ }
+      console.log(elem)
+      const index = state.findIndex((x) => x.address == address_);
+      console.log(index)
+      state =
+        index === -1
+          ? [...state, elem]
+          : [...state.slice(0, index), ...state.slice(index + 1)];
+      return state;
+    });
+  }
 
   const handleSelected = (index: number) => {
     let currentTab: PortfolioData = trackedAssets;
@@ -371,6 +470,73 @@ const vault: NextPage = () => {
                       return alphaRoad;
                     } else {
                       return ethtst;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  function returnSymbolfromAddress(address: string) {
+    if (
+      address ==
+      "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+    ) {
+      return "eth";
+    } else {
+      if (
+        address ==
+        "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7"
+      ) {
+        return "btc";
+      } else {
+        if (
+          address ==
+          "0x7a6dde277913b4e30163974bf3d8ed263abb7c7700a18524f5edf38a13d39ec"
+        ) {
+          return "zkp";
+        } else {
+          if (
+            address ==
+            "0x7394cbe418daa16e42b87ba67372d4ab4a5df0b05c6e554d158458ce245bc10"
+          ) {
+            return "tst";
+          } else {
+            if (
+              address ==
+              "0x68f02f0573d85b5d54942eea4c1bf97c38ca0e3e34fe3c974d1a3feef6c33be"
+            ) {
+              return "ethzkp";
+            } else {
+              if (
+                address ==
+                "0x6d0845eb49bcbef8c91f9717623b56331cc4205a5113bddef98ec40f050edc8"
+              ) {
+                return "btctst";
+              } else {
+                if (
+                  address ==
+                  "0x212040ea46c99455a30b62bfe9239f100271a198a0fdf0e86befc30e510e443"
+                ) {
+                  return "ethtst";
+                } else {
+                  if (
+                    address ==
+                    "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945"
+                  ) {
+                    return "ethbtc";
+                  } else {
+                    if (
+                      address ==
+                      "0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a"
+                    ) {
+                      return "alphaRoad";
+                    } else {
+                      return "ethtst";
                     }
                   }
                 }
@@ -907,6 +1073,7 @@ const vault: NextPage = () => {
           let tab__ = value.result;
           let size_ = tab__.shift();
           let tab_ = tab__;
+          setTrackedAssetsAddress(tab_)
           for (let pas = 0; pas < tab_.length; pas++) {
             let address_ = tab_[pas];
             const name = provider.callContract({
@@ -1231,17 +1398,26 @@ const vault: NextPage = () => {
 
   const handleSellShare = () => {
     let Tab: string[] = [];
+    console.log(sellShareDataTab
+    )
     Tab.push(hexToDecimalString(vaultAddress));
     Tab.push(sellTokenId);
     Tab.push("0");
-    Tab.push("20000000000000000000");
 
-    // Tab.push(parseFloat(percentShare) * parseFloat(userShareInfo[userShareInfo.findIndex(item => item.tokenId = sellTokenId)].shareAmount))
+    let amount = (parseFloat(userShareInfo[userShareInfo.findIndex(item => item.tokenId = sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100))
+    Tab.push(amount.toString());
     Tab.push("0");
-    Tab.push("1");
-    Tab.push(hexToDecimalString("0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"));
-    Tab.push("1");
-    Tab.push("100");
+
+    Tab.push(sellShareDataTab.length.toString());
+    for (let index = 0; index < sellShareDataTab.length; index++) {
+      Tab.push(sellShareDataTab[index].address)
+    }
+
+    Tab.push(sellShareDataTab.length.toString());
+    for (let index = 0; index < sellShareDataTab.length; index++) {
+      Tab.push(sellShareDataTab[index].percent.toString())
+    }
+
     // Tab.push(sellShareTab.length.toString());
     // sellShareTab.forEach((element) => {
     //   Tab.push(hexToDecimalString(element.address));
@@ -2054,12 +2230,7 @@ const vault: NextPage = () => {
                                                   )}
                                                 />
                                               </Box>
-                                              {/* <FakeImage
-                                              width="50px"
-                                              height="50px"
-                                              fillColor="var(--color-secondary)"
-                                              borderRadius="50%"
-                                            ></FakeImage> */}
+
                                               <div>
                                                 <span> {p.coinName} </span>
                                                 <span> {p.coinSymbol} </span>
@@ -2105,70 +2276,7 @@ const vault: NextPage = () => {
                                   </div>
                                 )}
                               </div>
-                              {/* <div>
-                              {trackedAssetsLen > 0 ? (
-                                <div
-                                  className={`${styles.portfolioTable} bg__dotted`}
-                                >
-                                  <table cellSpacing="0" cellPadding="0">
-                                    <thead>
-                                      <tr>
-                                        <th>External position</th>
-                                        <th>Value</th>
-                                        <th>Allocation</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {trackedAssets.map((p, index) => (
-                                        <tr key={index}>
-                                          <td>
-                                            <FakeImage
-                                              width="50px"
-                                              height="50px"
-                                              fillColor="var(--color-secondary)"
-                                              borderRadius="50%"
-                                            ></FakeImage>
-                                            <div>
-                                              <span> {p.coinName} </span>
-                                              <span> {p.coinSymbol} </span>
-                                            </div>
-                                          </td>
-                                          <td>
-                                            {p.value} {denominationAsset}
-                                          </td>
-                                          <td>{p.allocation}</td>
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </table>
-                                </div>
-                              ) : (
-                                <div
-                                  className={`${styles.portfolioTable} bg__dotted`}
-                                >
-                                  <table cellSpacing="0" cellPadding="0">
-                                    <thead>
-                                      <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr key={1}>
-                                        <td> .</td>
-                                        <td> .</td>
-                                        <td>
-                                          {" "}
-                                          Fetching External positions, please
-                                          wait..
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                              )}
-                            </div> */}
+
                             </Flex>
                           </TabPanel>
                           <TabPanel>
@@ -2702,8 +2810,8 @@ const vault: NextPage = () => {
                               </Box>
 
                               {sellTokenId && (
-                                <Flex direction={"column"} gap={"40px"}>
-                                  <Box borderTop={"solid 2px #f6643c"} padding={"2vw"} borderBottom={"solid 2px #f6643c"}>
+                                <Flex direction={"column"} marginTop={"40px"}>
+                                  <Box borderTop={"solid 2px #f6643c"} padding={"2vw"}>
                                     <Flex direction={"column"} gap={"20px"} alignItems={"center"}>
                                       <Text fontSize={"2xl"}>
                                         ID {sellTokenId} : Allowed to sell 🎉
@@ -2816,134 +2924,137 @@ const vault: NextPage = () => {
 
                                   </Box>
                                   <Box>
-                                    <Flex direction={"column"} gap={"20px"} alignItems={"center"}>
+                                    <Flex direction={"column"} gap={"20px"} alignItems={"center"} padding={"2vw"} borderTop={"solid 2px #f6643c"}>
                                       <Text fontSize={"2xl"}>Reedem funds with</Text>
-                                      {onChange == true ? (
-                                        <div>
-                                          {trackedAssets.map((p, index) => (
-                                            <div>
-                                              <div>
-                                                <button
-                                                  type="button"
-                                                  style={{ width: "50px" }}
-                                                  onClick={() =>
-                                                    handleSelected(index)
-                                                  }
-                                                >
-                                                  <Box
-                                                    style={{
-                                                      width: "50px",
-                                                      height: "50px",
-
-                                                      overflow: "hidden",
-                                                      backgroundColor: "0f0b1f",
-                                                    }}
+                                      <Flex minWidth={"20vw"} gap={"50px"}>
+                                        <div className={styles.asset_container}>
+                                          {trackedAssets.map((item, index) => (
+                                            <Button
+                                              key={index}
+                                              backgroundColor={"#0f0b1"}
+                                              type="button"
+                                              data-color="transparent"
+                                              onClick={() => addNewAsset(item.address, 0, item.coinSymbol)}
+                                              className={`${styles.asset_button} ${sellShareDataTab.includes({ percent: 0, address: item.address, symbol: "d" })
+                                                ? styles.asset_selected
+                                                : ""
+                                                }`}
+                                            >
+                                              <Image src={returnImagefromAddress(item.address)} />
+                                              {sellShareDataTab.find((x) => x.address == item.address) && (
+                                                <>
+                                                  <span
+                                                    className={styles.asset_selected_checkmark}
                                                   >
                                                     <Image
-                                                      src={returnImagefromAddress(p.address)}
+                                                      src={"/checkmark-circle-outline.svg"}
+                                                      width="48px"
+                                                      height="48px"
                                                     />
-                                                  </Box>
+                                                  </span>
+                                                </>
+                                              )}
+                                            </Button>
+                                          ))}
+                                        </div>
+                                        <Flex direction={"column"} gap={"5px"}>
+                                          {sellShareDataTab.map((item, index) => (
+                                            <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                                              <Box width={"40px"}> <Image src={returnImagefromAddress(item.address)} /></Box>
 
-                                                </button>
-                                                { }
-                                                {p.selected == true && (
-                                                  <Flex direction={"row"}>
-                                                    <NumberInput
-                                                      size="md"
-                                                      maxW={24}
-                                                      defaultValue={15}
-                                                      min={10}
-                                                      value={sellValue}
-                                                      onChange={handleChange3}
-                                                    >
-                                                      <NumberInputField />
-                                                      <NumberInputStepper>
-                                                        <NumberIncrementStepper />
-                                                        <NumberDecrementStepper />
-                                                      </NumberInputStepper>
-                                                    </NumberInput>
-                                                    <Button
-                                                      backgroundColor={"#f6643c"}
-                                                      color={"white"}
-                                                      onClick={() =>
-                                                        addPercent(
-                                                          p.coinSymbol,
-                                                          p.address,
-                                                          index
-                                                        )
-                                                      }
-                                                    >
-                                                      {" "}
-                                                      Set
-                                                    </Button>
-                                                  </Flex>
-                                                )}
-                                              </div>
-                                            </div>
+                                              <NumberInput
+                                                size="sm"
+                                                defaultValue={10}
+                                                min={10}
+                                                step={1}
+                                                value={sellValue}
+                                                onChange={handleChange3}
+                                              >
+                                                <NumberInputField />
+                                                <NumberInputStepper>
+                                                  <NumberIncrementStepper />
+                                                  <NumberDecrementStepper />
+                                                </NumberInputStepper>
+                                              </NumberInput>
+                                              <Button backgroundColor={"#f6643c"} onClick={() => setSellValueToIndex(index)}>
+                                                Set
+                                              </Button>
+                                            </Flex>
                                           ))}
-                                        </div>
-                                      ) : (
-                                        <div>
-                                          {trackedAssets.map((p, index) => (
-                                            <div>
-                                              <div>
-                                                <button
-                                                  type="button"
-                                                  style={{ width: "50px" }}
-                                                  onClick={() =>
-                                                    handleSelected(index)
+
+                                        </Flex>
+                                      </Flex>
+                                      {dataSetChange == true ?
+                                        <Flex direction={"column"} gap={"10px"} alignItems={"center"}>
+                                          <Flex direction={"row"} gap={"10px"}>
+                                            {
+                                              sellShareDataTab.map((item, index) => (
+                                                <Flex direction={"row"} gap={"10px"}>
+                                                  <Text>{item.percent}% {item.symbol}</Text>
+
+                                                  {index == sellShareDataTab.length &&
+                                                    <Text>+</Text>
                                                   }
-                                                >
-                                                  {returnImagefromSymbol(
-                                                    p.coinSymbol
-                                                  )}
-                                                </button>
-                                                {p.selected == true && (
-                                                  <Flex direction={"row"}>
-                                                    <NumberInput
-                                                      size="md"
-                                                      maxW={24}
-                                                      defaultValue={100}
-                                                      min={1}
-                                                      value={sellValue}
-                                                      onChange={handleChange3}
-                                                    >
-                                                      <NumberInputField />
-                                                      <NumberInputStepper>
-                                                        <NumberIncrementStepper />
-                                                        <NumberDecrementStepper />
-                                                      </NumberInputStepper>
-                                                    </NumberInput>
-                                                    <Button
-                                                      backgroundColor={"#f6643c"}
-                                                      color={"white"}
-                                                      onClick={() =>
-                                                        addPercent(
-                                                          p.coinSymbol,
-                                                          p.address,
-                                                          index
-                                                        )
-                                                      }
-                                                    >
-                                                      {" "}
-                                                      Set
-                                                    </Button>
-                                                  </Flex>
-                                                )}
-                                              </div>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      )}
-                                      <Button
-                                        backgroundColor={"#f6643c"}
-                                        color={"white"}
-                                        onClick={() => handleSellShare()}
-                                        size="md"
-                                      >
-                                        {" "}
-                                        Sell
-                                      </Button>
+                                                </Flex>
+
+                                              ))
+                                            }
+                                          </Flex>
+                                          {
+                                            sellShareDataTab.reduce((accumulator, current) => accumulator + current.percent, 0) == 100 ?
+
+                                              <Button
+                                                backgroundColor={"#f6643c"}
+                                                color={"white"}
+                                                onClick={() => handleSellShare()}
+                                                size="md"
+                                                width={"200px"}
+                                              >
+
+                                                {" "}
+                                                Sell
+                                              </Button>
+                                              :
+                                              <Text fontWeight={"bold"} color={"#f6643c"}> Sum must be equal to 100%</Text>
+                                          }
+
+                                        </Flex>
+                                        :
+                                        <Flex direction={"column"} gap={"10px"} alignItems={"center"}>
+                                          <Flex direction={"row"} gap={"10px"}>
+                                            {
+                                              sellShareDataTab.map((item, index) => (
+                                                <Flex direction={"row"} gap={"10px"}>
+                                                  <Text>{item.percent}% {item.symbol}</Text>
+
+                                                  {index == sellShareDataTab.length &&
+                                                    <Text>+</Text>
+                                                  }
+                                                </Flex>
+
+                                              ))
+                                            }
+                                          </Flex>
+                                          {
+                                            sellShareDataTab.reduce((accumulator, current) => accumulator + current.percent, 0) == 100 ?
+
+                                              <Button
+                                                backgroundColor={"#f6643c"}
+                                                color={"white"}
+                                                onClick={() => handleSellShare()}
+                                                size="md"
+                                                width={"200px"}
+                                              >
+
+                                                {" "}
+                                                Sell
+                                              </Button>
+                                              :
+                                              <Text> Sum must be equal to 100%</Text>
+                                          }
+
+                                        </Flex>
+                                      }
                                     </Flex>
                                   </Box>
                                   <Flex>
@@ -2985,9 +3096,6 @@ const vault: NextPage = () => {
                               Fees
                             </Tab>
                             <Tab fontSize={"1xl"} fontWeight={"bold"}>
-                              Integrations
-                            </Tab>
-                            <Tab fontSize={"1xl"} fontWeight={"bold"}>
                               Policies
                             </Tab>
                           </Flex>
@@ -3002,9 +3110,825 @@ const vault: NextPage = () => {
                           padding={"2%"}
                         >
                           <TabPanels>
-                            <TabPanel>DeFi</TabPanel>
+                            <TabPanel>
+                              <Flex width={"100%"} justifyContent={"space-evenly"} marginBottom={"80px"}>
+                                <Button onClick={() => setDefiSelected(1)} backgroundColor={defiSelected == 1 ? "#f6643c" : "#0f0b1f"}>
+                                  Swap
+                                </Button>
+                                <Button onClick={() => setDefiSelected(2)} backgroundColor={defiSelected == 2 ? "#f6643c" : "#0f0b1f"}>
+                                  Bring Liquidity
+                                </Button>
+                                <Button onClick={() => setDefiSelected(3)} backgroundColor={defiSelected == 3 ? "#f6643c" : "#0f0b1f"}>
+                                  Remove Liquidity
+                                </Button>
+                              </Flex>
+                              {defiSelected == 1 ?
+                                <>
+                                  {trackedAssetsAddress &&
+
+                                    <Flex
+                                      direction={"column"}
+                                      gap={"20px"}
+                                      alignItems={"center"}
+                                    >
+                                      <Flex direction={"row"} gap={"50px"} position={"relative"}>
+
+                                        <Box
+
+                                        >
+                                          <div className={styles.asset_container} style={{ position: "absolute", left: "-120px" }}>
+                                            {ARFSWAPTABADDRESS.filter(item => trackedAssetsAddress.includes(item)).map((item, index) => (
+                                              <Button
+                                                key={index}
+                                                type="button"
+                                                backgroundColor={"#0f0b1f"}
+                                                onClick={() => setSellSwapToken(item)}
+                                                className={`${styles.asset_button} ${sellSwapToken == item
+                                                  ? styles.asset_selected
+                                                  : ""
+                                                  }`}
+                                              >
+                                                <Image src={returnImagefromAddress(item)} />
+                                                {sellSwapToken == item && (
+                                                  <>
+                                                    <span className={styles.asset_selected_checkmark}>
+                                                      <Image
+                                                        src={"/checkmark-circle-outline.svg"}
+
+                                                        width="24px"
+                                                        height="24px"
+                                                      />
+                                                    </span>
+                                                  </>
+                                                )}
+                                              </Button>
+                                            ))}
+                                          </div>
+                                        </Box>
+
+                                        <Flex
+                                          justifyContent={"space-between"}
+                                          alignItems="center"
+                                          backgroundColor={"blackAlpha.400"}
+                                          width={"450px"}
+                                          borderRadius={"20px"}
+                                          padding={"10px"}
+                                        >
+                                          <NumberInput
+                                            height={"50px"}
+                                            variant={"unstyled"}
+                                            fontFamily={"IBM Plex Mono, sans-serif"}
+                                            padding={"10px 10px"}
+                                            alignSelf={"center"}
+                                            value={buyValue}
+                                            onChange={handleChange}
+                                            defaultValue={0}
+                                            max={parseFloat(userBalance)}
+                                          >
+                                            <NumberInputField />
+                                          </NumberInput>
+                                          <Flex direction={"row"}>
+                                            {denominationAsset != "deno" && (
+                                              <Flex alignItems={"center"} gap={"5px"}>
+                                                <Text
+                                                  fontSize={"1xl"}
+                                                  fontWeight={"bold"}
+                                                >
+                                                  {sellSwapToken ? returnSymbolfromAddress(sellSwapToken) : ""}
+                                                </Text>
+                                                <Box
+                                                  style={{
+                                                    width: "50px",
+                                                    height: "50px",
+                                                    borderRadius: "10px",
+                                                    overflow: "hidden",
+                                                  }}
+                                                >{sellSwapToken && <Image
+                                                  src={returnImagefromAddress(
+                                                    sellSwapToken
+                                                  )}
+                                                />}
+
+                                                </Box>
+                                              </Flex>
+                                            )}
+                                            <Flex
+                                              marginLeft={"30px"}
+                                              flexDir={"column"}
+                                            >
+                                              <Text
+                                                color={"whiteAlpha.300"}
+                                                fontSize={"sm"}
+                                              >
+                                                Balance{" "}
+                                              </Text>
+                                              <Text
+                                                color={"whiteAlpha.700"}
+                                                fontSize={"sm"}
+                                              >
+                                                {sellSwapTokenBalance.toPrecision(
+                                                  2
+                                                )}
+                                              </Text>
+                                            </Flex>
+                                          </Flex>
+                                        </Flex>
+                                      </Flex>
+                                      <IconContext.Provider
+                                        value={{ color: '#f6643c', size: '50px' }}
+                                      >
+                                        <div>
+                                          <MdOutlineSwapVert />
+                                        </div>
+                                      </IconContext.Provider>
+
+                                      <Flex direction={"row"} gap={"50px"} position={"relative"}>
+                                        <Box
+
+                                        >
+                                          <div className={styles.asset_container} style={{ position: "absolute", left: "-120px" }}>
+                                            {ARFSWAPTABADDRESS.filter(item => trackedAssetsAddress.includes(item)).map((item, index) => (
+                                              <Button
+                                                key={index}
+                                                type="button"
+                                                backgroundColor={"#0f0b1f"}
+                                                onClick={() => setBuySwapToken(item)}
+                                                className={`${styles.asset_button} ${buySwapToken == item
+                                                  ? styles.asset_selected
+                                                  : ""
+                                                  }`}
+                                              >
+                                                <Image src={returnImagefromAddress(item)} />
+                                                {buySwapToken == item && (
+                                                  <>
+                                                    <span className={styles.asset_selected_checkmark}>
+                                                      <Image
+                                                        src={"/checkmark-circle-outline.svg"}
+
+                                                        width="24px"
+                                                        height="24px"
+                                                      />
+                                                    </span>
+                                                  </>
+                                                )}
+                                              </Button>
+                                            ))}
+                                          </div>
+                                        </Box>
+                                        <Flex
+                                          justifyContent={"space-between"}
+                                          alignItems="center"
+                                          backgroundColor={"blackAlpha.400"}
+                                          width={"450px"}
+                                          borderRadius={"20px"}
+                                          padding={"10px"}
+                                        >
+                                          <Text
+                                            height={"50px"}
+                                            variant={"unstyled"}
+                                            fontFamily={"IBM Plex Mono, sans-serif"}
+                                            padding={"10px 10px"}
+                                            alignSelf={"center"}
+                                            width={"100%"}
+                                          >
+                                            {buySwapTokenBalance}
+                                          </Text>
+
+                                          <Flex alignItems={"center"} gap={"5px"}>
+                                            <Text
+                                              fontSize={"1xl"}
+                                              fontWeight={"bold"}
+                                            >
+                                              {buySwapToken ? returnSymbolfromAddress(buySwapToken) : ""}
+                                            </Text>
+                                            {buySwapToken &&
+
+                                              <Box
+                                                style={{
+                                                  width: "50px",
+                                                  height: "50px",
+                                                  borderRadius: "10px",
+                                                  overflow: "hidden",
+
+                                                }}
+                                              >
+                                                <Image
+                                                  src={returnImagefromAddress(buySwapToken)}
+                                                  style={{ objectFit: "cover" }}
+                                                />
+                                              </Box>
+                                            }
+
+                                          </Flex>
+
+                                          <Flex
+                                            marginLeft={"30px"}
+                                            flexDir={"column"}
+                                          >
+                                            <Text
+                                              color={"whiteAlpha.300"}
+                                              fontSize={"sm"}
+                                            >
+                                              Balance{" "}
+                                            </Text>
+                                            <Text
+                                              color={"whiteAlpha.700"}
+                                              fontSize={"sm"}
+                                            >
+                                              {" "}
+                                              {buySwapTokenFundBalance.toPrecision(2)}
+                                            </Text>
+                                          </Flex>
+
+                                        </Flex>
+                                      </Flex>
+                                      <Spacer />
+                                      <Spacer />
+
+
+
+                                      {buySwapToken && sellSwapToken ?
+
+                                        buySwapToken == sellSwapToken ?
+                                          <Text fontWeight={"bold"} color={"#f6643c"}> Swap {returnSymbolfromAddress(buySwapToken)} for {returnSymbolfromAddress(sellSwapToken)} is very smart ! </Text>
+
+                                          :
+
+                                          trackedAssetsAddress.includes(buySwapToken) ?
+                                            <Button
+                                              backgroundColor={"#f6643c"}
+                                              color={"white"}
+                                              onClick={() => handleMintShare()}
+                                              size="md"
+                                            >
+                                              {" "}
+                                              Mint
+                                            </Button>
+                                            :
+                                            <Text fontWeight={"bold"} color={"#f6643c"}>Incoming asset not tracked</Text>
+
+                                        :
+                                        <Text fontWeight={"bold"} color={"#f6643c"}>Select the assets you want to Swap </Text>
+                                      }
+
+                                    </Flex>
+                                  }
+                                </> :
+                                defiSelected == 2 ?
+                                  <>
+                                    {trackedAssetsAddress &&
+
+                                      <Flex
+                                        direction={"column"}
+                                        gap={"20px"}
+                                        alignItems={"center"}
+                                      >
+                                        <Flex direction={"row"} gap={"25px"} alignItems={"center"}>
+                                          <Flex
+                                            justifyContent={"space-between"}
+                                            alignItems="center"
+                                            backgroundColor={"blackAlpha.400"}
+                                            width={"300px"}
+                                            borderRadius={"20px"}
+                                            padding={"10px"}
+                                          >
+                                            <NumberInput
+                                              height={"50px"}
+                                              variant={"unstyled"}
+                                              fontFamily={"IBM Plex Mono, sans-serif"}
+                                              padding={"10px 10px"}
+                                              alignSelf={"center"}
+                                              value={buyValue}
+                                              onChange={handleChange}
+                                              defaultValue={0}
+                                              max={parseFloat(userBalance)}
+                                            >
+                                              <NumberInputField />
+                                            </NumberInput>
+                                            <Flex direction={"row"}>
+                                              {denominationAsset != "deno" && (
+                                                <Flex alignItems={"center"} gap={"5px"}>
+                                                  <Text
+                                                    fontSize={"1xl"}
+                                                    fontWeight={"bold"}
+                                                  >
+                                                    {sellSwapToken ? returnSymbolfromAddress(sellSwapToken) : ""}
+                                                  </Text>
+                                                  <Box
+                                                    style={{
+                                                      width: "50px",
+                                                      height: "50px",
+                                                      borderRadius: "10px",
+                                                      overflow: "hidden",
+                                                    }}
+                                                  >{sellSwapToken && <Image
+                                                    src={returnImagefromAddress(
+                                                      sellSwapToken
+                                                    )}
+                                                  />}
+
+                                                  </Box>
+                                                </Flex>
+                                              )}
+                                              <Flex
+                                                marginLeft={"30px"}
+                                                flexDir={"column"}
+                                              >
+                                                <Text
+                                                  color={"whiteAlpha.300"}
+                                                  fontSize={"sm"}
+                                                >
+                                                  Balance{" "}
+                                                </Text>
+                                                <Text
+                                                  color={"whiteAlpha.700"}
+                                                  fontSize={"sm"}
+                                                >
+                                                  {sellSwapTokenBalance.toPrecision(
+                                                    2
+                                                  )}
+                                                </Text>
+                                              </Flex>
+                                            </Flex>
+                                          </Flex>
+                                          <IconContext.Provider
+                                            value={{ color: 'white', size: '25px' }}
+                                          >
+                                            <div>
+                                              <AiOutlinePlus />
+                                            </div>
+                                          </IconContext.Provider>
+
+
+                                          <Flex
+                                            justifyContent={"space-between"}
+                                            alignItems="center"
+                                            backgroundColor={"blackAlpha.400"}
+                                            width={"300px"}
+                                            borderRadius={"20px"}
+                                            padding={"10px"}
+                                          >
+                                            <NumberInput
+                                              height={"50px"}
+                                              variant={"unstyled"}
+                                              fontFamily={"IBM Plex Mono, sans-serif"}
+                                              padding={"10px 10px"}
+                                              alignSelf={"center"}
+                                              value={buyValue}
+                                              onChange={handleChange}
+                                              defaultValue={0}
+                                              max={parseFloat(userBalance)}
+                                            >
+                                              <NumberInputField />
+                                            </NumberInput>
+                                            <Flex direction={"row"}>
+                                              {denominationAsset != "deno" && (
+                                                <Flex alignItems={"center"} gap={"5px"}>
+                                                  <Text
+                                                    fontSize={"1xl"}
+                                                    fontWeight={"bold"}
+                                                  >
+                                                    {sellSwapToken ? returnSymbolfromAddress(sellSwapToken) : ""}
+                                                  </Text>
+                                                  <Box
+                                                    style={{
+                                                      width: "50px",
+                                                      height: "50px",
+                                                      borderRadius: "10px",
+                                                      overflow: "hidden",
+                                                    }}
+                                                  >{sellSwapToken && <Image
+                                                    src={returnImagefromAddress(
+                                                      sellSwapToken
+                                                    )}
+                                                  />}
+
+                                                  </Box>
+                                                </Flex>
+                                              )}
+                                              <Flex
+                                                marginLeft={"30px"}
+                                                flexDir={"column"}
+                                              >
+                                                <Text
+                                                  color={"whiteAlpha.300"}
+                                                  fontSize={"sm"}
+                                                >
+                                                  Balance{" "}
+                                                </Text>
+                                                <Text
+                                                  color={"whiteAlpha.700"}
+                                                  fontSize={"sm"}
+                                                >
+                                                  {sellSwapTokenBalance.toPrecision(
+                                                    2
+                                                  )}
+                                                </Text>
+                                              </Flex>
+                                            </Flex>
+                                          </Flex>
+                                        </Flex>
+
+                                        <IconContext.Provider
+                                          value={{ color: '#f6643c', size: '50px' }}
+                                        >
+                                          <div>
+                                            <MdArrowCircleDown />
+                                          </div>
+                                        </IconContext.Provider>
+
+                                        <Flex direction={"row"} gap={"50px"} position={"relative"}>
+                                          <Box
+
+                                          >
+                                            <div className={styles.asset_container} style={{ position: "absolute", left: "-120px" }}>
+                                              {ARFLPTABADDRESS.filter(item => trackedAssetsAddress.includes(item)).map((item, index) => (
+                                                <Button
+                                                  key={index}
+                                                  type="button"
+                                                  backgroundColor={"#0f0b1f"}
+                                                  onClick={() => setBringLiquidtyToken(item)}
+                                                  className={`${styles.asset_button} ${bringLiquidtyToken == item
+                                                    ? styles.asset_selected
+                                                    : ""
+                                                    }`}
+                                                >
+                                                  <Image src={returnImagefromAddress(item)} />
+                                                  {bringLiquidtyToken == item && (
+                                                    <>
+                                                      <span className={styles.asset_selected_checkmark}>
+                                                        <Image
+                                                          src={"/checkmark-circle-outline.svg"}
+
+                                                          width="24px"
+                                                          height="24px"
+                                                        />
+                                                      </span>
+                                                    </>
+                                                  )}
+                                                </Button>
+                                              ))}
+                                            </div>
+                                          </Box>
+                                          <Flex
+                                            justifyContent={"space-between"}
+                                            alignItems="center"
+                                            backgroundColor={"blackAlpha.400"}
+                                            width={"450px"}
+                                            borderRadius={"20px"}
+                                            padding={"10px"}
+                                          >
+                                            <Text
+                                              height={"50px"}
+                                              variant={"unstyled"}
+                                              fontFamily={"IBM Plex Mono, sans-serif"}
+                                              padding={"10px 10px"}
+                                              alignSelf={"center"}
+                                              width={"100%"}
+                                            >
+                                              {buySwapTokenBalance}
+                                            </Text>
+
+                                            <Flex alignItems={"center"} gap={"5px"}>
+                                              <Text
+                                                fontSize={"1xl"}
+                                                fontWeight={"bold"}
+                                              >
+                                                {bringLiquidtyToken ? returnSymbolfromAddress(bringLiquidtyToken) : ""}
+                                              </Text>
+                                              {bringLiquidtyToken &&
+
+                                                <Box
+                                                  style={{
+                                                    width: "50px",
+                                                    height: "50px",
+                                                    borderRadius: "10px",
+                                                    overflow: "hidden",
+
+                                                  }}
+                                                >
+                                                  <Image
+                                                    src={returnImagefromAddress(bringLiquidtyToken)}
+                                                    style={{ objectFit: "cover" }}
+                                                  />
+                                                </Box>
+                                              }
+
+                                            </Flex>
+
+                                            <Flex
+                                              marginLeft={"30px"}
+                                              flexDir={"column"}
+                                            >
+                                              <Text
+                                                color={"whiteAlpha.300"}
+                                                fontSize={"sm"}
+                                              >
+                                                Balance{" "}
+                                              </Text>
+                                              <Text
+                                                color={"whiteAlpha.700"}
+                                                fontSize={"sm"}
+                                              >
+                                                {" "}
+                                                {bringLiquidityTokenFundBalance.toPrecision(2)}
+                                              </Text>
+                                            </Flex>
+
+                                          </Flex>
+                                        </Flex>
+                                        <Spacer />
+                                        <Spacer />
+
+
+
+                                        {buySwapToken && sellSwapToken ?
+
+                                          buySwapToken == sellSwapToken ?
+                                            <Text fontWeight={"bold"} color={"#f6643c"}> Swap {returnSymbolfromAddress(buySwapToken)} for {returnSymbolfromAddress(sellSwapToken)} is very smart ! </Text>
+
+                                            :
+
+                                            trackedAssetsAddress.includes(buySwapToken) ?
+                                              <Button
+                                                backgroundColor={"#f6643c"}
+                                                color={"white"}
+                                                onClick={() => handleMintShare()}
+                                                size="md"
+                                              >
+                                                {" "}
+                                                Mint
+                                              </Button>
+                                              :
+                                              <Text fontWeight={"bold"} color={"#f6643c"}>Incoming asset not tracked</Text>
+
+                                          :
+                                          <Text fontWeight={"bold"} color={"#f6643c"}>Select the assets you want to Swap </Text>
+                                        }
+
+                                      </Flex>
+                                    }
+                                  </> :
+                                  defiSelected == 3 &&
+                                  <>
+                                    {trackedAssetsAddress &&
+
+                                      <Flex
+                                        direction={"column"}
+                                        gap={"20px"}
+                                        alignItems={"center"}
+                                      >
+                                        <Flex direction={"row"} gap={"50px"} position={"relative"}>
+
+                                          <Box
+
+                                          >
+                                            <div className={styles.asset_container} style={{ position: "absolute", left: "-120px" }}>
+                                              {ARFLPTABADDRESS.filter(item => trackedAssetsAddress.includes(item)).map((item, index) => (
+                                                <Button
+                                                  key={index}
+                                                  type="button"
+                                                  backgroundColor={"#0f0b1f"}
+                                                  onClick={() => setSellSwapToken(item)}
+                                                  className={`${styles.asset_button} ${sellSwapToken == item
+                                                    ? styles.asset_selected
+                                                    : ""
+                                                    }`}
+                                                >
+                                                  <Image src={returnImagefromAddress(item)} />
+                                                  {sellSwapToken == item && (
+                                                    <>
+                                                      <span className={styles.asset_selected_checkmark}>
+                                                        <Image
+                                                          src={"/checkmark-circle-outline.svg"}
+
+                                                          width="24px"
+                                                          height="24px"
+                                                        />
+                                                      </span>
+                                                    </>
+                                                  )}
+                                                </Button>
+                                              ))}
+                                            </div>
+                                          </Box>
+                                          <Box width={"300px"} >
+                                            {ARFLPTABADDRESS.filter(item => trackedAssetsAddress.includes(item)) == [] ?
+
+
+                                              <Slider
+                                                flex="1"
+                                                focusThumbOnChange={false}
+                                                value={parseFloat(percentShare)}
+                                                onChange={handleChange2}
+                                                width={"80%"}
+                                                colorScheme="#f6643c"
+                                              >
+                                                <SliderTrack bg="red.100">
+                                                  <SliderFilledTrack bg="tomato" />
+                                                </SliderTrack>
+                                                <SliderThumb
+                                                  fontSize="md"
+                                                  boxSize="40px"
+                                                  children={percentShare + "%"}
+                                                  color={"#f6643c"}
+                                                />
+                                              </Slider>
+                                              :
+                                              <Text textAlign={"center"} fontWeight={"bold"}>
+                                                Start by Selecting the LP!
+                                              </Text>
+                                            }
+                                          </Box>
+
+
+
+                                        </Flex>
+                                        <IconContext.Provider
+                                          value={{ color: '#f6643c', size: '50px' }}
+                                        >
+                                          <div>
+                                            <MdArrowCircleDown />
+                                          </div>
+                                        </IconContext.Provider>
+
+                                        <Flex direction={"row"} gap={"25px"} alignItems={"center"}>
+                                          <Flex
+                                            justifyContent={"space-between"}
+                                            alignItems="center"
+                                            backgroundColor={"blackAlpha.400"}
+                                            width={"450px"}
+                                            borderRadius={"20px"}
+                                            padding={"10px"}
+                                          >
+                                            <Text
+                                              height={"50px"}
+                                              variant={"unstyled"}
+                                              fontFamily={"IBM Plex Mono, sans-serif"}
+                                              padding={"10px 10px"}
+                                              alignSelf={"center"}
+                                              width={"100%"}
+                                            >
+                                              {buySwapTokenBalance}
+                                            </Text>
+
+                                            <Flex alignItems={"center"} gap={"5px"}>
+                                              <Text
+                                                fontSize={"1xl"}
+                                                fontWeight={"bold"}
+                                              >
+                                                {buySwapToken ? returnSymbolfromAddress(buySwapToken) : ""}
+                                              </Text>
+                                              {buySwapToken &&
+
+                                                <Box
+                                                  style={{
+                                                    width: "50px",
+                                                    height: "50px",
+                                                    borderRadius: "10px",
+                                                    overflow: "hidden",
+
+                                                  }}
+                                                >
+                                                  <Image
+                                                    src={returnImagefromAddress(buySwapToken)}
+                                                    style={{ objectFit: "cover" }}
+                                                  />
+                                                </Box>
+                                              }
+
+                                            </Flex>
+
+                                            <Flex
+                                              marginLeft={"30px"}
+                                              flexDir={"column"}
+                                            >
+                                              <Text
+                                                color={"whiteAlpha.300"}
+                                                fontSize={"sm"}
+                                              >
+                                                Balance{" "}
+                                              </Text>
+                                              <Text
+                                                color={"whiteAlpha.700"}
+                                                fontSize={"sm"}
+                                              >
+                                                {" "}
+                                                {buySwapTokenFundBalance.toPrecision(2)}
+                                              </Text>
+                                            </Flex>
+
+                                          </Flex>
+                                          <IconContext.Provider
+                                            value={{ color: 'white', size: '25px' }}
+                                          >
+                                            <div>
+                                              <AiOutlinePlus />
+                                            </div>
+                                          </IconContext.Provider>
+
+                                          <Flex
+                                            justifyContent={"space-between"}
+                                            alignItems="center"
+                                            backgroundColor={"blackAlpha.400"}
+                                            width={"450px"}
+                                            borderRadius={"20px"}
+                                            padding={"10px"}
+                                          >
+                                            <Text
+                                              height={"50px"}
+                                              variant={"unstyled"}
+                                              fontFamily={"IBM Plex Mono, sans-serif"}
+                                              padding={"10px 10px"}
+                                              alignSelf={"center"}
+                                              width={"100%"}
+                                            >
+                                              {buySwapTokenBalance}
+                                            </Text>
+
+                                            <Flex alignItems={"center"} gap={"5px"}>
+                                              <Text
+                                                fontSize={"1xl"}
+                                                fontWeight={"bold"}
+                                              >
+                                                {buySwapToken ? returnSymbolfromAddress(buySwapToken) : ""}
+                                              </Text>
+                                              {buySwapToken &&
+
+                                                <Box
+                                                  style={{
+                                                    width: "50px",
+                                                    height: "50px",
+                                                    borderRadius: "10px",
+                                                    overflow: "hidden",
+
+                                                  }}
+                                                >
+                                                  <Image
+                                                    src={returnImagefromAddress(buySwapToken)}
+                                                    style={{ objectFit: "cover" }}
+                                                  />
+                                                </Box>
+                                              }
+
+                                            </Flex>
+
+                                            <Flex
+                                              marginLeft={"30px"}
+                                              flexDir={"column"}
+                                            >
+                                              <Text
+                                                color={"whiteAlpha.300"}
+                                                fontSize={"sm"}
+                                              >
+                                                Balance{" "}
+                                              </Text>
+                                              <Text
+                                                color={"whiteAlpha.700"}
+                                                fontSize={"sm"}
+                                              >
+                                                {" "}
+                                                {buySwapTokenFundBalance.toPrecision(2)}
+                                              </Text>
+                                            </Flex>
+
+                                          </Flex>
+                                        </Flex>
+                                        <Spacer />
+                                        <Spacer />
+
+
+
+                                        {buySwapToken && sellSwapToken ?
+
+                                          buySwapToken == sellSwapToken ?
+                                            <Text fontWeight={"bold"} color={"#f6643c"}> Swap {returnSymbolfromAddress(buySwapToken)} for {returnSymbolfromAddress(sellSwapToken)} is very smart ! </Text>
+
+                                            :
+
+                                            trackedAssetsAddress.includes(buySwapToken) ?
+                                              <Button
+                                                backgroundColor={"#f6643c"}
+                                                color={"white"}
+                                                onClick={() => handleMintShare()}
+                                                size="md"
+                                              >
+                                                {" "}
+                                                Mint
+                                              </Button>
+                                              :
+                                              <Text fontWeight={"bold"} color={"#f6643c"}>Incoming asset not tracked</Text>
+
+                                          :
+                                          <Text fontWeight={"bold"} color={"#f6643c"}>Select the assets you want to Swap </Text>
+                                        }
+
+                                      </Flex>
+                                    }
+                                  </>}
+
+                            </TabPanel>
                             <TabPanel>Fees</TabPanel>
-                            <TabPanel>Integration</TabPanel>
                             <TabPanel>Policies</TabPanel>
                           </TabPanels>
                         </Box>
@@ -3026,222 +3950,3 @@ const vault: NextPage = () => {
 };
 
 export default vault;
-
-{
-  /* <Tabs activeTab='2'>
-            <Tab label='Mint shares' id='1' >
-              <div className={` bg__dotted`} style={{ minHeight: "300px" }}>
-
-                <div className={`${styles.mint}`}>
-                  <div className='fs-14' style={{ fontWeight: "bold" }}>
-                    <div>
-                      {acccountAddress.substring(0, 7)}...
-                    </div>
-                    <div className='fs-14 '>
-                      &nbsp;&nbsp;&nbsp;{isAllowedDepositor ? "allowed depositor" : "not allowed to mint"}
-                    </div>
-                  </div>
-                </div>
-
-                <Flex direction={"column"} gap={"20px"} alignItems={"center"}>
-                  <Flex justifyContent={'space-between'} alignItems='center' backgroundColor={"blackAlpha.400"} width={'70%'}
-                    borderRadius={'20px'} padding={'10px'}>
-                    <NumberInput height={'50px'} variant={'unstyled'} fontFamily={'IBM Plex Mono, sans-serif'} padding={"10px 10px"}
-                      alignSelf={"center"} value={buyValue} onChange={handleChange} defaultValue={"0"}>
-                      <NumberInputField />
-                      <NumberInputStepper>
-                      </NumberInputStepper>
-                    </NumberInput>
-                    {denominationAsset != "deno" &&
-                      <Flex alignItems={"center"} >
-                        <Text fontSize={"1xl"} fontWeight={"bold"}>
-                          {denominationAsset}
-                        </Text>
-                        <div style={{ width: "30px" }}>
-                          <img src={`require(../../image/${denominationAsset}.png)`} />
-                        </div>
-                      </Flex>}
-                    <Flex flexDir={'column'}>
-                      <Text marginLeft={'30px'} color={"whiteAlpha.500"} fontSize={'sm'}>Balance : ~{parseFloat(userBalance).toPrecision(2)}</Text>
-                    </Flex>
-                  </Flex>
-                  <Flex justifyContent={'space-between'} alignItems='center' backgroundColor={"blackAlpha.400"} width={'70%'}
-                    borderRadius={'20px'} padding={'10px'} paddingRight={'30px'}>
-                    <Text height={'50px'} variant={'unstyled'} fontFamily={'IBM Plex Mono, sans-serif'} padding={"10px 10px"}
-                      alignSelf={"center"} width={"50%"}>
-                      {((parseFloat(buyValue) / parseFloat(sharePrice)) - ((parseFloat(buyValue) / parseFloat(sharePrice)) * parseFloat(entranceFee))) == NaN ? 0
-                        : ((parseFloat(buyValue) / parseFloat(sharePrice)) - ((parseFloat(buyValue) / parseFloat(sharePrice)) * parseFloat(entranceFee)))}
-                    </Text>
-                    {denominationAsset != "deno" &&
-                      <Flex alignItems={"center"} gap={"2px"}>
-                        <Text fontSize={"1xl"} fontWeight={"bold"}>
-                          {symbol}
-                        </Text>
-
-                        <FakeImage height='30px' width='30px' borderRadius='50%' fillColor='black' />
-
-                      </Flex>
-                    }
-                    <Flex flexDir={'column'}>
-                      <Text color={"whiteAlpha.500"} fontSize={'sm'}>  NFTs : ~{parseFloat(userShareBalance)}</Text>
-                    </Flex>
-                  </Flex>
-
-                  <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => handleMintShare()} size='md'> Mint</Button>
-
-                </Flex>
-
-
-              </div>
-            </Tab>
-            <Tab label='Sell Shares' id='2'>
-              {sellTokenId == "" ?
-                <div className={` bg__dotted`} style={{ minHeight: "300px" }}>
-                  <div className={`${styles.mint}`}>
-
-                    <div className='fs-14' style={{ fontWeight: "bold" }}>
-                      <div>
-                        {acccountAddress.substring(0, 7)}...
-                      </div>
-                      <div className='fs-14 '>
-                        &nbsp;&nbsp;&nbsp;{userShareBalance == "" ? "Fetching your shares" : userShareBalance == '0' ? "you don't have any shares" : "See below your shares"}
-                      </div>
-                    </div>
-                    {userShareInfo.length != 0 &&
-                      userShareInfo.map((p, index) => (
-                        <div>
-                          <div>
-                            tokenID : {p.tokenId}
-                          </div>
-                          <div>
-                            Share amount: {p.shareAmount}
-                          </div>
-                          <div>
-                            <Button backgroundColor={"#f6643c"} style={{ margin: '8px auto' }} onClick={() => setSellTokenId(p.tokenId)}>Sell</Button>
-                          </div>
-                        </div>
-                      ))
-                    }
-
-                  </div>
-                </div>
-
-                :
-                <div className={` bg__dotted`}>
-                  <div className={`${styles.mint}`}>
-
-                    <div className='fs-14' style={{ fontWeight: "bold" }}>
-                      <div>
-                        tokenID : {sellTokenId}
-                      </div>
-                    </div>
-                    <Text>You are allowed to sell this share</Text>
-                    <Text>Selling {(parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100)).toPrecision(5)} {symbol} Shares</Text>
-                    <Slider
-                      flex='1'
-                      focusThumbOnChange={false}
-                      value={parseFloat(percentShare)}
-                      onChange={handleChange2}
-                      width={"80%"}
-                      colorScheme='#f6643c'
-                    >
-                      <SliderTrack>
-                        <SliderFilledTrack />
-                      </SliderTrack>
-                      <SliderThumb fontSize='sm' boxSize='32px' children={parseFloat(percentShare)} />
-                    </Slider>
-                    <div>
-                      {percentShare == "0" ?
-                        <>
-                          ~ {userShareInfo[parseFloat(sellTokenId)].shareAmount} shares available
-                        </>
-                        :
-                        <>
-                          ~ {(((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) - ((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) * (((parseFloat(sharePrice) - parseFloat(userShareInfo[parseFloat(sellTokenId)].pricePurchased)) / (parseFloat(sharePrice))) * (parseFloat(performanceFee) / 100)))) - (((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) - ((parseFloat(userShareInfo[parseFloat(sellTokenId)].shareAmount) * (parseFloat(percentShare) / 100) * parseFloat(sharePrice)) * (((parseFloat(sharePrice) - parseFloat(userShareInfo[parseFloat(sellTokenId)].pricePurchased)) / (parseFloat(sharePrice))) * (parseFloat(performanceFee) / 100)))) * (parseFloat(exitFee) / 100))).toPrecision(2)} {denominationAsset} including Performance and exit fees
-                        </>
-                      }
-
-                    </div>
-                    <div>
-                      <div>
-                        Reedem funds with
-                      </div>
-                      {onChange == true ?
-                        <div>
-                          {trackedAssets.map((p, index) => (
-                            <div>
-                              <div>
-                                <button type="button" style={{ width: "50px" }} onClick={() => handleSelected(index)}>
-                                  {console.log(index)}
-                                  {returnImagefromSymbol(p.coinSymbol)}
-
-                                </button>
-                                {
-
-                                }
-                                {p.selected == true &&
-                                  <Flex direction={"row"}>
-                                    <NumberInput size='md' maxW={24} defaultValue={15} min={10} value={sellValue
-                                    } onChange={handleChange3}>
-                                      <NumberInputField />
-                                      <NumberInputStepper>
-                                        <NumberIncrementStepper />
-                                        <NumberDecrementStepper />
-                                      </NumberInputStepper>
-                                    </NumberInput>
-                                    <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => addPercent(p.coinSymbol, p.address, index)} > Set</Button>
-                                  </Flex>
-                                }
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        :
-                        <div>
-                          {trackedAssets.map((p, index) => (
-                            <div>
-                              <div>
-                                <button type="button" style={{ width: "50px" }} onClick={() => handleSelected(index)}>
-                                  {returnImagefromSymbol(p.coinSymbol)}
-                                </button>
-                                {p.selected == true &&
-                                  <Flex direction={"row"}>
-                                    <NumberInput size='md' maxW={24} defaultValue={100} min={1} value={sellValue
-                                    } onChange={handleChange3}>
-                                      <NumberInputField />
-                                      <NumberInputStepper>
-                                        <NumberIncrementStepper />
-                                        <NumberDecrementStepper />
-                                      </NumberInputStepper>
-                                    </NumberInput>
-                                    <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => addPercent(p.coinSymbol, p.address, index)}> Set</Button>
-                                  </Flex>
-                                }
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      }
-
-
-                    </div>
-                    <Flex>
-                      <Text>Sum must be 100% : </Text>
-                      {sellShareTab.map((p, index) => (
-                        <Text>
-                          {console.log(index)}
-                          {console.log(sellShareTab)}
-                          {p.percent}% {p.symbol} {index == sellShareTab.length - 1 ? "" : "+"}
-                        </Text>
-                      ))}
-                    </Flex>
-
-                    <Button backgroundColor={'#f6643c'} color={'white'} onClick={() => handleSellShare()} size='md'> Sell</Button>
-
-
-                  </div>
-                </div>
-              }
-            </Tab>
-          </Tabs> */
-}

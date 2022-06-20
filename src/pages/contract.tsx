@@ -1281,29 +1281,29 @@ const Contract: NextPage = () => {
                 <ModalOverlay />
                 <ModalContent backgroundColor={"#0f0b1f"}>
                   {txAcceptedTransac == 0 ?
-                    <ModalHeader>  Get Ready ⏳</ModalHeader>
+                    <ModalHeader color={"whiteAlpha.100"}>  Get Ready ⏳</ModalHeader>
                     :
-                    <ModalHeader> 🎉🎉✨✨✨🎉🎉</ModalHeader>
+                    <ModalHeader color={"whiteAlpha.100"}> 🎉🎉✨✨✨🎉🎉</ModalHeader>
 
                   }
                   <ModalCloseButton />
                   <ModalBody>
                     {txAcceptedTransac == 0 ?
                       <Flex direction={"column"}>
-                        <Text fontWeight={"2x1"}>Your transaction is about to be confirmed on L2</Text>
+                        <Text fontWeight={"2x1"} color={"whiteAlpha.100"}>Your transaction is about to be confirmed on L2</Text>
                         {/* <Link href={targetLink}>
                   <Button backgroundColor={"#f6643c"}>
                   Fund on Goerli
                   </Button>
                 </Link> */}
-                        <Text>
+                        <Text color={"whiteAlpha.100"}>
                           Fund Address : {deployedVaultAddress}
                         </Text>
                       </Flex>
                       :
                       <Flex direction={"column"}>
-                        <Text fontWeight={"2x1"}>Congrats, your fund has been Initalized, so Bullish 🙌</Text>
-                        <Text>
+                        <Text fontWeight={"2x1"} color={"whiteAlpha.100"}>Congrats, your fund has been Initalized, so Bullish 🙌</Text>
+                        <Text color={"whiteAlpha.100"}>
                           Fund Address : {deployedVaultAddress}
                         </Text>
                         <Link href={`/vault/${deployedVaultAddress}`}>
