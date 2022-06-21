@@ -302,9 +302,9 @@ const vault: NextPage = () => {
 
   useEffect(() => {
     if (bringLiquidtyToken) {
-      if(bringLiquidtyToken == "0x212040ea46c99455a30b62bfe9239f100271a198a0fdf0e86befc30e510e443"){
-        setTokenLP1()
-        setTokenLP1
+      if(bringLiquidtyToken == ETH_BTC_ad){
+        setTokenLP1(ETH_ad)
+        setTokenLP2(BTC_ad)
       }
     }
   }, [bringLiquidtyToken]);
@@ -3536,13 +3536,12 @@ const vault: NextPage = () => {
                                               <NumberInputField />
                                             </NumberInput>
                                             <Flex direction={"row"}>
-                                              {denominationAsset != "deno" && (
                                                 <Flex alignItems={"center"} gap={"5px"}>
                                                   <Text
                                                     fontSize={"1xl"}
                                                     fontWeight={"bold"}
                                                   >
-                                                    {sellSwapToken ? returnSymbolfromAddress(sellSwapToken) : ""}
+                                                    {TokenLP1 ? returnSymbolfromAddress(TokenLP1) : ""}
                                                   </Text>
                                                   <Box
                                                     style={{
@@ -3551,15 +3550,15 @@ const vault: NextPage = () => {
                                                       borderRadius: "10px",
                                                       overflow: "hidden",
                                                     }}
-                                                  >{sellSwapToken && <Image
+                                                  >{TokenLP1 && <Image
                                                     src={returnImagefromAddress(
-                                                      sellSwapToken
+                                                      TokenLP1
                                                     )}
                                                   />}
 
                                                   </Box>
                                                 </Flex>
-                                              )}
+                                              
                                               <Flex
                                                 marginLeft={"30px"}
                                                 flexDir={"column"}
@@ -3612,13 +3611,12 @@ const vault: NextPage = () => {
                                               <NumberInputField />
                                             </NumberInput>
                                             <Flex direction={"row"}>
-                                              {denominationAsset != "deno" && (
                                                 <Flex alignItems={"center"} gap={"5px"}>
                                                   <Text
                                                     fontSize={"1xl"}
                                                     fontWeight={"bold"}
                                                   >
-                                                    {sellSwapToken ? returnSymbolfromAddress(sellSwapToken) : ""}
+                                                    {TokenLP2 ? returnSymbolfromAddress(TokenLP2) : ""}
                                                   </Text>
                                                   <Box
                                                     style={{
@@ -3629,13 +3627,13 @@ const vault: NextPage = () => {
                                                     }}
                                                   >{sellSwapToken && <Image
                                                     src={returnImagefromAddress(
-                                                      sellSwapToken
+                                                      TokenLP2
                                                     )}
                                                   />}
 
                                                   </Box>
                                                 </Flex>
-                                              )}
+                                              
                                               <Flex
                                                 marginLeft={"30px"}
                                                 flexDir={"column"}
