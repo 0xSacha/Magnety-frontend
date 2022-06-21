@@ -98,12 +98,9 @@ const databaseInfo = {
 };
 
 type PortfolioData = {
-  coinName: string;
-  coinSymbol: string;
   balance: string;
   value: string;
   allocation: string;
-  selected: boolean;
   address: string;
 }[];
 
@@ -149,14 +146,11 @@ const vault: NextPage = () => {
   useEffect(() => {
     if (vad !== undefined && typeof vad == "string") {
       setVaultAddess(vad);
-      console.log("fff");
-      console.log(vaultAddress);
       loadData();
     }
   }, [vad]);
 
   const loadData = async () => {
-    console.log("loading db Fund Data");
     const res = await fetch(
       "http://localhost:3000/api/contract/" + String(vad)
     );
@@ -175,9 +169,7 @@ const vault: NextPage = () => {
       "http://localhost:3000/api/user/" + `${assetManager_}`
     );
     if (res.status == 200) {
-      console.log(res);
       const { data } = await res.json();
-      console.log(data);
       setAssetManagerImage(data.profilePic);
       setAssetManagerName(data.name);
     } else {
@@ -255,11 +247,16 @@ const vault: NextPage = () => {
 
   const [defiSelected, setDefiSelected] = React.useState<number>(1);
 
+  const [sellSwapTokenInput, setSellSwapTokenInput] = React.useState<number>(0);
+  const [buySwapTokenRate, setBuySwapTokenRate] = React.useState<number>(0);
 
   const [sellSwapTokenBalance, setSellSwapTokenBalance] = React.useState<number>(0);
   const [buySwapTokenBalance, setBuySwapTokenBalance] = React.useState<number>(0);
   const [buySwapTokenFundBalance, setBuySwapTokenFundBalance] = React.useState<number>(0);
   const [bringLiquidityTokenFundBalance, setBringLiquidityTokenFundBalance] = React.useState<number>(0);
+
+  const [TokenLP1, setTokenLP1] = React.useState<string>();
+  const [TokenLP2, setTokenLP2] = React.useState<string>();
 
 
 
@@ -304,6 +301,27 @@ const vault: NextPage = () => {
   }, [sellSwapToken]);
 
   useEffect(() => {
+    if (bringLiquidtyToken) {
+      if(bringLiquidtyToken == "0x212040ea46c99455a30b62bfe9239f100271a198a0fdf0e86befc30e510e443"){
+        setTokenLP1()
+        setTokenLP1
+      }
+    }
+  }, [bringLiquidtyToken]);
+
+
+  // const ETH_ad = "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+  // const BTC_ad = "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7"
+  // const ZKP_ad = "0x7a6dde277913b4e30163974bf3d8ed263abb7c7700a18524f5edf38a13d39ec"
+  // const TST_ad = "0x7394cbe418daa16e42b87ba67372d4ab4a5df0b05c6e554d158458ce245bc10"
+
+  // // LP
+  // const Eth_ZKP_ad = "0x68f02f0573d85b5d54942eea4c1bf97c38ca0e3e34fe3c974d1a3feef6c33be"
+  // const ETH_TST_ad = "0x212040ea46c99455a30b62bfe9239f100271a198a0fdf0e86befc30e510e443"
+  // const ETH_BTC_ad = "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945"
+  // const BTC_TST_ad = "0x6d0845eb49bcbef8c91f9717623b56331cc4205a5113bddef98ec40f050edc8"
+
+  useEffect(() => {
     if (buySwapToken) {
       const res1 = provider.callContract({
         contractAddress: buySwapToken,
@@ -326,14 +344,14 @@ const vault: NextPage = () => {
     if (sellSwapToken && buySwapToken) {
       const res1 = provider.callContract({
         contractAddress: contractAddress.ValueInterpreter,
-        entrypoint: "balanceOf",
-        calldata: [hexToDecimalString(sellSwapToken), (sellSwapTokenBalance * 1000000000000000000).toString(), hexToDecimalString(buySwapToken)],
+        entrypoint: "calculAssetValue",
+        calldata: [hexToDecimalString(sellSwapToken), "1000000000000000000", "0", hexToDecimalString(buySwapToken)],
       });
       res1
         .then((value) => {
-          const fundBalance__ = hexToDecimalString(value.result[0]);
-          const fundBalance_ = parseFloat(fundBalance__) / 1000000000000000000;
-          setBuySwapTokenBalance(fundBalance_)
+          const newPrice = hexToDecimalString(value.result[0]);
+          const newPrice__ = 1000000000000000000 / parseFloat(newPrice);
+          setBuySwapTokenRate(newPrice__)
         })
         .catch((err) => {
           console.log(err);
@@ -360,9 +378,7 @@ const vault: NextPage = () => {
 
     setSellShareDataTab((state) => {
       const elem = { percent: percent_, address: address_, symbol: symbol_ }
-      console.log(elem)
       const index = state.findIndex((x) => x.address == address_);
-      console.log(index)
       state =
         index === -1
           ? [...state, elem]
@@ -384,6 +400,9 @@ const vault: NextPage = () => {
 
     setOnChange(!onChange);
   };
+
+  const handleChangeSell = (value) => setSellSwapTokenInput(value);
+
 
   const handleChange = (value) => setBuyValue(value);
   const handleChange2 = (value) => setPercentShare(value);
@@ -518,6 +537,73 @@ const vault: NextPage = () => {
                     "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945"
                   ) {
                     return "ethbtc";
+                  } else {
+                    if (
+                      address ==
+                      "0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a"
+                    ) {
+                      return "alphaRoad";
+                    } else {
+                      return "ethtst";
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  function returnNamefromAddress(address: string) {
+    if (
+      address ==
+      "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
+    ) {
+      return "Ethererum";
+    } else {
+      if (
+        address ==
+        "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7"
+      ) {
+        return "Alpha Road Bitcoin";
+      } else {
+        if (
+          address ==
+          "0x7a6dde277913b4e30163974bf3d8ed263abb7c7700a18524f5edf38a13d39ec"
+        ) {
+          return "Astraly";
+        } else {
+          if (
+            address ==
+            "0x7394cbe418daa16e42b87ba67372d4ab4a5df0b05c6e554d158458ce245bc10"
+          ) {
+            return "Test Token";
+          } else {
+            if (
+              address ==
+              "0x68f02f0573d85b5d54942eea4c1bf97c38ca0e3e34fe3c974d1a3feef6c33be"
+            ) {
+              return "Ether-Astraly LP";
+            } else {
+              if (
+                address ==
+                "0x6d0845eb49bcbef8c91f9717623b56331cc4205a5113bddef98ec40f050edc8"
+              ) {
+                return "Bitcoin-TestToken LP";
+              } else {
+                if (
+                  address ==
+                  "0x212040ea46c99455a30b62bfe9239f100271a198a0fdf0e86befc30e510e443"
+                ) {
+                  return "Ethereum-TestToken LP";
+                } else {
+                  if (
+                    address ==
+                    "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945"
+                  ) {
+                    return "Ethereum-Bitcoin LP";
                   } else {
                     if (
                       address ==
@@ -760,7 +846,6 @@ const vault: NextPage = () => {
       res13
         .then((value) => {
           const _isPublic = hexToDecimalString(value.result[0]);
-          console.log(_isPublic);
           setIsPublic(_isPublic);
         })
         .catch((err) => {
@@ -817,7 +902,6 @@ const vault: NextPage = () => {
           });
           res17
             .then((value) => {
-              console.log("integrationnn");
               let tabIntegration = value.result;
               let tabIntegrationFinal: string[][] = [];
               let firstIndex =
@@ -838,7 +922,6 @@ const vault: NextPage = () => {
                 shortTab.push(element2);
                 tabIntegrationFinal.push(shortTab);
               }
-              console.log(tabIntegrationFinal);
               setAllowedIntegration(tabIntegrationFinal);
             })
             .catch((err) => {
@@ -849,19 +932,36 @@ const vault: NextPage = () => {
           console.log(err);
         });
 
-      // const res17 = provider.callContract({
-      //   contractAddress: policyManager,
-      //   entrypoint: "getAllowedTrackedAsset",
-      //   calldata: [hexToDecimalString(vaultAddress)],
-      // });
-      // res17
-      //   .then((value) => {
-      //     const tab__ = value.result[0];
-      //     setTimeLock(_timeLock);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+        const res18 = provider.callContract({
+          contractAddress: vaultAddress,
+          entrypoint: "getTrackedAssets",
+          calldata: [],
+        });
+        res18
+          .then((value) => {
+            let tab__ = value.result;
+            let size_ = tab__.shift();
+            let tab_ = tab__;
+            let TABBBE:PortfolioData = [];
+            setTrackedAssetsAddress(tab_)
+            for (let index = 0; index < tab_.length; index++) {
+              TABBBE.push({
+                balance: "",
+                value: "",
+                allocation: "",
+                address: tab_[index],
+              })}
+            setTrackedAssets(TABBBE)
+            console.log(TABBBE)
+            
+            setTrackedAssetsLen(TABBBE.length);
+            }
+            )
+            .catch((err) => {
+              console.log(err);
+            });
+
+     
     }
   }, [vaultAddress]);
 
@@ -875,11 +975,8 @@ const vault: NextPage = () => {
   };
 
   useEffect(() => {
-    console.log("useEffectAddress");
     const { account } = getStarknet();
     setAccountInterface(account);
-    console.log("accountInteface set");
-    console.log(accountInterface);
     if (account.address != "" && denominationAssetAddress != "deno") {
       setAcccountAddress(account.address);
       const res1 = provider.callContract({
@@ -936,8 +1033,6 @@ const vault: NextPage = () => {
       res3
         .then((value) => {
           const userShareBalance__ = hexToDecimalString(value.result[0]);
-          console.log("usersharebalance");
-          console.log(userShareBalance__);
           setUserShareBalance(userShareBalance__);
           for (let pas = 0; pas < parseFloat(userShareBalance__); pas++) {
             const res4 = provider.callContract({
@@ -952,8 +1047,6 @@ const vault: NextPage = () => {
             res4
               .then((value) => {
                 const tokenId = hexToDecimalString(value.result[0]);
-                console.log("tokenId");
-                console.log(tokenId);
                 const res5 = provider.callContract({
                   contractAddress: vaultAddress,
                   entrypoint: "sharesBalance",
@@ -962,8 +1055,6 @@ const vault: NextPage = () => {
                 res5
                   .then((value) => {
                     const sharesBalance = hexToDecimalString(value.result[0]);
-                    console.log("share balance");
-                    console.log(sharesBalance);
 
                     const res6 = provider.callContract({
                       contractAddress: vaultAddress,
@@ -986,7 +1077,6 @@ const vault: NextPage = () => {
                           shareAmount: sharesBalance,
                           pricePurchased: sharePricePurchased,
                         });
-                        console.log(userShareInfo__);
                         setUserShareInfo(userShareInfo__);
                       })
                       .catch((err) => {
@@ -1019,8 +1109,6 @@ const vault: NextPage = () => {
       res3
         .then((value) => {
           const userShareBalance__ = hexToDecimalString(value.result[0]);
-          console.log("assetManagersharebalance");
-          console.log(userShareBalance__);
           for (let pas = 0; pas < parseFloat(userShareBalance__); pas++) {
             const res4 = provider.callContract({
               contractAddress: vaultAddress,
@@ -1030,8 +1118,6 @@ const vault: NextPage = () => {
             res4
               .then((value) => {
                 const tokenId = hexToDecimalString(value.result[0]);
-                console.log("tokenId AssetManager");
-                console.log(tokenId);
                 const res5 = provider.callContract({
                   contractAddress: vaultAddress,
                   entrypoint: "sharesBalance",
@@ -1040,12 +1126,7 @@ const vault: NextPage = () => {
                 res5
                   .then((value) => {
                     const sharesBalance = hexToDecimalString(value.result[0]);
-                    console.log("share balance Asset Manager");
-                    console.log(sharesBalance);
-                    console.log(parseFloat(sharesBalance));
                     shareAmount = shareAmount + parseFloat(sharesBalance);
-                    console.log("totalshareAmountFromAssetManager");
-                    console.log(shareAmount);
                     setAssetManagerShareAmount(shareAmount);
                   })
                   .catch((err) => {
@@ -1065,42 +1146,10 @@ const vault: NextPage = () => {
   }, [assetManager, gav]);
 
   useEffect(() => {
-    if (denominationAssetAddress != "deno" && gav != "0") {
-      const res9 = provider.callContract({
-        contractAddress: vaultAddress,
-        entrypoint: "getTrackedAssets",
-        calldata: [],
-      });
-      res9
-        .then((value) => {
-          let tab__ = value.result;
-          let size_ = tab__.shift();
-          let tab_ = tab__;
-          setTrackedAssetsAddress(tab_)
+    if (denominationAssetAddress != "deno" && gav != "0" && trackedAssetsAddress?.length == trackedAssets.length) {
+          let tab_ = trackedAssets;
           for (let pas = 0; pas < tab_.length; pas++) {
-            let address_ = tab_[pas];
-            const name = provider.callContract({
-              contractAddress: address_,
-              entrypoint: "name",
-              calldata: [],
-            });
-            name
-              .then((value) => {
-                const coinName_ = shortStringFeltToStr(
-                  BigInt(hexToDecimalString(value.result[0]))
-                );
-
-                const symbol = provider.callContract({
-                  contractAddress: address_,
-                  entrypoint: "symbol",
-                  calldata: [],
-                });
-                symbol
-                  .then((value) => {
-                    const coinSymbol_ = shortStringFeltToStr(
-                      BigInt(hexToDecimalString(value.result[0]))
-                    );
-
+            let address_ = tab_[pas].address;        
                     const balance = provider.callContract({
                       contractAddress: address_,
                       entrypoint: "balanceOf",
@@ -1134,25 +1183,15 @@ const vault: NextPage = () => {
                             const coinPrice_ = _coinPrice.toString();
 
                             let coinAllocation_ = (
-                              (parseFloat(gav) / parseFloat(coinPrice_)) *
+                              (parseFloat(coinPrice_) / parseFloat(gav)) *
                               100
-                            ).toString();
+                            ).toPrecision(3).toString();
                             coinAllocation_ = coinAllocation_.concat("%");
 
-                            let portfolioData2: PortfolioData = trackedAssets;
-                            portfolioData2.push({
-                              coinName: coinName_,
-                              coinSymbol: coinSymbol_,
-                              balance: coinBalance_,
-                              value: coinPrice_,
-                              allocation: coinAllocation_,
-                              selected: false,
-                              address: address_,
-                            });
-                            console.log(portfolioData2);
-                            setTrackedAssets(portfolioData2);
-                            let TrackedAssetLen_ = trackedAssetsLen + 1;
-                            setTrackedAssetsLen(TrackedAssetLen_);
+                            tab_[pas].balance = coinBalance_
+                            tab_[pas].value = coinPrice_
+                            tab_[pas].allocation = coinAllocation_
+                            setTrackedAssets(tab_);
                           })
                           .catch((err) => {
                             console.log(err);
@@ -1161,21 +1200,12 @@ const vault: NextPage = () => {
                       .catch((err) => {
                         console.log(err);
                       });
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+                  
+
           }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+
     }
-  }, [denominationAssetAddress, gav]);
+  }, [denominationAssetAddress, gav, trackedAssetsAddress]);
 
   const depositorsData = [
     {
@@ -1399,6 +1429,57 @@ const vault: NextPage = () => {
     }
   };
 
+  const handleSwap = () => {
+    const newAmount = sellSwapTokenInput * 1000000000000000000;
+
+    let TabApprove: any[] = [];
+    TabApprove.push(hexToDecimalString(vaultAddress));
+    TabApprove.push(hexToDecimalString(sellSwapToken));
+    TabApprove.push("949021990203918389843157787496164629863144228991510976554585288817234167820");
+    TabApprove.push("3")
+    TabApprove.push("0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a")
+    TabApprove.push(newAmount.toString())
+    TabApprove.push("0")
+
+
+    let Tab: any[] = [];
+    Tab.push(hexToDecimalString(vaultAddress));
+    Tab.push(hexToDecimalString("0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a"));
+    Tab.push(hexToDecimalString("0x2c0f7bf2d6cf5304c29171bf493feb222fef84bdaf17805a6574b0c2e8bcc87"));
+    Tab.push("6")
+    Tab.push(hexToDecimalString(sellSwapToken));
+    Tab.push(hexToDecimalString(buySwapToken));
+    Tab.push(newAmount.toString());
+    Tab.push("0");
+    Tab.push("0");
+    Tab.push("0");
+
+    if (!accountInterface.address) {
+      console.log("no account detected");
+    } else {
+      console.log("connected");
+      multicallSwap(TabApprove, Tab);
+    }
+  };
+
+  const multicallSwap = async ( _tabApprove: any[], _tab: any[]) => {
+    console.log("invoke");
+    let tx1 = await accountInterface.execute([
+      {
+        contractAddress: comptroller,
+        entrypoint: "executeCall",
+        calldata: _tabApprove,
+      },
+      {
+        contractAddress: comptroller,
+        entrypoint: "executeCall",
+        calldata: _tab,
+      },
+    ]);
+    console.log(tx1);
+    // return (tx1)
+  };
+
   const handleTrack = (_address: string) => {
     let Tab: string[] = [];
     Tab.push(hexToDecimalString(vaultAddress));
@@ -1427,8 +1508,7 @@ const vault: NextPage = () => {
 
   const handleSellShare = () => {
     let Tab: string[] = [];
-    console.log(sellShareDataTab
-    )
+
     Tab.push(hexToDecimalString(vaultAddress));
     Tab.push(sellTokenId);
     Tab.push("0");
@@ -1455,7 +1535,6 @@ const vault: NextPage = () => {
     // sellShareTab.forEach((element) => {
     //   Tab.push(hexToDecimalString(element.percent));
     // });
-    console.log(Tab);
 
     if (!accountInterface.address) {
       console.log("no account detected");
@@ -1767,7 +1846,6 @@ const vault: NextPage = () => {
                           fontSize={"0.8rem"}
                           style={{ fontWeight: "bold" }}
                         >
-                          {console.log(shareSupply)}
                           {assetManagerShareAmount
                             ? (assetManagerShareAmount / (parseFloat(shareSupply))
                             ) *
@@ -1870,7 +1948,7 @@ const vault: NextPage = () => {
                           <Tab fontSize={"1xl"} fontWeight={"bold"}>
                             Policies
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          {/* <Tab fontSize={"1xl"} fontWeight={"bold"}>
                             Financial
                           </Tab>
                           <Tab fontSize={"1xl"} fontWeight={"bold"}>
@@ -1881,7 +1959,7 @@ const vault: NextPage = () => {
                           </Tab>
                           <Tab fontSize={"1xl"} fontWeight={"bold"}>
                             Social
-                          </Tab>
+                          </Tab> */}
                         </Flex>
                       </TabList>
                       <Box
@@ -2249,7 +2327,7 @@ const vault: NextPage = () => {
                           <TabPanel>
                             <Flex direction={"column"} gap={"2vw"}>
                               <div>
-                                {trackedAssetsLen > 0 ? (
+                                {trackedAssetsLen != 0  ? (
                                   <div
                                     className={`${styles.portfolioTable} bg__dotted`}
                                   >
@@ -2284,18 +2362,19 @@ const vault: NextPage = () => {
                                               </Box>
 
                                               <div>
-                                                <span> {p.coinName} </span>
-                                                <span> {p.coinSymbol} </span>
+                                                <span> {
+                                                returnNamefromAddress(p.address)} </span>
+                                                <span> {returnSymbolfromAddress(p.address)} </span>
                                               </div>
                                             </td>
                                             <td>
                                               {" "}
-                                              {p.balance} {p.coinSymbol}
+                                              {p.balance == "" ? "⌛⏳" : p.balance} {returnSymbolfromAddress(p.address)}
                                             </td>
                                             <td>
-                                              {p.value} {denominationAsset}
+                                            {p.value == "" ? "⌛⏳" : p.value} {denominationAsset}
                                             </td>
-                                            <td>{p.allocation}</td>
+                                            <td>{p.allocation == "" ? "⌛⏳" : p.allocation}</td>
                                           </tr>
                                         ))}
                                       </tbody>
@@ -3221,7 +3300,7 @@ const vault: NextPage = () => {
                                         <Flex
                                           justifyContent={"space-between"}
                                           alignItems="center"
-                                          backgroundColor={"blackAlpha.400"}
+                                          backgroundColor={"#04062f"}
                                           width={"450px"}
                                           borderRadius={"20px"}
                                           padding={"10px"}
@@ -3232,10 +3311,9 @@ const vault: NextPage = () => {
                                             fontFamily={"IBM Plex Mono, sans-serif"}
                                             padding={"10px 10px"}
                                             alignSelf={"center"}
-                                            value={buyValue}
-                                            onChange={handleChange}
-                                            defaultValue={0}
-                                            max={parseFloat(userBalance)}
+                                            value={sellSwapTokenInput}
+                                            onChange={handleChangeSell}
+                                            max={sellSwapTokenBalance}
                                           >
                                             <NumberInputField />
                                           </NumberInput>
@@ -3330,7 +3408,7 @@ const vault: NextPage = () => {
                                         <Flex
                                           justifyContent={"space-between"}
                                           alignItems="center"
-                                          backgroundColor={"blackAlpha.400"}
+                                          backgroundColor={"#04062f"}
                                           width={"450px"}
                                           borderRadius={"20px"}
                                           padding={"10px"}
@@ -3343,7 +3421,7 @@ const vault: NextPage = () => {
                                             alignSelf={"center"}
                                             width={"100%"}
                                           >
-                                            {buySwapTokenBalance}
+                                            { buySwapTokenRate != 0 ? sellSwapTokenInput / buySwapTokenRate : 0 }
                                           </Text>
 
                                           <Flex alignItems={"center"} gap={"5px"}>
@@ -3410,11 +3488,11 @@ const vault: NextPage = () => {
                                             <Button
                                               backgroundColor={"#f6643c"}
                                               color={"white"}
-                                              onClick={() => handleMintShare()}
+                                              onClick={() => handleSwap()}
                                               size="md"
                                             >
                                               {" "}
-                                              Mint
+                                              Swap
                                             </Button>
                                             :
                                             <Text fontWeight={"bold"} color={"#f6643c"}>Incoming asset not tracked</Text>
@@ -3991,11 +4069,12 @@ const vault: NextPage = () => {
                                 <Text fontWeight={"bold"} fontSize={"2xl"} textAlign={"center"}>Track and Remove assets to manage your {name} Holdings</Text>
                                 {
                                   allowedTrackedAsset && trackedAssetsAddress ?
-                                    <Flex direction={"column"} gap={"25px"} justifyContent={"center"} width={"100%"}>
+                                    <Flex direction={"row"} gap={"25px"} justifyContent={"center"} width={"100%"} alignItems={"baseline"}>
+                                      <Flex direction={"column"} gap={"25px"} justifyContent={"center"} alignItems={"center"} width={"40%"}>
                                       <Text fontSize={"2xl"} textAlign={"center"}>Assets not tracked yet</Text>
-                                      <Flex direction={"column"} gap={"5px"} justifyContent={"center"} width={"30%"} alignSelf={"center"}>
+                                      <Flex direction={"column"} gap={"5px"} justifyContent={"center"} alignSelf={"center"} width={"100%"}>
                                         {allowedTrackedAsset.filter(item => !trackedAssetsAddress.includes(item)).map((item, index) => (
-                                          <Flex direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
+                                          <Flex direction={"row"} justifyContent={"space-between"} alignItems={"center"}  width={"100%"}>
                                             <Flex direction={"row"} gap={"4px"} alignItems={"center"}>
                                               <Box
                                                 style={{
@@ -4018,12 +4097,13 @@ const vault: NextPage = () => {
                                           </Flex>
                                         ))}
                                       </Flex>
-
+                                      </Flex>
+                                      <Flex direction={"column"} gap={"25px"} justifyContent={"center"} alignItems={"center"} width={"40%"}>
                                       <Text fontSize={"2xl"} textAlign={"center"}>Tracked Assets</Text>
 
-                                      <Flex direction={"column"} gap={"5px"} justifyContent={"center"} width={"30%"} alignSelf={"center"}>
+                                      <Flex direction={"column"} gap={"5px"} justifyContent={"center"}  alignSelf={"center"} width={"100%"}>
                                         {allowedTrackedAsset.filter(item => trackedAssetsAddress.includes(item)).map((item, index) => (
-                                          <Flex direction={"row"} justifyContent={"space-between"}>
+                                          <Flex direction={"row"} justifyContent={"space-between"} width={"100%"}>
                                             <Flex direction={"row"} gap={"8px"}>
                                               <Box
                                                 style={{
@@ -4042,9 +4122,10 @@ const vault: NextPage = () => {
                                               <Text fontWeight={"bold"} fontSize={"2xl"}>{returnSymbolfromAddress(item)}</Text>
 
                                             </Flex>
-                                            <Button onClick={() => handleUntrack(item)} type="undefined" backgroundColor={"#f6643c"}> Untrack </Button>
+                                            <Button padding={"1vh"} onClick={() => handleUntrack(item)} type="undefined" backgroundColor={"#f6643c"}> Untrack </Button>
                                           </Flex>
                                         ))}
+                                      </Flex>
                                       </Flex>
                                     </Flex>
                                     :

@@ -72,20 +72,12 @@ import ethzkp from "../image/ETH-ZKP.png";
 import btctst from "../image/BTC-TST.png";
 import ethtst from "../image/ETH-TST.png";
 import ethbtc from "../image/ETH-BTC.png";
-import { compileString } from "sass";
 import { useRouter } from "next/router";
-import { withCoalescedInvoke } from "next/dist/lib/coalesced-function";
-import { toDataUrl } from "~/utils/fileHelper";
 import ImageUpload from "~/components/FileUpload";
-import postContract from "~/utils/postContract";
-import { setValues } from "framer-motion/types/render/utils/setters";
 
 function RemoveAtIndex(array: any[], index: number) {
   return [...array.slice(0, index), ...array.slice(index + 1)];
 }
-
-const comptroller =
-  "0x04432fc00432c1025c8b03775fc64180948d5a2725cc50882f4dec0b526459f5";
 
 const Create: NextPage = () => {
   const [formData, setFormData] = React.useState<any>({});
@@ -126,9 +118,6 @@ const Create: NextPage = () => {
     }
   };
   const [deploying, setDeploying] = useState(false);
-
-  // const { contract: comptroller } = useComptrollerContract()
-  // const { invoked } = useStarknetInvoke({ contract: comptroller, method: 'activateVault' })
 
   function addNewAsset(id: number) {
     setTrackedAsset((state) => {
@@ -226,73 +215,6 @@ const Create: NextPage = () => {
     }
   };
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    let tab: any[] = [];
-    tab.push(hexToDecimalString(deployedVaultAddress));
-    tab.push(strToShortStringFelt(formData.name).toString());
-    tab.push(strToShortStringFelt(formData.symbol).toString());
-    tab.push(hexToDecimalString(Asset[denominationAsset].address));
-    tab.push(formData.maximum_position.toString());
-    tab.push("0");
-    tab.push("4");
-    tab.push(formData.entrance_fees ?? "0");
-    tab.push(formData.exit_fees ?? "0");
-    tab.push(formData.yearly_management_fees ?? "0");
-    tab.push(formData.performance_fees ?? "0");
-
-    tab.push(trackedAsset.length.toString());
-    trackedAsset.forEach((track) => {
-      tab.push(hexToDecimalString(Asset[track].address));
-    });
-
-    tab.push(allowedProtocol.length.toString());
-    allowedProtocol.forEach((value) => {
-      let integrationArgs = Integration[value].integration;
-      tab.push(integrationArgs[0]);
-      tab.push(integrationArgs[1]);
-      tab.push("0");
-    });
-
-    var min = parseFloat(formData.minimum);
-    min = min * 1000000000000000000;
-    tab.push(min.toString());
-    tab.push("0");
-
-    var max = parseFloat(formData.maximum);
-    max = max * 1000000000000000000;
-    tab.push(max.toString());
-    tab.push("0");
-
-    tab.push(formData.harvest_lockup_time ?? "0");
-
-    tab.push(`${+formData.fund_type}`); // selected => 1 else 0
-
-
-    const _tabA: Array<string> = [];
-
-    _tabA.push(hexToDecimalString(comptroller));
-
-    const _tabB: Array<string> = [];
-    _tabB.push(hexToDecimalString(deployedVaultAddress));
-    _tabB.push(hexToDecimalString(Asset[denominationAsset].address));
-    var amountToInvest = parseFloat(formData.amount_to_invest);
-    amountToInvest = amountToInvest * 1000000000000000000;
-    _tabA.push(amountToInvest.toString());
-    _tabA.push("0");
-
-    _tabB.push(amountToInvest.toString());
-    _tabB.push("0");
-
-
-    if (!account.address) {
-      console.log("no account detected");
-    } else {
-      console.log("connected");
-      // multicall(tab, _tabA, _tabB);
-    }
-
-    e.preventDefault();
-  };
 
 
 
@@ -385,6 +307,12 @@ const Create: NextPage = () => {
   const dominationAssetsList = [
     { value: 1, path: btc, alt: "btc" },
     { value: 0, path: eth, alt: "eth" },
+    { value: 2, path: zkp, alt: "zkp" },
+    { value: 3, path: tst, alt: "tst" },
+    { value: 4, path: ethzkp, alt: "ethzkp" },
+    { value: 5, path: btctst, alt: "btctst" },
+    { value: 6, path: ethtst, alt: "ethtst" },
+    { value: 7, path: ethbtc, alt: "ethbtc" },
   ];
   const assetsList = [
     { value: 0, path: btc, alt: "btc" },

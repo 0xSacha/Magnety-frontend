@@ -33,7 +33,7 @@ import ethtst from "../image/ETH-TST.png";
 import ethbtc from "../image/ETH-BTC.png";
 import { Asset } from "~/registry/tokenSupported";
 
-const AssetTab = [btc, eth, zkp, tst, alphaRoad, ethzkp, btctst, ethtst, ethbtc]
+const AssetTab = [btc, eth, zkp, tst, ethzkp, btctst, ethtst, ethbtc]
 const ProtocolTab = [alphaRoad]
 
 const Home: NextPage = () => {
@@ -43,16 +43,17 @@ const Home: NextPage = () => {
       <Flex
         direction={"row"}
         flexWrap={"wrap"}
-        width={"90%"}
+        width={"100%"}
         justifyContent={"space-evenly"}
+        alignItems={"center"}
 
       >
         <Flex direction={"column"} gap={"8vh"} width={"45%"}>
           <Flex flexWrap={"wrap"} gap={"12px"}>
-            <Text fontWeight={"bold"} fontSize={"35px"}>Discover and Monetize </Text><Text color={"#f6643c"} fontWeight={"bold"} fontSize={"35px"}>Extraordinary</Text> <Text fontWeight={"bold"} fontSize={"35px"}>DeFi strategies</Text>
+            <Text fontWeight={"bold"} fontSize={"3rem"}>Discover / Monetize </Text><Text color={"#f6643c"} fontWeight={"bold"} fontSize={"3rem"}>Extraordinary</Text> <Text fontWeight={"bold"} fontSize={"3rem"}>DeFi strategies</Text>
           </Flex>
           <Flex direction={"row"} gap={"8vh"} alignItems={"center"}>
-            <Flex gap={"1vh"} direction={"column"} width={"35%"} alignItems={"justify"}>
+            <Flex gap={"1vh"} direction={"column"} width={"40%"} alignItems={"justify"}>
               <Text fontSize={"25px"} fontWeight={"semibold"}>
                 Too Busy?<br></br>
               </Text>
@@ -68,7 +69,7 @@ const Home: NextPage = () => {
                 </Link>
               </Button>
             </Flex>
-            <Flex gap={"1vh"} direction={"column"} width={"35%"} alignItems={"justify"}>
+            <Flex gap={"1vh"} direction={"column"} width={"40%"} alignItems={"justify"}>
               <Text fontSize={"25px"} fontWeight={"semibold"}>
                 Too Pro?<br></br>
               </Text>
@@ -167,7 +168,7 @@ const Home: NextPage = () => {
           </Box>
         </Link>
       </Flex>
-      <Flex direction={"row"} justifyContent={"space-evenly"} marginTop={"150px"}>
+      <Flex direction={"row"} justifyContent={"space-evenly"} marginTop={"8vh"}  marginBottom={"5vh"} padding={"2vh"}>
         <Flex direction={"column"} justifyContent={"space-evenly"} gap={"20px"}>
           <Box
             backgroundColor={"#0f0b1f"}
@@ -216,7 +217,7 @@ const Home: NextPage = () => {
             </Text>
             <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"200px"}>
               {AssetTab.map((p, index) => (
-                <Box width={"100px"}>
+                <Box width={"23%"}>
                   <Image src={p} />
                 </Box>
               ))}
@@ -238,7 +239,7 @@ const Home: NextPage = () => {
             </Text>
             <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"200px"}>
               {ProtocolTab.map((p, index) => (
-                <Box width={"100px"}>
+                <Box width={"23%"}>
                   <Image src={p} />
                 </Box>
               ))}

@@ -384,12 +384,9 @@ const Layout = (props: PropsWithChildren<unknown>) => {
                 margin: "20px 0",
               }}
             >
-              <Flex direction={"row"} justifyContent={"space-between"}>
+              <Flex direction={"row"} justifyContent={"space-between"} margin={"5%"}>
                 <button className="social_button">
                   <Image src={Twitter} width="21px" height="21px"></Image>
-                </button>
-                <button className="social_button">
-                  <Image src={Linkedin} width="21px" height="21px"></Image>
                 </button>
                 <button className="social_button">
                   <Image src={Notion} width="17px" height="21px"></Image>
