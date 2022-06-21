@@ -13,4 +13,7 @@ export const Integration =
         integration: ["0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a", "0x147fd8f7d12de6da66feedc6d64a11bd371e5471ee1018f11f9072ede67a0fa", "0"],
     },
     ]
+<<<<<<< HEAD
 
+=======
+>>>>>>> pr/7

@@ -7,17 +7,14 @@
                 "type": "felt"
             },
             {
-                "name": "selector",
+<<<<<<< HEAD
+=======
+                "name": "tokenId",
                 "offset": 1,
-                "type": "felt"
-            },
-            {
-                "name": "integration",
-                "offset": 2,
-                "type": "felt"
+                "type": "Uint256"
             }
         ],
-        "name": "integration",
+        "name": "ShareInfo",
         "size": 3,
         "type": "struct"
     },
@@ -39,6 +36,49 @@
         "type": "struct"
     },
     {
+        "members": [
+            {
+                "name": "contract",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+>>>>>>> pr/7
+                "name": "selector",
+                "offset": 1,
+                "type": "felt"
+            },
+            {
+                "name": "integration",
+                "offset": 2,
+                "type": "felt"
+            }
+        ],
+        "name": "integration",
+        "size": 3,
+        "type": "struct"
+    },
+    {
+<<<<<<< HEAD
+        "members": [
+            {
+                "name": "low",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "high",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "Uint256",
+        "size": 2,
+        "type": "struct"
+    },
+    {
+=======
+>>>>>>> pr/7
         "data": [
             {
                 "name": "comptrollerLibAddress",
@@ -84,6 +124,33 @@
     },
     {
         "inputs": [],
+<<<<<<< HEAD
+=======
+        "name": "areDependenciesSet",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getOwner",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+>>>>>>> pr/7
         "name": "getComptroller",
         "outputs": [
             {
@@ -168,7 +235,11 @@
     },
     {
         "inputs": [],
+<<<<<<< HEAD
         "name": "getDerivativePriceFeed",
+=======
+        "name": "getDaoTreasury",
+>>>>>>> pr/7
         "outputs": [
             {
                 "name": "res",
@@ -191,8 +262,56 @@
         "type": "function"
     },
     {
+<<<<<<< HEAD
         "inputs": [],
         "name": "getDaoTreasury",
+=======
+        "inputs": [
+            {
+                "name": "_user",
+                "type": "felt"
+            }
+        ],
+        "name": "getUserShareAmount",
+        "outputs": [
+            {
+                "name": "amount",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_user",
+                "type": "felt"
+            },
+            {
+                "name": "id",
+                "type": "felt"
+            }
+        ],
+        "name": "getUserShareInfo",
+        "outputs": [
+            {
+                "name": "info",
+                "type": "ShareInfo"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_user",
+                "type": "felt"
+            }
+        ],
+        "name": "getUserVaultAmount",
+>>>>>>> pr/7
         "outputs": [
             {
                 "name": "res",
@@ -205,6 +324,76 @@
     {
         "inputs": [
             {
+<<<<<<< HEAD
+=======
+                "name": "_user",
+                "type": "felt"
+            },
+            {
+                "name": "_vaultId",
+                "type": "felt"
+            }
+        ],
+        "name": "getUserVault",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getVaultAmount",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vaultId",
+                "type": "felt"
+            }
+        ],
+        "name": "getVaultFromId",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "claimOwnership",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_nominatedOwner",
+                "type": "felt"
+            }
+        ],
+        "name": "setNewOwner",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+>>>>>>> pr/7
                 "name": "_comptrolleur",
                 "type": "felt"
             }
@@ -319,6 +508,24 @@
     {
         "inputs": [
             {
+<<<<<<< HEAD
+=======
+                "name": "_externalPositionList_len",
+                "type": "felt"
+            },
+            {
+                "name": "_externalPositionList",
+                "type": "felt*"
+            }
+        ],
+        "name": "addGlobalAllowedExternalPosition",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+>>>>>>> pr/7
                 "name": "_integrationList_len",
                 "type": "felt"
             },
@@ -357,6 +564,85 @@
                 "type": "felt"
             },
             {
+<<<<<<< HEAD
+=======
+                "name": "_trackedAsset_len",
+                "type": "felt"
+            },
+            {
+                "name": "_trackedAsset",
+                "type": "felt*"
+            }
+        ],
+        "name": "addAllowedTrackedAsset",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_integration_len",
+                "type": "felt"
+            },
+            {
+                "name": "_integration",
+                "type": "integration*"
+            }
+        ],
+        "name": "addAllowedIntegration",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_caller",
+                "type": "felt"
+            },
+            {
+                "name": "_tokenId",
+                "type": "Uint256"
+            }
+        ],
+        "name": "setNewMint",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_caller",
+                "type": "felt"
+            },
+            {
+                "name": "_tokenId",
+                "type": "Uint256"
+            }
+        ],
+        "name": "setNewBurn",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+>>>>>>> pr/7
                 "name": "_fundName",
                 "type": "felt"
             },
@@ -373,6 +659,17 @@
                 "type": "Uint256"
             },
             {
+<<<<<<< HEAD
+=======
+                "name": "_amount",
+                "type": "Uint256"
+            },
+            {
+                "name": "_shareAmount",
+                "type": "Uint256"
+            },
+            {
+>>>>>>> pr/7
                 "name": "_feeConfig_len",
                 "type": "felt"
             },
@@ -389,6 +686,17 @@
                 "type": "felt*"
             },
             {
+<<<<<<< HEAD
+=======
+                "name": "_externalPositionList_len",
+                "type": "felt"
+            },
+            {
+                "name": "_externalPositionList",
+                "type": "felt*"
+            },
+            {
+>>>>>>> pr/7
                 "name": "_integration_len",
                 "type": "felt"
             },
@@ -416,6 +724,7 @@
         "name": "initializeFund",
         "outputs": [],
         "type": "function"
+<<<<<<< HEAD
     },
     {
         "inputs": [
@@ -489,5 +798,7 @@
         "name": "__addAllowedDepositors",
         "outputs": [],
         "type": "function"
+=======
+>>>>>>> pr/7
     }
 ]

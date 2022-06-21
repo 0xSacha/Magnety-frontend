@@ -64,6 +64,10 @@ export function useContractFactory({
                 setContract(contract);
                 return contract;
             }
+<<<<<<< HEAD
+=======
+           
+>>>>>>> pr/7
             return undefined;
         },
         [factory]

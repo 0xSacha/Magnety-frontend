@@ -3,7 +3,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 :root {
-  --color-primary: #030135;
+  --color-primary: #0f0b1f;
   --color-secondary: #f6643c;
   --color-danger: #91141d;
   --color-success: #0dab45;
@@ -44,6 +44,7 @@ div.page {
     overflow: hidden;
   }
   .page__backdrop {
+<<<<<<< HEAD
     --dot1Color: #f6643c;
     --dot2Color: #ffffff;
     --dot3Color: #030135;
@@ -51,21 +52,25 @@ div.page {
       radial-gradient(
         circle 50vh at 25vw -10vh,
         var(--dot1Color) 80%,
+=======
+    --dot1Color: #05014bde;
+    --dot2Color: #f6643cbb;
+    background: 
+      radial-gradient(
+        circle 70vh at 17vw 40vh,
+        var(--dot1Color) 30%,
+>>>>>>> pr/7
         transparent
       ),
       radial-gradient(
-        circle 30vh at 55vw 30vh,
-        var(--dot2Color) 80%,
-        transparent
-      ),
-      radial-gradient(
-        circle 70vh at 30vw 45vh,
-        var(--dot3Color) 80%,
+        circle 50vh at 90vw 90vh,
+        var(--dot1Color) 30%,
         transparent
       );
+      
     filter: blur(20px);
-    -webkit-filter: blur(20px);
-    opacity: 0.5;
+    -webkit-filter: blur(50px);
+    opacity: 0.6;
     position: absolute;
     inset: 0;
     z-index: 0;
@@ -149,6 +154,7 @@ div.page {
   background-image: url("/bg.svg");
 }
 
+<<<<<<< HEAD
 button {
   --text: #ffffff;
   --bg: var(--color-primary, black);
@@ -184,6 +190,41 @@ button {
     }
   }
 }
+=======
+// button {
+//   color: var(--text);
+//   background-color: var(--bg);
+//   padding: 8px 12px;
+//   border-width: 0px;
+//   border-radius: 10px;
+//   font-size: 16px;
+//   cursor: pointer;
+//   &:hover {
+//     background-color: #f6643c;
+//     color: #ffffff;
+//   }
+//   &[data-color="primary"] {
+//     --text: #ffffff;
+//     --bg: var(--color-primary, black);
+//   }
+//   &[data-color="secondary"] {
+//     --text: #ffffff;
+//     --bg: var(--color-secondary, black);
+//   }
+//   &[data-color="white"] {
+//     --text: var(--color-secondary, black);
+//     --bg: white;
+//   }
+//   &[data-color="transparent"]{
+//     --text: 'black';
+//     --bg: hsl(0deg 0% 85% / 90%);
+//     &:hover{
+//       --hover-bg: rgba(255, 0, 238, 0.75);
+//       --hover-text: 'white';
+//     }
+//   }
+// }
+>>>>>>> pr/7
 
 /* Scrollbar */
 ::-webkit-scrollbar {
@@ -210,4 +251,21 @@ img{
   -moz-user-drag: none;
   -o-user-drag: none;
   user-drag: none;
+<<<<<<< HEAD
+=======
+}
+
+.social_button{
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background-color: rgb(214, 214, 214);
+  color: var(--color-primary);
+}
+
+.text-center{
+  text-align: center;
+>>>>>>> pr/7
 }

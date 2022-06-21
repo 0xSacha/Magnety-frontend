@@ -17,6 +17,26 @@
         "type": "struct"
     },
     {
+<<<<<<< HEAD
+=======
+        "members": [
+            {
+                "name": "contract",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "selector",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "integration",
+        "size": 2,
+        "type": "struct"
+    },
+    {
+>>>>>>> pr/7
         "inputs": [
             {
                 "name": "_vaultFactory",
@@ -110,6 +130,30 @@
                 "type": "felt"
             },
             {
+<<<<<<< HEAD
+=======
+                "name": "_externalPosition",
+                "type": "felt"
+            }
+        ],
+        "name": "checkIsAllowedTrackedExternalPosition",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+>>>>>>> pr/7
                 "name": "_contract",
                 "type": "felt"
             },
@@ -154,6 +198,93 @@
             {
                 "name": "_vault",
                 "type": "felt"
+<<<<<<< HEAD
+=======
+            }
+        ],
+        "name": "getAllowedTrackedAsset",
+        "outputs": [
+            {
+                "name": "allowedTrackedAsset_len",
+                "type": "felt"
+            },
+            {
+                "name": "allowedTrackedAsset",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            }
+        ],
+        "name": "getAllowedDepositor",
+        "outputs": [
+            {
+                "name": "allowedDepositor_len",
+                "type": "felt"
+            },
+            {
+                "name": "allowedDepositor",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            }
+        ],
+        "name": "getAllowedTrackedExternalPosition",
+        "outputs": [
+            {
+                "name": "allowedTrackedExternalPosition_len",
+                "type": "felt"
+            },
+            {
+                "name": "allowedTrackedExternalPosition",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            }
+        ],
+        "name": "getAllowedIntegration",
+        "outputs": [
+            {
+                "name": "allowedIntegration_len",
+                "type": "felt"
+            },
+            {
+                "name": "allowedIntegration",
+                "type": "integration*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+>>>>>>> pr/7
             },
             {
                 "name": "_max",
@@ -209,6 +340,39 @@
                 "type": "felt"
             },
             {
+<<<<<<< HEAD
+=======
+                "name": "_externalPosition",
+                "type": "felt"
+            }
+        ],
+        "name": "setAllowedTrackedExternalPosition",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+                "name": "_depositor",
+                "type": "felt"
+            }
+        ],
+        "name": "setAllowedDepositor",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_vault",
+                "type": "felt"
+            },
+            {
+>>>>>>> pr/7
                 "name": "_block_timestamp",
                 "type": "felt"
             }
@@ -231,6 +395,7 @@
         "name": "setIsPublic",
         "outputs": [],
         "type": "function"
+<<<<<<< HEAD
     },
     {
         "inputs": [
@@ -246,5 +411,7 @@
         "name": "setAllowedDepositor",
         "outputs": [],
         "type": "function"
+=======
+>>>>>>> pr/7
     }
 ]

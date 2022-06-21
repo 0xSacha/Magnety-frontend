@@ -77,11 +77,23 @@
   display: flex;
   gap: 20px;  
   flex-wrap: wrap;
+<<<<<<< HEAD
   .asset_button{
     width: 100px;
+=======
+  padding: 2%;
+  overflow-y: scroll;
+  max-height: 120px;
+  .asset_button{
+    width: 80px;
+>>>>>>> pr/7
     height: fit-content;
-    min-height: 100px;
+    min-height: 60px;
     position: relative;
+<<<<<<< HEAD
+=======
+    background-color: #0f0b1f69;
+>>>>>>> pr/7
     &.asset_selected{
       >span.asset_selected_checkmark{
         position: absolute;
@@ -93,3 +105,31 @@
   }
 }
 
+<<<<<<< HEAD
+=======
+.asset_container_2{
+  display: flex;
+  gap: 20px;  
+  width: 100%;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  max-height: 120px;
+  padding: 2%;
+  .asset_button{
+    width: 100px;
+    height: fit-content;
+    background-color: #0f0b1f69;
+    min-height: 100px;
+    position: relative;
+    &.asset_selected{
+      >span.asset_selected_checkmark{
+        position: absolute;
+        top: -55px;
+        right: 0;
+        width: 24px;
+      }
+    }
+  }
+}
+
+>>>>>>> pr/7

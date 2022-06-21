@@ -499,6 +499,7 @@
         "type": "event"
     },
     {
+<<<<<<< HEAD
         "inputs": [],
         "name": "getAB",
         "outputs": [
@@ -509,6 +510,28 @@
         ],
         "stateMutability": "view",
         "type": "function"
+=======
+        "data": [
+            {
+                "name": "externalPositionAddress",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "TrackedExternalPositionAdded",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "externalPositionAddress",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "TrackedExternalPositionRemoved",
+        "type": "event"
+>>>>>>> pr/7
     },
     {
         "inputs": [],
@@ -536,6 +559,7 @@
     },
     {
         "inputs": [],
+<<<<<<< HEAD
         "name": "checkIsActivated",
         "outputs": [
             {
@@ -548,6 +572,8 @@
     },
     {
         "inputs": [],
+=======
+>>>>>>> pr/7
         "name": "getVaultFactory",
         "outputs": [
             {
@@ -605,6 +631,26 @@
         "type": "function"
     },
     {
+<<<<<<< HEAD
+=======
+        "inputs": [
+            {
+                "name": "_externalPosition",
+                "type": "felt"
+            }
+        ],
+        "name": "isTrackedExternalPosition",
+        "outputs": [
+            {
+                "name": "isTrackedExternalPosition_",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+>>>>>>> pr/7
         "inputs": [],
         "name": "getTrackedAssets",
         "outputs": [
@@ -622,6 +668,25 @@
     },
     {
         "inputs": [],
+<<<<<<< HEAD
+=======
+        "name": "getTrackedExternalPositions",
+        "outputs": [
+            {
+                "name": "trackedExternalPositions__len",
+                "type": "felt"
+            },
+            {
+                "name": "trackedExternalPositions_",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+>>>>>>> pr/7
         "name": "getPositionsLimit",
         "outputs": [
             {
@@ -820,12 +885,15 @@
         "type": "function"
     },
     {
+<<<<<<< HEAD
         "inputs": [],
         "name": "activate",
         "outputs": [],
         "type": "function"
     },
     {
+=======
+>>>>>>> pr/7
         "inputs": [
             {
                 "name": "_action",

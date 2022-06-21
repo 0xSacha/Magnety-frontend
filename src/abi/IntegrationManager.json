@@ -1,5 +1,25 @@
 [
     {
+<<<<<<< HEAD
+=======
+        "members": [
+            {
+                "name": "contract",
+                "offset": 0,
+                "type": "felt"
+            },
+            {
+                "name": "selector",
+                "offset": 1,
+                "type": "felt"
+            }
+        ],
+        "name": "integration",
+        "size": 2,
+        "type": "struct"
+    },
+    {
+>>>>>>> pr/7
         "inputs": [
             {
                 "name": "_vaultFactory",
@@ -30,6 +50,26 @@
     {
         "inputs": [
             {
+<<<<<<< HEAD
+=======
+                "name": "_externalPosition",
+                "type": "felt"
+            }
+        ],
+        "name": "checkIsExternalPositionAvailable",
+        "outputs": [
+            {
+                "name": "res",
+                "type": "felt"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+>>>>>>> pr/7
                 "name": "_contract",
                 "type": "felt"
             },
@@ -70,6 +110,57 @@
         "type": "function"
     },
     {
+<<<<<<< HEAD
+=======
+        "inputs": [],
+        "name": "getAvailableAssets",
+        "outputs": [
+            {
+                "name": "availableAssets_len",
+                "type": "felt"
+            },
+            {
+                "name": "availableAssets",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getAvailableExternalPositions",
+        "outputs": [
+            {
+                "name": "availableExternalPositions_len",
+                "type": "felt"
+            },
+            {
+                "name": "availableExternalPositions",
+                "type": "felt*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getAvailableIntegrations",
+        "outputs": [
+            {
+                "name": "availableIntegrations_len",
+                "type": "felt"
+            },
+            {
+                "name": "availableIntegrations",
+                "type": "integration*"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+>>>>>>> pr/7
         "inputs": [
             {
                 "name": "_asset",
@@ -83,6 +174,20 @@
     {
         "inputs": [
             {
+<<<<<<< HEAD
+=======
+                "name": "_externalPosition",
+                "type": "felt"
+            }
+        ],
+        "name": "setAvailableExternalPosition",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+>>>>>>> pr/7
                 "name": "_contract",
                 "type": "felt"
             },
