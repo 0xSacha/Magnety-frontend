@@ -87,7 +87,7 @@ function RemoveAtIndex(array: any[], index: number) {
 const comptroller =
   "0x04432fc00432c1025c8b03775fc64180948d5a2725cc50882f4dec0b526459f5";
 
-const Contract: NextPage = () => {
+const Create: NextPage = () => {
   const [formData, setFormData] = React.useState<any>({});
   const [denominationAsset, setDenominationAsset] = React.useState<number>(0);
   const [trackedAsset, setTrackedAsset] = React.useState<number[]>([]);
@@ -1342,5 +1342,5 @@ const Contract: NextPage = () => {
   );
 };
 
-export default Contract;
+export default Create;
 

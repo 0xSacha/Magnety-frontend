@@ -7,6 +7,7 @@ import { InitializeFund } from "~/components/InitializeFund";
 import { useVaultContract } from "~/hooks/vault";
 import { getSelectorFromName } from "../starknetWrapper";
 import clientPromise from "../lib/mongodb";
+import Image from "next/image";
 import {
   Box,
   Button,
@@ -21,27 +22,42 @@ import {
 
 import VDatabase from "./vault/vaults.json";
 
+import btc from "../image/BTC.png";
+import eth from "../image/ETH.png";
+import zkp from "../image/ZKP.png";
+import tst from "../image/TST.svg";
+import alphaRoad from "../image/alphaRoad.jpg";
+import ethzkp from "../image/ETH-ZKP.png";
+import btctst from "../image/BTC-TST.png";
+import ethtst from "../image/ETH-TST.png";
+import ethbtc from "../image/ETH-BTC.png";
+import { Asset } from "~/registry/tokenSupported";
+
+const AssetTab = [btc, eth, zkp, tst, alphaRoad, ethzkp, btctst, ethtst, ethbtc]
+const ProtocolTab = [alphaRoad]
+
 const Home: NextPage = () => {
 
   return (
-    <Box margin={"auto"} paddingTop={"5%"}>
+    <Box margin={"auto"} paddingTop={"5%"} gap={"200px"}>
       <Flex
         direction={"row"}
         flexWrap={"wrap"}
-        width={"100%"}
+        width={"90%"}
         justifyContent={"space-evenly"}
 
       >
         <Flex direction={"column"} gap={"8vh"} width={"45%"}>
-          <Text fontWeight={"bold"} fontSize={"35px"} textAlign={"center"}>Discover and Create Extraordinary DeFi strategies</Text>
-
-          <Flex direction={"row"} justifyContent={"space-evenly"} alignItems={"center"}>
-            <Flex gap={"1vh"} direction={"column"} width={"42%"} alignItems={"center"}>
+          <Flex flexWrap={"wrap"} gap={"12px"}>
+            <Text fontWeight={"bold"} fontSize={"35px"}>Discover and Monetize </Text><Text color={"#f6643c"} fontWeight={"bold"} fontSize={"35px"}>Extraordinary</Text> <Text fontWeight={"bold"} fontSize={"35px"}>DeFi strategies</Text>
+          </Flex>
+          <Flex direction={"row"} gap={"8vh"} alignItems={"center"}>
+            <Flex gap={"1vh"} direction={"column"} width={"35%"} alignItems={"justify"}>
               <Text fontSize={"25px"} fontWeight={"semibold"}>
-                You Busy?<br></br>
+                Too Busy?<br></br>
               </Text>
-              <Text fontSize={"13px"} textAlign={"center"}>
-                get connected with qualificated asset managers, save both time and money {getSelectorFromName("addLiquidity")}
+              <Text fontSize={"13px"} textAlign={"justify"}>
+                get connected with qualificated asset managers, save both time and money
               </Text>
               <Button backgroundColor={"#f6643c"} width={"120px"}>
                 <Link href={`/marketplace`} padding={"10px"}>
@@ -52,11 +68,11 @@ const Home: NextPage = () => {
                 </Link>
               </Button>
             </Flex>
-            <Flex gap={"1vh"} direction={"column"} width={"42%"} alignItems={"center"}>
+            <Flex gap={"1vh"} direction={"column"} width={"35%"} alignItems={"justify"}>
               <Text fontSize={"25px"} fontWeight={"semibold"}>
-                You Pro?<br></br>
+                Too Pro?<br></br>
               </Text>
-              <Text fontSize={"13px"} textAlign={"center"}>
+              <Text fontSize={"13px"} textAlign={"justify"}>
                 Deploy a new Fund and monetize your investment strategy
               </Text>
               <Button backgroundColor={"#f6643c"} width={"120px"}>
@@ -150,6 +166,87 @@ const Home: NextPage = () => {
             </Box>
           </Box>
         </Link>
+      </Flex>
+      <Flex direction={"row"} justifyContent={"space-evenly"} marginTop={"150px"}>
+        <Flex direction={"column"} justifyContent={"space-evenly"} gap={"20px"}>
+          <Box
+            backgroundColor={"#0f0b1f"}
+            style={{ borderRadius: "10px" }}
+            borderTop={"solid 2px #f6643c"}
+            borderBottom={"solid 2px #f6643c"}
+            padding={"20px"}
+          >
+            <Flex direction={"column"}>
+              <Text fontSize={"3xl"}>
+                Total Funds created
+              </Text>
+              <Text fontWeight={"bold"} fontSize={"5xl"}>
+                56
+              </Text>
+            </Flex>
+          </Box>
+          <Box
+            backgroundColor={"#0f0b1f"}
+            style={{ borderRadius: "10px" }}
+            borderTop={"solid 2px #f6643c"}
+            borderBottom={"solid 2px #f6643c"}
+            padding={"20px"}
+          >
+            <Flex direction={"column"}>
+              <Text fontSize={"3xl"}>
+                Avergare APRs
+              </Text>
+              <Text fontWeight={"bold"} fontSize={"5xl"}>
+                12%
+              </Text>
+            </Flex>
+          </Box>
+        </Flex>
+        <Box
+          backgroundColor={"#0f0b1f"}
+          style={{ borderRadius: "10px" }}
+          borderTop={"solid 2px #f6643c"}
+          borderBottom={"solid 2px #f6643c"}
+          padding={"20px"}
+          width={"30%"}
+        >
+          <Flex direction={"column"}>
+            <Text fontSize={"3xl"}>
+              {AssetTab.length} Token Supported
+            </Text>
+            <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"200px"}>
+              {AssetTab.map((p, index) => (
+                <Box width={"100px"}>
+                  <Image src={p} />
+                </Box>
+              ))}
+
+            </Flex>
+          </Flex>
+        </Box>
+        <Box
+          backgroundColor={"#0f0b1f"}
+          style={{ borderRadius: "10px" }}
+          borderTop={"solid 2px #f6643c"}
+          borderBottom={"solid 2px #f6643c"}
+          padding={"20px"}
+          width={"30%"}
+        >
+          <Flex direction={"column"}>
+            <Text fontSize={"3xl"} >
+              {ProtocolTab.length} Protocol supported
+            </Text>
+            <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"200px"}>
+              {ProtocolTab.map((p, index) => (
+                <Box width={"100px"}>
+                  <Image src={p} />
+                </Box>
+              ))}
+
+            </Flex>
+          </Flex>
+        </Box>
+
       </Flex>
     </Box>
   );
