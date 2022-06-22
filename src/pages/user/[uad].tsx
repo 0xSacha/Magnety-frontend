@@ -38,29 +38,29 @@ import { Field, Form, Formik, FormikProps } from "formik";
 import { string } from "yup";
 import { Value } from "sass";
 // import { userInfo } from "os";
+import { hexToDecimalString } from "starknet/dist/utils/number";
 
-const VAULT_UNDER_MANAGEMENT = [
-  {
-    name: "A vault name",
-    percentage: "+1.34%",
-  },
-  {
-    name: "A vault name",
-    percentage: "+1.34%",
-  },
-];
-const VAULT_EXPOSED = [
-  {
-    name: "A vault name",
-    percentage: "+1.34%",
-  },
-];
+type fundInfo = {
+  image: string;
+  name: string;
+  address: string;
+};
+
+type ShareInfo = {
+  image: string;
+  name: string;
+  address: string;
+  tokenId: string;
+}[];
+
+import { contractAddress } from "~/registry/address";
 
 interface UserPageProps {
   user: UserInfo;
 }
 
 function UserPage(props: UserPageProps) {
+  const { provider } = getStarknet();
   const [userInfo, setUserInfo] = useState<UserInfo>(props.user);
   let count = useAppSelector(selectCount);
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -73,6 +73,13 @@ function UserPage(props: UserPageProps) {
   >();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [userFundInfo, setUserFundInfo] = useState<fundInfo[]>([]);
+  const [userShareInfo, setUserShareInfo] = useState<ShareInfo>([]);
+  const [userShareAmount, setUserShareAmount] = useState<number>(-1);
+  const [showFunds, setShowFunds] = useState(false);
+  const [showFunds2, setShowFunds2] = useState(false);
+
+  const [userFundAmount, setUserFundAmount] = useState<number>(-1);
 
   const router = useRouter();
   const userAddress = router.query.uad;
@@ -88,6 +95,138 @@ function UserPage(props: UserPageProps) {
       profilePic: string;
     }>
   >();
+
+  async function getFundInfo(address: string, amount: number) {
+    let currentFundInfo = userFundInfo;
+    const res = await fetch("http://localhost:3000/api/contract/" + address);
+    if (res.status == 200) {
+      const { data } = await res.json();
+      currentFundInfo.push({
+        image: data.image,
+        name: data.name,
+        address: address,
+      });
+      setUserFundInfo(data);
+    } else {
+      currentFundInfo.push({
+        image: "",
+        name: address.substring(0, 5),
+        address: address,
+      });
+    }
+    setUserFundInfo(currentFundInfo);
+    
+    console.log(amount);
+    console.log(currentFundInfo.length);
+    if (currentFundInfo.length == amount) {
+      console.log("donnnnnnne");
+      setShowFunds(true);
+    }
+    console.log(currentFundInfo);
+  }
+
+  async function getShareInfo(fund: string, tokenId: string, amount: number) {
+    let currentShareInfo = userShareInfo;
+    const res = await fetch("http://localhost:3000/api/contract/" + fund);
+    if (res.status == 200) {
+      const { data } = await res.json();
+      currentShareInfo.push({
+        image: data.image,
+        name: data.name,
+        address: fund,
+        tokenId: tokenId,
+      });
+      setUserShareInfo(data);
+    } else {
+      currentShareInfo.push({
+        image: "",
+        name: fund.substring(0, 5),
+        address: fund,
+        tokenId: tokenId,
+      });
+    }
+    setUserShareInfo(currentShareInfo);
+    console.log(userShareInfo)
+    console.log(amount);
+    console.log(currentShareInfo.length);
+    if (currentShareInfo.length == amount) {
+      console.log("donnnnnnne");
+      setShowFunds2(true);
+    }
+  }
+
+  useEffect(() => {
+    if (userAddress) {
+      // getUserInfo();
+      const res = provider.callContract({
+        contractAddress: contractAddress.VaultFactory,
+        entrypoint: "getUserVaultAmount",
+        calldata: [hexToDecimalString(userAddress)],
+      });
+      res
+        .then((value) => {
+          console.log(value);
+          const amount = parseFloat(hexToDecimalString(value.result[0]));
+          setUserFundAmount(amount);
+          for (let index = 0; index < amount; index++) {
+            const res2 = provider.callContract({
+              contractAddress: contractAddress.VaultFactory,
+              entrypoint: "getUserVault",
+              calldata: [hexToDecimalString(userAddress), index.toString()],
+            });
+            res2
+              .then((value) => {
+                console.log(value);
+                getFundInfo(value.result[0], amount);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    console.log("fff");
+    console.log(userAddress);
+  }, [userAddress]);
+
+  useEffect(() => {
+    if (userAddress) {
+      // getUserInfo();
+      const res = provider.callContract({
+        contractAddress: contractAddress.VaultFactory,
+        entrypoint: "getUserShareAmount",
+        calldata: [hexToDecimalString(userAddress)],
+      });
+      res
+        .then((value) => {
+          console.log(value);
+          const amount = parseFloat(hexToDecimalString(value.result[0]));
+          setUserShareAmount(amount);
+          for (let index = 0; index < amount; index++) {
+            const res2 = provider.callContract({
+              contractAddress: contractAddress.VaultFactory,
+              entrypoint: "getUserShareInfo",
+              calldata: [hexToDecimalString(userAddress), index.toString()],
+            });
+            res2
+              .then((value) => {
+                let fund = value.result[0];
+                let tokenId = hexToDecimalString(value.result[1]);
+                getShareInfo(fund, tokenId, amount);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [userAddress]);
 
   function validateName(value) {
     let error;
@@ -106,7 +245,7 @@ function UserPage(props: UserPageProps) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    })
+    });
   }
 
   function validateDescription(value) {
@@ -204,8 +343,7 @@ function UserPage(props: UserPageProps) {
                 <Text>Error : {errorMessage}</Text>
               </ModalBody>
 
-              <ModalFooter>
-              </ModalFooter>
+              <ModalFooter></ModalFooter>
             </ModalContent>
           </Modal>
 
@@ -247,10 +385,12 @@ function UserPage(props: UserPageProps) {
               borderRadius: "50%",
               backgroundSize: "cover",
               backgroundPosition: "center bottom",
-
             }}
           >
-            <img src={props.user.profilePic} style={{ objectFit: "cover", borderRadius: "50%" }} />
+            <img
+              src={props.user.profilePic}
+              style={{ objectFit: "cover", borderRadius: "50%" }}
+            />
           </Box>
 
           {!editMode ? (
@@ -387,17 +527,16 @@ function UserPage(props: UserPageProps) {
                   setTimeout(() => {
                     console.log(actions);
                     alert(JSON.stringify(values, null, 2));
-                    const data: UserInfo =
-                    {
+                    const data: UserInfo = {
                       userAddress: userAddress as String,
                       name: values.name,
                       description: values.description,
                       twitter: values.telegram,
                       linkedin: values.linkedin,
                       telegram: values.telegram,
-                      profilePic: values.profilePic
-                    }
-                    postDB(data)
+                      profilePic: values.profilePic,
+                    };
+                    postDB(data);
                     actions.setSubmitting(false);
                     setEditMode(false);
                   }, 100);
@@ -540,7 +679,6 @@ function UserPage(props: UserPageProps) {
                           />
                         </Box>
                       </Flex> */}
-
                     </Flex>
 
                     {/* <Button
@@ -559,42 +697,95 @@ function UserPage(props: UserPageProps) {
         </div>
 
         {!editMode && (
-          <div className={`${styles.vaultContainer}`}>
-            <div className={`${styles.vaultCard}`}>
-              <div>
-                <div className="fs-32 fw-600">Funds under Management</div>
-                {VAULT_UNDER_MANAGEMENT.slice(0, 2).map((vault, index) => (
-                  <div className={`${styles.vaultCardDetail}`}>
-                    <FakeImage
-                      width="60px"
-                      height="60px"
-                      fillColor="#0D0C1D"
-                      borderRadius="50%"
-                    ></FakeImage>
-                    <div>{vault.name}</div>
-                    <div style={{ marginLeft: "auto" }}>{vault.percentage}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className={`${styles.vaultCard}`}>
-              <div>
-                <div className="fs-32 fw-600">Shares owned</div>
-                {VAULT_EXPOSED.slice(0, 2).map((vault, index) => (
-                  <div className={`${styles.vaultCardDetail}`}>
-                    <FakeImage
-                      width="60px"
-                      height="60px"
-                      fillColor="#0D0C1D"
-                      borderRadius="50%"
-                    ></FakeImage>
-                    <div>{vault.name}</div>
-                    <div style={{ marginLeft: "auto" }}>{vault.percentage}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <Flex direction={"row"} justifyContent={"space-between"} margin = {"2vw"}>
+            <Flex className={`${styles.vaultCard}`}>
+              {showFunds == false ? (
+                <Text>Fetching Funds</Text>
+              ) : (
+                <div>
+                  <Text fontWeight={"semibold"} fontSize={"3xl"}>
+                    {" "}
+                    Funds under Management : {userFundAmount}
+                  </Text>
+                  {console.log(userFundInfo)}
+                  {userFundInfo != [] ? userFundInfo.map((vault, index) => (
+                    <Link href={`/vault/${vault.address}`}>
+                      <Flex
+                        justifyContent={"space-between"}
+                        alignItems={"center"}
+                      >
+                        <Box
+                          style={{
+                            width: "60px",
+                            height: "60px",
+                            borderRadius: "50%",
+                            overflow: "hidden",
+                            backgroundColor: "black",
+                          }}
+                        >
+                          <img
+                            src={vault.image}
+                            style={{ objectFit: "cover" }}
+                          />
+                        </Box>
+                        <div>{vault.name}</div>
+                      </Flex>
+                    </Link>
+                  ))
+                :
+                <Text>⌛</Text>}
+                </div>
+              )}
+            </Flex>
+            <Box
+              backgroundColor={"#0f0b1f"}
+              style={{ borderRadius: "10px" }}
+              borderTop={"solid 2px #f6643c"}
+              borderBottom={"solid 2px #f6643c"}
+              padding={"20px"}
+              width={"40%"}
+            >
+              {showFunds2 == false ? (
+                <Text>Fetching Shares</Text>
+              ) : (
+                <Flex direction={"column"}  gap={"1vw"}>
+                                    <Text fontWeight={"semibold"} fontSize={"3xl"}>
+                    {" "}
+                    {userShareAmount} Shares 
+                  </Text>
+                  <Flex flexWrap={"nowrap"} overflowY={"scroll"} width={"100%"} height={"10vh"}>
+                  {userShareInfo != [] ? userShareInfo.map((vault, index) => (
+                    <Link href={`/vault/${vault.address}`}>
+                      <Flex
+                        gap={"1vw"}
+                        alignItems={"center"}
+                      >
+                        <Box
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "50%",
+                            overflow: "hidden",
+                            backgroundColor: "black",
+                          }}
+                        >
+                          <img
+                            src={vault.image}
+                            style={{ objectFit: "cover" }}
+                          />
+                        </Box>
+                        <div>{vault.name}</div>
+                        <div>ID: {vault.tokenId}</div>
+                      </Flex>
+                    </Link>
+                  ))
+                :
+                <Flex>⌛</Flex>
+                }</Flex>
+                </Flex>
+              )}
+            </Box>
+          </Flex>
         )}
       </div>
     </>

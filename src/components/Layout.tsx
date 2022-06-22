@@ -199,7 +199,9 @@ const Layout = (props: PropsWithChildren<unknown>) => {
                     please connect you wallet to access the full
                     fonctionnalities
                   </Text>
-                </Flex>
+
+               
+                                        </Flex>
                 <ConnectWallet />
               </Flex>
             )}
@@ -214,6 +216,8 @@ const Layout = (props: PropsWithChildren<unknown>) => {
                       <Text fontWeight={"light"} fontSize={"0.75rem"}>
                         customize your profile and start the adventure!{" "}
                       </Text>
+                      <Button padding={"5px"} borderRadius={"15px"} backgroundColor={"#f6643c"}>
+                        <Link href={`/user/${address}`}> My profile</Link></Button>
                     </Flex>
                   ) : (
                     <Flex direction={"column"} alignItems={"center"} justifyContent={"center"} gap={"15px"}>
