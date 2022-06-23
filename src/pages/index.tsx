@@ -1,6 +1,8 @@
 import { useStarknetCall } from "@starknet-react/core";
 import type { NextPage } from "next";
 import { useMemo } from "react";
+import React, { useEffect } from "react";
+
 import { toBN, hexToDecimalString } from "starknet/dist/utils/number";
 import { TransactionList } from "~/components/TransactionList";
 import { InitializeFund } from "~/components/InitializeFund";
@@ -21,6 +23,8 @@ import {
 } from "@chakra-ui/react";
 
 import VDatabase from "./vault/vaults.json";
+import { getStarknet, AccountInterface } from "../starknetWrapper";
+import { contractAddress } from "~/registry/address";
 
 import btc from "../image/BTC.png";
 import eth from "../image/ETH.png";
@@ -37,6 +41,23 @@ const AssetTab = [btc, eth, zkp, tst, ethzkp, btctst, ethtst, ethbtc]
 const ProtocolTab = [alphaRoad]
 
 const Home: NextPage = () => {
+  const [vaultAmount, setVaultAmount] = React.useState<string>("");
+  const { provider, account } = getStarknet();
+  useEffect(() => {
+    const res1 = provider.callContract({
+      contractAddress: contractAddress.VaultFactory,
+      entrypoint: "getVaultAmount",
+      calldata: [],
+    });
+    res1
+      .then((value) => {
+        const vaultAmount_ = (hexToDecimalString(value.result[0]));
+        setVaultAmount(vaultAmount_)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <Box margin={"auto"} paddingTop={"5%"} gap={"200px"}>
@@ -77,7 +98,7 @@ const Home: NextPage = () => {
                 Deploy a new Fund and monetize your investment strategy
               </Text>
               <Button backgroundColor={"#f6643c"} width={"120px"}>
-                <Link href={`/contract`} padding={"10px"}>
+                <Link href={`/create`} padding={"10px"}>
 
                   <Text fontWeight={"bold"}>Create</Text>
 
@@ -168,7 +189,7 @@ const Home: NextPage = () => {
           </Box>
         </Link>
       </Flex>
-      <Flex direction={"row"} justifyContent={"space-evenly"} marginTop={"8vh"}  marginBottom={"5vh"} padding={"2vh"}>
+      <Flex direction={"row"} justifyContent={"space-evenly"} marginTop={"8vh"} marginBottom={"5vh"} padding={"2vh"}>
         <Flex direction={"column"} justifyContent={"space-evenly"} gap={"20px"}>
           <Box
             backgroundColor={"#0f0b1f"}
@@ -182,12 +203,12 @@ const Home: NextPage = () => {
                 Total Funds created
               </Text>
               <Text fontWeight={"bold"} fontSize={"5xl"}>
-                56
+                {vaultAmount ? vaultAmount : ""}
               </Text>
             </Flex>
           </Box>
           <Box
-            backgroundColor={"#0f0b1f"}
+            className={` bg__dotted`}
             style={{ borderRadius: "10px" }}
             borderTop={"solid 2px #f6643c"}
             borderBottom={"solid 2px #f6643c"}
@@ -204,7 +225,7 @@ const Home: NextPage = () => {
           </Box>
         </Flex>
         <Box
-          backgroundColor={"#0f0b1f"}
+          className={` bg__dotted`}
           style={{ borderRadius: "10px" }}
           borderTop={"solid 2px #f6643c"}
           borderBottom={"solid 2px #f6643c"}
@@ -215,9 +236,9 @@ const Home: NextPage = () => {
             <Text fontSize={"3xl"}>
               {AssetTab.length} Token Supported
             </Text>
-            <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"200px"}>
+            <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"100px"}>
               {AssetTab.map((p, index) => (
-                <Box width={"23%"}>
+                <Box width={"20%"}>
                   <Image src={p} />
                 </Box>
               ))}
@@ -227,6 +248,7 @@ const Home: NextPage = () => {
         </Box>
         <Box
           backgroundColor={"#0f0b1f"}
+          // className={` bg__dotted`}
           style={{ borderRadius: "10px" }}
           borderTop={"solid 2px #f6643c"}
           borderBottom={"solid 2px #f6643c"}
@@ -237,7 +259,7 @@ const Home: NextPage = () => {
             <Text fontSize={"3xl"} >
               {ProtocolTab.length} Protocol supported
             </Text>
-            <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"200px"}>
+            <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"100px"}>
               {ProtocolTab.map((p, index) => (
                 <Box width={"23%"}>
                   <Image src={p} />
