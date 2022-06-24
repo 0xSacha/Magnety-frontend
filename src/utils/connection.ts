@@ -31,21 +31,31 @@ export const connect = async () => {
     name: String,
     symbol: String,
     strategy: String,
-    // type: String,
-    // min: Number,
-    // max: Number,
-    // lockup: Number,
-    // limit: Number,
-    // entranceFees: String,
-    // exitFees: String,
-    // managementFees: String,
-    // performanceFees: String,
     tags: [String],
+    dataFinanceD: [{
+      sharePrice: Number,
+      date: Number,
+      gav: Number,
+    }],
+    dataFinanceW: [{
+      sharePrice: Number,
+      date: Number,
+      gav: Number,
+    }],
+    dataFinanceM: [{
+      sharePrice: Number,
+      date: Number,
+      gav: Number,
+    }],
     dataFinance: [{
       sharePrice: Number,
       date: Number,
       gav: Number,
     }],
+    dailyIncome: Number,
+    weeklyIncome: Number,
+    monthlyIncome: Number,
+    totalIncome: Number,
     image: String
   })
 

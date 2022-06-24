@@ -40,7 +40,7 @@ import ethbtc from "../image/ETH-BTC.png";
 import { Asset } from "~/registry/tokenSupported";
 import { GiRadiations } from "react-icons/gi";
 
-const [userFundInfo, setUserFundInfo] = useState<fundInfo[]>([]);
+// const [userFundInfo, setUserFundInfo] = useState<fundInfo[]>([]);
 const AssetTab = [btc, eth, zkp, tst, ethzkp, btctst, ethtst, ethbtc]
 const ProtocolTab = [alphaRoad]
 
@@ -62,7 +62,7 @@ const Home: NextPage = () => {
         console.log(err);
       });
   }, []);
-  const [showFunds, setShowFunds] = useState(false);
+  // const [showFunds, setShowFunds] = useState(false);
 
 
   return (
@@ -83,15 +83,17 @@ const Home: NextPage = () => {
           </Flex>
           <Flex >
             <Flex gap={"1vh"} direction={"row"}>
+              <Text>this is url {process.env.URL}</Text>
+              {console.log(process.env.URL)}
               <Button backgroundColor={"#00318973"} padding={"5px"}>
                 <Link href={`/marketplace`} padding={"10px"}>
 
                   <Flex>
+
                     <Text fontWeight={"bold"} fontSize={"2xl"} >Delegate</Text>
                   </Flex>
                 </Link>
               </Button>
-
 
               <Button backgroundColor={"#f6643c"} padding={"5px"}>
                 <Link href={`/create`} padding={"10px"}>
@@ -257,7 +259,7 @@ const Home: NextPage = () => {
           </Flex>
         </Box>
 
-        <Box
+        {/* <Box
           className={` bg__dotted`}
           style={{ borderRadius: "10px" }}
           borderRight={"solid 2px #f6643c"}
@@ -304,7 +306,7 @@ const Home: NextPage = () => {
               )}
             </Flex>
           </Flex>
-        </Box>
+        </Box> */}
 
       </Flex>
     </Box>

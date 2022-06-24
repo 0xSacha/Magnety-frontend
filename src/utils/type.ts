@@ -31,10 +31,29 @@ export interface ContractInfo {
   symbol: String
   strategy: String
   tags: String[]
+  dataFinanceD: {
+    sharePrice: Number
+    date: Number
+    gav: Number
+  }[]
+  dataFinanceW: {
+    sharePrice: Number
+    date: Number
+    gav: Number
+  }[]
+  dataFinanceM: {
+    sharePrice: Number
+    date: Number
+    gav: Number
+  }[]
   dataFinance: {
     sharePrice: Number
     date: Number
     gav: Number
   }[]
+  dailyIncome: Number
+  weeklyIncome: Number
+  monthlyIncome: Number
+  totalIncome: Number
   image: String
 }

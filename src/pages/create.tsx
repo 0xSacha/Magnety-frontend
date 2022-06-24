@@ -8,7 +8,8 @@ import { getStarknet, toBN } from "../starknetWrapper";
 import { contractAddress } from "~/registry/address";
 import { ContractInfo } from "../utils/type";
 import { TransactionList } from "~/components/TransactionList";
-
+import moment from "moment";
+import fs from 'fs'
 import {
   Modal,
   ModalOverlay,
@@ -74,10 +75,17 @@ import ethtst from "../image/ETH-TST.png";
 import ethbtc from "../image/ETH-BTC.png";
 import { useRouter } from "next/router";
 import ImageUpload from "~/components/FileUpload";
+import { DeployFund } from "~/components/DeployFund";
 
 function RemoveAtIndex(array: any[], index: number) {
   return [...array.slice(0, index), ...array.slice(index + 1)];
 }
+
+type DataChart = {
+  date: number;
+  sharePrice: number;
+  gav: number;
+}[];
 
 const Create: NextPage = () => {
   const [formData, setFormData] = React.useState<any>({});
@@ -92,7 +100,6 @@ const Create: NextPage = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isOpenError, setIsOpenError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
 
   const [deployedVaultHash, setDeployedVaultHash] = useState<
     string | undefined
@@ -164,7 +171,7 @@ const Create: NextPage = () => {
   };
 
   const handleTransactionAfter = async (_tabDB: ContractInfo) => {
-    await fetch(`http://localhost:3000/api/contract/${deployedVaultAddress}`, {
+    await fetch(process.env.URL + `api/contract/${deployedVaultAddress}`, {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -173,16 +180,6 @@ const Create: NextPage = () => {
     }).then(() => settxAcceptedTransac(1))
   };
 
-  // async function postDB(data: ContractInfo) {
-  //   console.log(data)
-  //   await fetch(`http://localhost:3000/api/contract/${deployedVaultAddress}`, {
-  //     method: "put",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   })
-  // }
 
   const Initialize = async (_tabA: String[], _tabI: any[], _tabDB: ContractInfo) => {
     console.log("yoo")
@@ -215,6 +212,10 @@ const Create: NextPage = () => {
     }
   };
 
+  const { deploy: deployTarget } = useContractFactory({
+    compiledContract: compiledTarget,
+    abi: TargetSource as Abi,
+  });
 
 
 
@@ -224,51 +225,17 @@ const Create: NextPage = () => {
     // (even if the issue is closed, the underlying Starknet issue remains)
     const raw = await fetch("/Vault.json");
     const compiled = json.parse(await raw.text());
+    console.log(compiled)
     return compiled;
   };
 
-  const { deploy: deployTarget } = useContractFactory({
-    compiledContract: compiledTarget,
-    abi: TargetSource as Abi,
-  });
+  const onDeployFund = async () => {
 
-
-
-  useEffect(() => {
-    if (!compiledTarget) {
-      getCompiledVault().then(setCompiledTarget);
-    }
-
-  }, []);
-
-
-  useEffect(() => {
-    if (compiledTarget != undefined && deployedVaultAddress == "") {
-      setTimeout(function () {
-        handleDeploy()
-      }, 2000);
-    }
-  }, [compiledTarget]);
-
-  const handleDeploy = async () => {
-    // provider.deployContract(
-    //   {
-
-    //   }
-    // )
-    onDeploy()
-  };
-
-
-
-
-
-
-  const onDeploy = async () => {
-    if (deploying) return;
-    setDeploying(true);
-    const _deployTarget = async () => {
-      const deployment = await deployTarget({
+    if (deploying == false) {
+      const raw = await fetch("/Vault.json");
+      const compiled = json.parse(await raw.text());
+      const erc20Response = await provider.deployContract({
+        contract: compiled,
         constructorCalldata: [
           hexToDecimalString(
             contractAddress.VaultFactory
@@ -276,21 +243,71 @@ const Create: NextPage = () => {
           hexToDecimalString(
             contractAddress.Comptroller
           ),
-        ],
+        ]
       });
-      if (deployment) {
-        console.log(deployment.address)
-        setDeployedVaultAddress(deployment.address);
-        setDeployedVaultHash(deployment.deployTransactionHash);
-        await library
-          .waitForTransaction(deployment.deployTransactionHash)
-          .then(() => settxAccepted(1));
-
-        setDeploying(false);
+      setDeploying(true);
+      if (erc20Response.address) {
+        console.log("Waiting for Tx to be Accepted on Starknet - ERC20 Deployment...");
+        console.log(erc20Response.address)
+        setDeployedVaultAddress(erc20Response.address);
+        await provider.waitForTransaction(erc20Response.transaction_hash).then(() => settxAccepted(1));
       }
-    };
-    await _deployTarget();
-  };
+    }
+  }
+
+
+
+  useEffect(() => {
+    onDeployFund()
+
+  }, []);
+
+
+  // useEffect(() => {
+  //   if (!compiledTarget) {
+  //     getCompiledVault().then(setCompiledTarget);
+
+  //   }
+
+  // }, []);
+
+
+  // useEffect(() => {
+  //   if (compiledTarget != undefined && deployedVaultAddress == "") {
+  //     setTimeout(function () {
+  //       onDeploy()
+  //     }, 2000);
+  //   }
+  // }, [compiledTarget]);
+
+
+
+  // const onDeploy = async () => {
+
+  //   if (deploying) return;
+
+  //   setDeploying(true);
+  //   const deployment = await deployTarget({
+  //     constructorCalldata: [
+  //       hexToDecimalString(
+  //         contractAddress.VaultFactory
+  //       ),
+  //       hexToDecimalString(
+  //         contractAddress.Comptroller
+  //       ),
+  //     ],
+  //   });
+  //   if (deployment) {
+  //     console.log(deployment.address)
+  //     setDeployedVaultAddress(deployment.address);
+  //     setDeployedVaultHash(deployment.deployTransactionHash);
+  //     await library
+  //       .waitForTransaction(deployment.deployTransactionHash)
+  //       .then(() => settxAccepted(1));
+
+  //     setDeploying(false);
+  //   }
+  // };
 
   const targetLink =
     "https://goerli.voyager.online/contract/" + deployedVaultAddress;
@@ -305,24 +322,22 @@ const Create: NextPage = () => {
   ];
 
   const dominationAssetsList = [
-    { value: 1, path: btc, alt: "btc" },
     { value: 0, path: eth, alt: "eth" },
-    { value: 2, path: zkp, alt: "zkp" },
+    { value: 1, path: btc, alt: "btc" },
+    { value: 2, path: zkp, alt: "ast" },
     { value: 3, path: tst, alt: "tst" },
-    { value: 4, path: ethzkp, alt: "ethzkp" },
+    { value: 4, path: ethzkp, alt: "ethast" },
     { value: 5, path: btctst, alt: "btctst" },
-    { value: 6, path: ethtst, alt: "ethtst" },
-    { value: 7, path: ethbtc, alt: "ethbtc" },
+    { value: 6, path: ethbtc, alt: "ethbtc" },
   ];
   const assetsList = [
-    { value: 0, path: btc, alt: "btc" },
-    { value: 1, path: eth, alt: "eth" },
-    { value: 2, path: zkp, alt: "zkp" },
+    { value: 0, path: eth, alt: "eth" },
+    { value: 1, path: btc, alt: "btc" },
+    { value: 2, path: zkp, alt: "ast" },
     { value: 3, path: tst, alt: "tst" },
-    { value: 4, path: ethzkp, alt: "ethzkp" },
+    { value: 4, path: ethzkp, alt: "ethast" },
     { value: 5, path: btctst, alt: "btctst" },
-    { value: 6, path: ethtst, alt: "ethtst" },
-    { value: 7, path: ethbtc, alt: "ethbtc" },
+    { value: 6, path: ethbtc, alt: "ethbtc" },
   ];
 
   function validateName(value) {
@@ -347,7 +362,7 @@ const Create: NextPage = () => {
 
   function validateStrategy(value) {
     let error;
-    if (value.length > 80) {
+    if (value.length > 140) {
       error = "too long 😱";
     }
     return error;
@@ -358,8 +373,6 @@ const Create: NextPage = () => {
   useEffect(() => {
     if (account != undefined && account?.address != "") {
       const assetAddress = Asset[denominationAsset].address.toString()
-      console.log(account.address)
-      console.log(assetAddress)
       const res1 = provider.callContract({
         contractAddress: assetAddress,
         entrypoint: "balanceOf",
@@ -402,18 +415,82 @@ const Create: NextPage = () => {
           setTimeout(() => {
             // alert(JSON.stringify(values, null, 8));
 
-            let dataFinance_ = [{
+
+            let dataFinance_: DataChart = [{
               sharePrice: values.amount / values.shareAmount,
               date: Date.now(),
               gav: values.amount
             }]
+
+            let dataFinanceD_: DataChart = []
+            let dataFinanceW_: DataChart = []
+            let dataFinanceM_: DataChart = []
+            let day_epoch = moment().subtract(1, "days").valueOf();
+            let week_epoch = moment().subtract(1, "weeks").valueOf();
+            let month_epoch = moment().subtract(1, "months").valueOf();
+            for (let pas = 0; pas < 24; pas++) {
+              let _epoch = day_epoch + pas * 3600000;
+              let _sharePrice = 0;
+              let _gav = 0;
+              dataFinanceD_.push({
+                date: _epoch,
+                sharePrice: _sharePrice,
+                gav: _gav,
+              });
+            }
+
+            dataFinanceD_.push({
+              sharePrice: values.amount / values.shareAmount,
+              date: Date.now(),
+              gav: values.amount
+            })
+
+            for (let pas = 0; pas < 24 * 7; pas++) {
+              let _epoch = day_epoch + pas * 3600000;
+              let _sharePrice = 0;
+              let _gav = 0;
+              dataFinanceW_.push({
+                date: _epoch,
+                sharePrice: _sharePrice,
+                gav: _gav,
+              });
+            }
+            dataFinanceW_.push({
+              sharePrice: values.amount / values.shareAmount,
+              date: Date.now(),
+              gav: values.amount
+            })
+
+            for (let pas = 0; pas < 24 * 30; pas++) {
+              let _epoch = day_epoch + pas * 3600000;
+              let _sharePrice = 0;
+              let _gav = 0;
+              dataFinanceM_.push({
+                date: _epoch,
+                sharePrice: _sharePrice,
+                gav: _gav,
+              });
+            }
+            dataFinanceM_.push({
+              sharePrice: values.amount / values.shareAmount,
+              date: Date.now(),
+              gav: values.amount
+            })
+
             let data: ContractInfo = {
               fundAddress: deployedVaultAddress,
               name: values.name,
               symbol: values.symbol,
               strategy: values.strategy,
               tags: values.tags,
+              dataFinanceD: dataFinanceD_,
+              dataFinanceW: dataFinanceW_,
+              dataFinanceM: dataFinanceM_,
               dataFinance: dataFinance_,
+              dailyIncome: 0,
+              weeklyIncome: 0,
+              monthlyIncome: 0,
+              totalIncome: 0,
               image: values.image
             }
             let _tabI: any[] = [];
@@ -458,7 +535,7 @@ const Create: NextPage = () => {
             _tabI.push(max.toString());
             _tabI.push("0");
 
-            _tabI.push(values.lockup);
+            _tabI.push((parseFloat(values.lockup) * 3600).toString());
             _tabI.push(values.type == "Public" ? "1" : "0")
 
             var _tabA: String[] = []
@@ -760,7 +837,7 @@ const Create: NextPage = () => {
                       Harvest Lockup (Hours)
                     </Text>
                     <Flex direction={"row"} gap="50px">
-                      <Text>3 hours min</Text>
+                      <Text>0</Text>
 
                       <Slider
                         flex="1"
@@ -769,7 +846,7 @@ const Create: NextPage = () => {
                         onChange={(v) => {
                           props.setFieldValue("lockup", v);
                         }}
-                        min={3}
+                        min={0}
                         max={168}
                         step={1}
                       >

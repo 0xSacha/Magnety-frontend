@@ -50,21 +50,27 @@ export function useContractFactory({
     }, [compiledContract, library, abi]);
 
     const deploy = useCallback(
-        async ({ constructorCalldata, addressSalt }: DeployArgs) => {
-            console.log(factory)
-            console.log(constructorCalldata)
-            console.log(addressSalt)
-            if (factory) {
-                console.log("facory is here")
-                const contract = await factory.deploy(constructorCalldata, addressSalt);
-                addTransaction({
-                    status: "TRANSACTION_RECEIVED",
-                    transactionHash: contract.deployTransactionHash ?? "",
-                });
-                setContract(contract);
-                return contract;
+        async ({ constructorCalldata }: DeployArgs) => {
+            console.log(compiledContract)
+
+            if (compiledContract) {
+
+                const factory2: ContractFactory = new ContractFactory(compiledContract, library, abi)
+
+
+                console.log(factory2)
+
+                if (factory) {
+                    console.log("facory is here")
+                    const contract = await factory.deploy(constructorCalldata);
+                    addTransaction({
+                        status: "TRANSACTION_RECEIVED",
+                        transactionHash: contract.deployTransactionHash ?? "",
+                    });
+                    setContract(contract);
+                    return contract;
+                }
             }
-           
             return undefined;
         },
         [factory]

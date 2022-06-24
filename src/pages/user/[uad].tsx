@@ -98,7 +98,7 @@ function UserPage(props: UserPageProps) {
 
   async function getFundInfo(address: string, amount: number) {
     let currentFundInfo = userFundInfo;
-    const res = await fetch("http://localhost:3000/api/contract/" + address);
+    const res = await fetch(process.env.URL + `api/contract/` + address);
     if (res.status == 200) {
       const { data } = await res.json();
       currentFundInfo.push({
@@ -115,7 +115,7 @@ function UserPage(props: UserPageProps) {
       });
     }
     setUserFundInfo(currentFundInfo);
-    
+
     console.log(amount);
     console.log(currentFundInfo.length);
     if (currentFundInfo.length == amount) {
@@ -127,7 +127,7 @@ function UserPage(props: UserPageProps) {
 
   async function getShareInfo(fund: string, tokenId: string, amount: number) {
     let currentShareInfo = userShareInfo;
-    const res = await fetch("http://localhost:3000/api/contract/" + fund);
+    const res = await fetch(process.env.URL + `api/contract/` + fund);
     if (res.status == 200) {
       const { data } = await res.json();
       currentShareInfo.push({
@@ -239,7 +239,7 @@ function UserPage(props: UserPageProps) {
   }
 
   async function postDB(data: UserInfo) {
-    await fetch(`http://localhost:3000/api/user/${userAddress}`, {
+    await fetch(process.env.URL + `api/user/${userAddress}`, {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -697,7 +697,7 @@ function UserPage(props: UserPageProps) {
         </div>
 
         {!editMode && (
-          <Flex direction={"row"} justifyContent={"space-between"} margin = {"2vw"}>
+          <Flex direction={"row"} justifyContent={"space-between"} margin={"2vw"}>
             <Flex className={`${styles.vaultCard}`}>
               {showFunds == false ? (
                 <Text>Fetching Funds</Text>
@@ -732,8 +732,8 @@ function UserPage(props: UserPageProps) {
                       </Flex>
                     </Link>
                   ))
-                :
-                <Text>⌛</Text>}
+                    :
+                    <Text>⌛</Text>}
                 </div>
               )}
             </Flex>
@@ -748,40 +748,40 @@ function UserPage(props: UserPageProps) {
               {showFunds2 == false ? (
                 <Text>Fetching Shares</Text>
               ) : (
-                <Flex direction={"column"}  gap={"1vw"}>
-                                    <Text fontWeight={"semibold"} fontSize={"3xl"}>
+                <Flex direction={"column"} gap={"1vw"}>
+                  <Text fontWeight={"semibold"} fontSize={"3xl"}>
                     {" "}
-                    {userShareAmount} Shares 
+                    {userShareAmount} Shares
                   </Text>
                   <Flex flexWrap={"nowrap"} overflowY={"scroll"} width={"100%"} height={"10vh"}>
-                  {userShareInfo != [] ? userShareInfo.map((vault, index) => (
-                    <Link href={`/vault/${vault.address}`}>
-                      <Flex
-                        gap={"1vw"}
-                        alignItems={"center"}
-                      >
-                        <Box
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            borderRadius: "50%",
-                            overflow: "hidden",
-                            backgroundColor: "black",
-                          }}
+                    {userShareInfo != [] ? userShareInfo.map((vault, index) => (
+                      <Link href={`/vault/${vault.address}`}>
+                        <Flex
+                          gap={"1vw"}
+                          alignItems={"center"}
                         >
-                          <img
-                            src={vault.image}
-                            style={{ objectFit: "cover" }}
-                          />
-                        </Box>
-                        <div>{vault.name}</div>
-                        <div>ID: {vault.tokenId}</div>
-                      </Flex>
-                    </Link>
-                  ))
-                :
-                <Flex>⌛</Flex>
-                }</Flex>
+                          <Box
+                            style={{
+                              width: "30px",
+                              height: "30px",
+                              borderRadius: "50%",
+                              overflow: "hidden",
+                              backgroundColor: "black",
+                            }}
+                          >
+                            <img
+                              src={vault.image}
+                              style={{ objectFit: "cover" }}
+                            />
+                          </Box>
+                          <div>{vault.name}</div>
+                          <div>ID: {vault.tokenId}</div>
+                        </Flex>
+                      </Link>
+                    ))
+                      :
+                      <Flex>⌛</Flex>
+                    }</Flex>
                 </Flex>
               )}
             </Box>
@@ -797,7 +797,7 @@ export default UserPage;
 export async function getServerSideProps(context: any) {
   // fetch the todo, the param was received via context.query.id
   const res = await fetch(
-    "http://localhost:3000/api/user/" + context.query.uad
+    process.env.URL + `api/user/` + context.query.uad
   );
   if (res.status == 200) {
     console.log(res);

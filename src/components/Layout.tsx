@@ -27,6 +27,7 @@ import Linkedin from "../image/linkedin.svg";
 import Medium from "../image/medium.svg";
 import Notion from "../image/notion.svg";
 import { hexToDecimalString } from "starknet/dist/utils/number";
+import process from "process";
 
 type fundInfo = {
   image: string;
@@ -49,7 +50,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
   const [showFunds, setShowFunds] = useState(false);
 
   async function getUserInfo() {
-    const res = await fetch("http://localhost:3000/api/user/" + address);
+    const res = await fetch(process.env.URL + `api/user/` + address);
 
     if (res.status == 200) {
       const { data } = await res.json();
@@ -60,7 +61,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
 
   async function getFundInfo(address: string, amount: number) {
     let currentFundInfo = userFundInfo
-    const res = await fetch("http://localhost:3000/api/contract/" + address);
+    const res = await fetch(process.env.URL + `api/contract/` + address);
     if (res.status == 200) {
       const { data } = await res.json();
       currentFundInfo.push(
@@ -81,19 +82,15 @@ const Layout = (props: PropsWithChildren<unknown>) => {
       )
     }
     setUserFundInfo(currentFundInfo)
-    console.log(amount)
-    console.log(currentFundInfo.length)
+
     if (currentFundInfo.length == amount) {
-      console.log("donnnnnnne")
       setShowFunds(true)
     }
-    console.log(currentFundInfo)
   }
 
   useEffect(() => {
     if (address !== "connect wallet") {
       getUserInfo();
-      console.log(address)
       const res = provider.callContract({
         contractAddress: contractAddress.VaultFactory,
         entrypoint: "getUserVaultAmount",
@@ -101,7 +98,6 @@ const Layout = (props: PropsWithChildren<unknown>) => {
       });
       res
         .then((value) => {
-          console.log(value)
           const amount = parseFloat(hexToDecimalString(value.result[0]))
           setUserFundAmount(amount)
           for (let index = 0; index < amount; index++) {
@@ -115,7 +111,6 @@ const Layout = (props: PropsWithChildren<unknown>) => {
             });
             res2
               .then((value) => {
-                console.log(value)
                 getFundInfo(value.result[0], amount)
 
               }).catch((err) => {
@@ -129,8 +124,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
           console.log(err);
         });
     }
-    console.log("fff");
-    console.log(address);
+
   }, [address]);
 
   useEffect(() => {
@@ -200,8 +194,8 @@ const Layout = (props: PropsWithChildren<unknown>) => {
                     fonctionnalities
                   </Text>
 
-               
-                                        </Flex>
+
+                </Flex>
                 <ConnectWallet />
               </Flex>
             )}

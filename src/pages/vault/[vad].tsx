@@ -117,7 +117,7 @@ type userShareData = {
 }[];
 
 type DataChart = {
-  epoch: number;
+  date: number;
   sharePrice: number;
   gav: number;
 }[];
@@ -158,7 +158,7 @@ const vault: NextPage = () => {
 
   const loadData = async () => {
     const res = await fetch(
-      "http://localhost:3000/api/contract/" + String(vad)
+      process.env.URL + `api/contract/` + String(vad)
     );
     if (res.status == 200) {
       const { data } = await res.json();
@@ -172,7 +172,7 @@ const vault: NextPage = () => {
 
   const loadDataAssetManager = async (assetManager_: string) => {
     const res = await fetch(
-      "http://localhost:3000/api/user/" + `${assetManager_}`
+      process.env.URL + `api/user/${assetManager_}`
     );
     if (res.status == 200) {
       const { data } = await res.json();
@@ -313,19 +313,18 @@ const vault: NextPage = () => {
 
   const ETH_ad = "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
   const BTC_ad = "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7"
-  const ZKP_ad = "0x7a6dde277913b4e30163974bf3d8ed263abb7c7700a18524f5edf38a13d39ec"
+  const AST_ad = "0x5a6b68181bb48501a7a447a3f99936827e41d77114728960f22892f02e24928"
   const TST_ad = "0x7394cbe418daa16e42b87ba67372d4ab4a5df0b05c6e554d158458ce245bc10"
 
   // LP
-  const Eth_ZKP_ad = "0x68f02f0573d85b5d54942eea4c1bf97c38ca0e3e34fe3c974d1a3feef6c33be"
-  const ETH_TST_ad = "0x212040ea46c99455a30b62bfe9239f100271a198a0fdf0e86befc30e510e443"
+  const Eth_AST_ad = "0x038bd0f8aff67ade736159d373cf3399d15529445b147b6b3348cc96cdf66ad8"
+  const BTC_TST_ad = "0x06d0845eb49bcbef8c91f9717623b56331cc4205a5113bddef98ec40f050edc8"
   const ETH_BTC_ad = "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945"
-  const BTC_TST_ad = "0x6d0845eb49bcbef8c91f9717623b56331cc4205a5113bddef98ec40f050edc8"
 
 
 
-  const ARFSWAPTABADDRESS = [ETH_ad, BTC_ad, ZKP_ad, TST_ad]
-  const ARFLPTABADDRESS = [Eth_ZKP_ad, ETH_TST_ad, ETH_BTC_ad, BTC_TST_ad]
+  const ARFSWAPTABADDRESS = [ETH_ad, BTC_ad, AST_ad, TST_ad]
+  const ARFLPTABADDRESS = [Eth_AST_ad, BTC_TST_ad, ETH_BTC_ad, BTC_TST_ad]
 
 
   useEffect(() => {
@@ -755,7 +754,7 @@ const vault: NextPage = () => {
       } else {
         if (
           address ==
-          "0x7a6dde277913b4e30163974bf3d8ed263abb7c7700a18524f5edf38a13d39ec"
+          "0x05a6b68181bb48501a7a447a3f99936827e41d77114728960f22892f02e24928"
         ) {
           return zkp;
         } else {
@@ -767,7 +766,7 @@ const vault: NextPage = () => {
           } else {
             if (
               address ==
-              "0x68f02f0573d85b5d54942eea4c1bf97c38ca0e3e34fe3c974d1a3feef6c33be"
+              "0x038bd0f8aff67ade736159d373cf3399d15529445b147b6b3348cc96cdf66ad8"
             ) {
               return ethzkp;
             } else {
@@ -777,28 +776,23 @@ const vault: NextPage = () => {
               ) {
                 return btctst;
               } else {
+
                 if (
                   address ==
-                  "0x212040ea46c99455a30b62bfe9239f100271a198a0fdf0e86befc30e510e443"
+                  "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945"
                 ) {
-                  return ethtst;
+                  return ethbtc;
                 } else {
                   if (
                     address ==
-                    "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945"
+                    "0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a"
                   ) {
-                    return ethbtc;
+                    return alphaRoad;
                   } else {
-                    if (
-                      address ==
-                      "0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a"
-                    ) {
-                      return alphaRoad;
-                    } else {
-                      return ethtst;
-                    }
+                    return ethtst;
                   }
                 }
+
               }
             }
           }
@@ -1617,164 +1611,17 @@ const vault: NextPage = () => {
 
   useEffect(() => {
     if (vaultInfo?.dataFinance != undefined) {
-      setChartData([]);
-      let list = vaultInfo?.dataFinance;
-      let render: DataChart = [];
-      let tabEpoch: number[] = [];
-      //convert date in epoch
-      list.forEach((d) => {
-        tabEpoch.push(d.date); // date -> epoch
-      });
-
-      if (list.length != 0) {
-        setTotalIncome(
-          ((list[list.length - 1].sharePrice - list[0].sharePrice) /
-            list[0].sharePrice) *
-          100
-        );
-      } else {
-        setTotalIncome(0);
-      }
-
-      let day_epoch = moment().subtract(1, "days").valueOf();
-      let now = moment().valueOf();
-      const closestD = tabEpoch.reduce((a, b) => {
-        return Math.abs(b - day_epoch) < Math.abs(a - day_epoch) ? b : a;
-      });
-      let closestIndexD = tabEpoch.indexOf(closestD);
-      let diffEpochD = Math.abs(day_epoch - closestD);
-      if (diffEpochD <= 3600000) {
-        setDailyIncome(
-          ((list[list.length - 1].sharePrice - list[closestIndexD].sharePrice) /
-            list[closestIndexD].sharePrice) *
-          100
-        );
-      } else {
-        setDailyIncome(0);
-      }
-
-      let week_epoch = moment().subtract(1, "weeks").valueOf();
-      const closestW = tabEpoch.reduce((a, b) => {
-        return Math.abs(b - week_epoch) < Math.abs(a - week_epoch) ? b : a;
-      });
-      let closestIndexW = tabEpoch.indexOf(closestW);
-      let diffEpochW = Math.abs(week_epoch - closestW);
-      if (diffEpochW <= 3600000) {
-        setWeeklyIncome(
-          ((list[list.length - 1].sharePrice - list[closestIndexW].sharePrice) /
-            list[closestIndexW].sharePrice) *
-          100
-        );
-      } else {
-        setWeeklyIncome(0);
-      }
-
-      let month_epoch = moment().subtract(1, "months").valueOf();
-      const closestM = tabEpoch.reduce((a, b) => {
-        return Math.abs(b - month_epoch) < Math.abs(a - month_epoch) ? b : a;
-      });
-      let closestIndexM = tabEpoch.indexOf(closestM);
-      let diffEpochM = Math.abs(month_epoch - closestM);
-      if (diffEpochM < 3600000) {
-        setMonthlyIncome(
-          ((list[list.length - 1].sharePrice - list[closestIndexM].sharePrice) /
-            list[closestIndexM].sharePrice) *
-          100
-        );
-      } else {
-        setMonthlyIncome(0);
-      }
-
       if (timeframe == 0) {
-        if (diffEpochD >= 3600000) {
-          let elemAmount = Math.floor(diffEpochD / 3600000);
-          for (let pas = 0; pas < elemAmount; pas++) {
-            let _epoch = day_epoch + pas * 3600000;
-            let _sharePrice = 0;
-            let _gav = 0;
-            render.push({
-              epoch: _epoch,
-              sharePrice: _sharePrice,
-              gav: _gav,
-            });
-          }
-        }
-        for (let pas = closestIndexD; pas < tabEpoch.length; pas++) {
-          let _epoch = tabEpoch[pas];
-          let _sharePrice = list[pas].sharePrice;
-          let _gav = list[pas].gav;
-          render.push({
-            epoch: _epoch,
-            sharePrice: _sharePrice,
-            gav: _gav,
-          });
-        }
-        setChartData(render);
+        setChartData(vaultInfo?.dataFinanceD);
       }
       if (timeframe == 1) {
-        if (diffEpochW >= 3600000) {
-          let elemAmount = Math.floor(diffEpochW / 3600000);
-          for (let pas = 0; pas < elemAmount; pas++) {
-            let _epoch = week_epoch + pas * 3600000;
-            let _sharePrice = 0;
-            let _gav = 0;
-            render.push({
-              epoch: _epoch,
-              sharePrice: _sharePrice,
-              gav: _gav,
-            });
-          }
-        }
-        for (let pas = closestIndexW; pas < tabEpoch.length; pas++) {
-          let _epoch = tabEpoch[pas];
-          let _sharePrice = list[pas].sharePrice;
-          let _gav = list[pas].gav;
-          render.push({
-            epoch: _epoch,
-            sharePrice: _sharePrice,
-            gav: _gav,
-          });
-        }
-        setChartData(render);
+        setChartData(vaultInfo?.dataFinanceW);
       }
       if (timeframe == 2) {
-        if (diffEpochM >= 3600000) {
-          let elemAmount = Math.floor(diffEpochM / 3600000);
-          for (let pas = 0; pas < elemAmount; pas++) {
-            let _epoch = month_epoch + pas * 3600000;
-            let _sharePrice = 0;
-            let _gav = 0;
-            render.push({
-              epoch: _epoch,
-              sharePrice: _sharePrice,
-              gav: _gav,
-            });
-          }
-        }
-        for (let pas = closestIndexM; pas < tabEpoch.length; pas++) {
-          let _epoch = tabEpoch[pas];
-          let _sharePrice = list[pas].sharePrice;
-          let _gav = list[pas].gav;
-          render.push({
-            epoch: _epoch,
-            sharePrice: _sharePrice,
-            gav: _gav,
-          });
-        }
-        setChartData(render);
+        setChartData(vaultInfo?.dataFinanceM);
       }
       if (timeframe == 3) {
-        for (let pas = 0; pas < tabEpoch.length; pas++) {
-          let _epoch = tabEpoch[pas];
-          let _sharePrice = list[pas].sharePrice;
-          let _gav = list[pas].gav;
-          render.push({
-            epoch: _epoch,
-            sharePrice: _sharePrice,
-            gav: _gav,
-          });
-        }
-        setChartData(render);
+        setChartData(vaultInfo?.dataFinance);
       }
     }
   }, [timeframe, vaultInfo]);
@@ -2671,7 +2518,7 @@ const vault: NextPage = () => {
                               >
                                 <AreaChart data={chartData}>
                                   <XAxis
-                                    dataKey="epoch"
+                                    dataKey="date"
                                     tickFormatter={dateFormatter}
                                     minTickGap={25}
                                   />

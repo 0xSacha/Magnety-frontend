@@ -11,8 +11,8 @@ export const Asset =
         isAllowedDeno: true
     },
     {
-        id: "ZKP",
-        address: '0x07a6dde277913b4e30163974bf3d8ed263abb7c7700a18524f5edf38a13d39ec',
+        id: "AST",
+        address: '0x05a6b68181bb48501a7a447a3f99936827e41d77114728960f22892f02e24928',
         isAllowedDeno: false
     },
     {
@@ -21,18 +21,13 @@ export const Asset =
         isAllowedDeno: false
     },
     {
-        id: "ETH-ZKP LP",
-        address: '0x068f02f0573d85b5d54942eea4c1bf97c38ca0e3e34fe3c974d1a3feef6c33be',
+        id: "ETH-AST LP",
+        address: '0x038bd0f8aff67ade736159d373cf3399d15529445b147b6b3348cc96cdf66ad8',
         isAllowedDeno: false
     },
     {
         id: "BTC-TST LP",
         address: '0x06d0845eb49bcbef8c91f9717623b56331cc4205a5113bddef98ec40f050edc8',
-        isAllowedDeno: false
-    },
-    {
-        id: "ETH-TST LP",
-        address: '0x0212040ea46c99455a30b62bfe9239f100271a198a0fdf0e86befc30e510e443',
         isAllowedDeno: false
     },
     {
