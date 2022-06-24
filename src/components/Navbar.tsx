@@ -16,6 +16,12 @@ export default () => {
 
   const NAVBAR_ITEMS: HeaderListItem[] = [
     {
+      label: "Home",
+      onClick: (event: MouseEvent) => {
+        console.log("MarketPlace clicked");
+      },
+    },
+    {
       label: "MarketPlace",
       onClick: (event: MouseEvent) => {
         console.log("MarketPlace clicked");

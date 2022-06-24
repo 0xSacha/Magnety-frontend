@@ -22,6 +22,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 
+import neon from "../image/logo_neon.png"
+
 import VDatabase from "./vault/vaults.json";
 import { getStarknet, AccountInterface } from "../starknetWrapper";
 import { contractAddress } from "~/registry/address";
@@ -36,7 +38,9 @@ import btctst from "../image/BTC-TST.png";
 import ethtst from "../image/ETH-TST.png";
 import ethbtc from "../image/ETH-BTC.png";
 import { Asset } from "~/registry/tokenSupported";
+import { GiRadiations } from "react-icons/gi";
 
+const [userFundInfo, setUserFundInfo] = useState<fundInfo[]>([]);
 const AssetTab = [btc, eth, zkp, tst, ethzkp, btctst, ethtst, ethbtc]
 const ProtocolTab = [alphaRoad]
 
@@ -58,6 +62,8 @@ const Home: NextPage = () => {
         console.log(err);
       });
   }, []);
+  const [showFunds, setShowFunds] = useState(false);
+
 
   return (
     <Box margin={"auto"} paddingTop={"5%"} gap={"200px"}>
@@ -66,48 +72,37 @@ const Home: NextPage = () => {
         flexWrap={"wrap"}
         width={"100%"}
         justifyContent={"space-evenly"}
-        alignItems={"center"}
+      // alignItems={"center"}
 
       >
-        <Flex direction={"column"} gap={"8vh"} width={"45%"}>
+
+
+        <Flex direction={"column"} gap={"4vh"} width={"45%"}>
           <Flex flexWrap={"wrap"} gap={"12px"}>
-            <Text fontWeight={"bold"} fontSize={"3rem"}>Discover / Monetize </Text><Text color={"#f6643c"} fontWeight={"bold"} fontSize={"3rem"}>Extraordinary</Text> <Text fontWeight={"bold"} fontSize={"3rem"}>DeFi strategies</Text>
+            <Text fontWeight={"bold"} fontSize={"3rem"}>Discover </Text><Text color={"#f6643c"} fontWeight={"bold"} fontSize={"3rem"}>Extraordinary</Text> <Text fontWeight={"bold"} fontSize={"3rem"}>DeFi strategies</Text>
           </Flex>
-          <Flex direction={"row"} gap={"8vh"} alignItems={"center"}>
-            <Flex gap={"1vh"} direction={"column"} width={"40%"} alignItems={"justify"}>
-              <Text fontSize={"25px"} fontWeight={"semibold"}>
-                Too Busy?<br></br>
-              </Text>
-              <Text fontSize={"13px"} textAlign={"justify"}>
-                get connected with qualificated asset managers, save both time and money
-              </Text>
-              <Button backgroundColor={"#f6643c"} width={"120px"}>
+          <Flex >
+            <Flex gap={"1vh"} direction={"row"}>
+              <Button backgroundColor={"#00318973"} padding={"5px"}>
                 <Link href={`/marketplace`} padding={"10px"}>
 
-
-                  <Text fontWeight={"bold"}>Explore</Text>
-
+                  <Flex>
+                    <Text fontWeight={"bold"} fontSize={"2xl"} >Delegate</Text>
+                  </Flex>
                 </Link>
               </Button>
-            </Flex>
-            <Flex gap={"1vh"} direction={"column"} width={"40%"} alignItems={"justify"}>
-              <Text fontSize={"25px"} fontWeight={"semibold"}>
-                Too Pro?<br></br>
-              </Text>
-              <Text fontSize={"13px"} textAlign={"justify"}>
-                Deploy a new Fund and monetize your investment strategy
-              </Text>
-              <Button backgroundColor={"#f6643c"} width={"120px"}>
+
+
+              <Button backgroundColor={"#f6643c"} padding={"5px"}>
                 <Link href={`/create`} padding={"10px"}>
 
-                  <Text fontWeight={"bold"}>Create</Text>
+                  <Text fontWeight={"bold"} fontSize={"2xl"} >Monetize</Text>
 
                 </Link>
               </Button>
-
             </Flex>
-          </Flex>
 
+          </Flex>
         </Flex>
         <Link href={"/vault/"}>
           <Box
@@ -189,24 +184,8 @@ const Home: NextPage = () => {
           </Box>
         </Link>
       </Flex>
-      <Flex direction={"row"} justifyContent={"space-evenly"} marginTop={"8vh"} marginBottom={"5vh"} padding={"2vh"}>
+      <Flex direction={"row"} justifyContent={"space-evenly"} marginTop={"18vh"} marginBottom={"5vh"} padding={"2vh"}>
         <Flex direction={"column"} justifyContent={"space-evenly"} gap={"20px"}>
-          <Box
-            backgroundColor={"#0f0b1f"}
-            style={{ borderRadius: "10px" }}
-            borderTop={"solid 2px #f6643c"}
-            borderBottom={"solid 2px #f6643c"}
-            padding={"20px"}
-          >
-            <Flex direction={"column"}>
-              <Text fontSize={"3xl"}>
-                Total Funds created
-              </Text>
-              <Text fontWeight={"bold"} fontSize={"5xl"}>
-                {vaultAmount ? vaultAmount : ""}
-              </Text>
-            </Flex>
-          </Box>
           <Box
             className={` bg__dotted`}
             style={{ borderRadius: "10px" }}
@@ -215,11 +194,27 @@ const Home: NextPage = () => {
             padding={"20px"}
           >
             <Flex direction={"column"}>
-              <Text fontSize={"3xl"}>
-                Avergare APRs
+              <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
+                Total Funds created
               </Text>
-              <Text fontWeight={"bold"} fontSize={"5xl"}>
-                12%
+              <Text fontWeight={"bold"} fontSize={"4xl"} color={"#f6643cbb"}>
+                {vaultAmount ? vaultAmount : ""}
+              </Text>
+            </Flex>
+          </Box>
+          <Box
+            backgroundColor={"#f6643c"}
+            style={{ borderRadius: "10px" }}
+            borderTop={"solid 2px #f6643c"}
+            borderBottom={"solid 2px #f6643c"}
+            padding={"20px"}
+          >
+            <Flex direction={"column"}>
+              <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
+                Total Value Locked
+              </Text>
+              <Text fontWeight={"bold"} fontSize={"4xl"} color={"whiteAlpha"}>
+                12.236 ETH
               </Text>
             </Flex>
           </Box>
@@ -232,40 +227,81 @@ const Home: NextPage = () => {
           padding={"20px"}
           width={"30%"}
         >
-          <Flex direction={"column"}>
-            <Text fontSize={"3xl"}>
-              {AssetTab.length} Token Supported
-            </Text>
-            <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"100px"}>
-              {AssetTab.map((p, index) => (
-                <Box width={"20%"}>
-                  <Image src={p} />
-                </Box>
-              ))}
+          <Flex direction={"column"} gap={"25px"}>
+            <Flex direction={"column"}>
+              <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
+                {AssetTab.length} Token Supported
+              </Text>
+              <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"100px"}>
+                {AssetTab.map((p, index) => (
+                  <Box width={"10%"}>
+                    <Image src={p} />
+                  </Box>
+                ))}
 
+              </Flex>
+            </Flex>
+            <Flex direction={"column"}>
+              <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
+                {ProtocolTab.length} Protocol supported
+              </Text>
+              <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"100px"}>
+                {ProtocolTab.map((p, index) => (
+                  <Box width={"10%"}>
+                    <Image src={p} />
+                  </Box>
+                ))}
+
+              </Flex>
             </Flex>
           </Flex>
         </Box>
+
         <Box
-          backgroundColor={"#0f0b1f"}
-          // className={` bg__dotted`}
+          className={` bg__dotted`}
           style={{ borderRadius: "10px" }}
-          borderTop={"solid 2px #f6643c"}
-          borderBottom={"solid 2px #f6643c"}
+          borderRight={"solid 2px #f6643c"}
+          borderLeft={"solid 2px #f6643c"}
           padding={"20px"}
           width={"30%"}
         >
-          <Flex direction={"column"}>
-            <Text fontSize={"3xl"} >
-              {ProtocolTab.length} Protocol supported
-            </Text>
-            <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"100px"}>
-              {ProtocolTab.map((p, index) => (
-                <Box width={"23%"}>
-                  <Image src={p} />
-                </Box>
-              ))}
-
+          <Flex direction={"column"} gap={"25px"}>
+            <Flex direction={"column"}>
+              <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
+                Last funds created
+              </Text>
+              {showFunds == false ? (
+                <Text>Fetching Funds</Text>
+              ) : (
+                <div>
+                  {userFundInfo != [] ? userFundInfo.map((vault, index) => (
+                    <Link href={`/vault/${vault.address}`}>
+                      <Flex
+                        justifyContent={"space-between"}
+                        alignItems={"center"}
+                      >
+                        <Box
+                          style={{
+                            width: "60px",
+                            height: "60px",
+                            borderRadius: "50%",
+                            overflow: "hidden",
+                            backgroundColor: "black",
+                          }}
+                        >
+                          <img
+                            src={vault.image}
+                            style={{ objectFit: "cover" }}
+                          />
+                        </Box>
+                        <div>{vault.name}</div>
+                      </Flex>
+                    </Link>
+                  ))
+                    :
+                    <Text>⌛</Text>}
+                </div>
+              )}
             </Flex>
           </Flex>
         </Box>
