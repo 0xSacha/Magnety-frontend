@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import { useMemo } from "react";
 import React, { useEffect } from "react";
 import { ContractInfo } from "../utils/type";
+import Link from 'next/link'
 
 import { toBN, hexToDecimalString } from "starknet/dist/utils/number";
 import { TransactionList } from "~/components/TransactionList";
@@ -19,7 +20,6 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
-  Link,
   Text,
   Stack,
 } from "@chakra-ui/react";
@@ -162,7 +162,6 @@ const Home: NextPage = () => {
         </Flex>
         {vaultInfoStakingVault !== undefined &&
           <Link href={"/vault/" + vaultInfoStakingVault.fundAddress} width={"35%"} style={{ textDecoration: "none" }}>
-            {console.log(vaultInfoStakingVault)}
 
             <Box
               className={` bg__dotted`}
@@ -551,56 +550,6 @@ const Home: NextPage = () => {
           </Flex>
 
         </Box>
-
-        {/* <Box
-          className={` bg__dotted`}
-          style={{ borderRadius: "10px" }}
-          borderRight={"solid 2px #f6643c"}
-          borderLeft={"solid 2px #f6643c"}
-          padding={"20px"}
-          width={"30%"}
-        >
-          <Flex direction={"column"} gap={"25px"}>
-            <Flex direction={"column"}>
-              <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
-                Last funds created
-              </Text>
-              {showFunds == false ? (
-                <Text>Fetching Funds</Text>
-              ) : (
-                <div>
-                  {userFundInfo != [] ? userFundInfo.map((vault, index) => (
-                    <Link href={`/vault/${vault.address}`}>
-                      <Flex
-                        justifyContent={"space-between"}
-                        alignItems={"center"}
-                      >
-                        <Box
-                          style={{
-                            width: "60px",
-                            height: "60px",
-                            borderRadius: "50%",
-                            overflow: "hidden",
-                            backgroundColor: "black",
-                          }}
-                        >
-                          <img
-                            src={vault.image}
-                            style={{ objectFit: "cover" }}
-                          />
-                        </Box>
-                        <div>{vault.name}</div>
-                      </Flex>
-                    </Link>
-                  ))
-                    :
-                    <Text>⌛</Text>}
-                </div>
-              )}
-            </Flex>
-          </Flex>
-        </Box> */}
-
       </Flex>
     </Box>
   );
