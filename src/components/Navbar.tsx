@@ -73,7 +73,7 @@ export default () => {
           </Link>
         </ul>
         <ul>
-          <Link href={process.env.URL + "/vault/0x3acdb97d5fc69eeb39ba3517754372c88ccdcc8563d7c49636fde0b0a8f93da"}>
+          <Link href={ "/vault/0x3acdb97d5fc69eeb39ba3517754372c88ccdcc8563d7c49636fde0b0a8f93da"}>
             <li className={''}>
               Staking
             </li>
