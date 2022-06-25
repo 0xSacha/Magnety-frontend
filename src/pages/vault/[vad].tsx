@@ -253,6 +253,8 @@ const vault: NextPage = () => {
   const [buySwapToken, setBuySwapToken] = React.useState<string>();
   const [bringLiquidtyToken, setBringLiquidtyToken] = React.useState<string>();
   const [withdrawLiquidtyToken, setWithdrawLiquidtyToken] = React.useState<string>();
+  const [poolExist, setPoolExist] = React.useState<Boolean>(true);
+
 
 
 
@@ -289,6 +291,8 @@ const vault: NextPage = () => {
   const [TokenLPW2Rate, setTokenLP2WRate] = React.useState<number>(0);
 
   const [TokenLPInput, setTokenLPInput] = React.useState<number>(0);
+  const [allowedToSell, setAllowedToSell] = React.useState<Boolean>();
+  const [remainingTime, setRemainingTime] = React.useState<number>(0);
 
 
 
@@ -317,14 +321,14 @@ const vault: NextPage = () => {
   const TST_ad = "0x7394cbe418daa16e42b87ba67372d4ab4a5df0b05c6e554d158458ce245bc10"
 
   // LP
-  const Eth_AST_ad = "0x038bd0f8aff67ade736159d373cf3399d15529445b147b6b3348cc96cdf66ad8"
-  const BTC_TST_ad = "0x06d0845eb49bcbef8c91f9717623b56331cc4205a5113bddef98ec40f050edc8"
+  const Eth_AST_ad = "0x38bd0f8aff67ade736159d373cf3399d15529445b147b6b3348cc96cdf66ad8"
+  const BTC_TST_ad = "0x6d0845eb49bcbef8c91f9717623b56331cc4205a5113bddef98ec40f050edc8"
   const ETH_BTC_ad = "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945"
 
 
 
   const ARFSWAPTABADDRESS = [ETH_ad, BTC_ad, AST_ad, TST_ad]
-  const ARFLPTABADDRESS = [Eth_AST_ad, BTC_TST_ad, ETH_BTC_ad, BTC_TST_ad]
+  const ARFLPTABADDRESS = [Eth_AST_ad, ETH_BTC_ad, BTC_TST_ad]
 
 
   useEffect(() => {
@@ -347,6 +351,19 @@ const vault: NextPage = () => {
   }, [sellSwapToken]);
 
   useEffect(() => {
+    if (sellSwapToken) {
+      if (sellSwapToken && buySwapToken) {
+        if (sellSwapToken == AST_ad && buySwapToken == BTC_ad || buySwapToken == AST_ad && sellSwapToken == BTC_ad) {
+          setPoolExist(false)
+        }
+        else {
+          setPoolExist(true)
+        }
+      }
+    }
+  }, [sellSwapToken, buySwapToken]);
+
+  useEffect(() => {
     if (withdrawLiquidtyToken) {
       console.log(withdrawLiquidtyToken)
 
@@ -358,6 +375,22 @@ const vault: NextPage = () => {
         LP1 = ETH_ad
         LP2 = BTC_ad
       }
+
+      if (withdrawLiquidtyToken == Eth_AST_ad) {
+        setTokenLPW1(ETH_ad)
+        setTokenLPW2(AST_ad)
+        LP1 = ETH_ad
+        LP2 = AST_ad
+      }
+
+      if (withdrawLiquidtyToken == ETH_BTC_ad) {
+        setTokenLPW1(BTC_ad)
+        setTokenLPW2(TST_ad)
+        LP1 = BTC_ad
+        LP2 = TST_ad
+      }
+
+
 
       console.log("lesgo")
 
@@ -445,7 +478,6 @@ const vault: NextPage = () => {
   }, [withdrawLiquidtyToken]);
 
   useEffect(() => {
-    console.log("wtfff")
     if (bringLiquidtyToken) {
 
       let LP1 = "";
@@ -453,15 +485,23 @@ const vault: NextPage = () => {
       if (bringLiquidtyToken == ETH_BTC_ad) {
         setTokenLP1(ETH_ad)
         setTokenLP2(BTC_ad)
-        console.log("set ::::")
-        console.log(TokenLP1)
-        console.log(TokenLP2)
         LP1 = ETH_ad
         LP2 = BTC_ad
-
       }
-      console.log("wtf222ff")
 
+      if (bringLiquidtyToken == Eth_AST_ad) {
+        setTokenLP1(ETH_ad)
+        setTokenLP2(AST_ad)
+        LP1 = ETH_ad
+        LP2 = AST_ad
+      }
+
+      if (bringLiquidtyToken == BTC_TST_ad) {
+        setTokenLP1(BTC_ad)
+        setTokenLP2(TST_ad)
+        LP1 = BTC_ad
+        LP2 = TST_ad
+      }
 
       const res1 = provider.callContract({
         contractAddress: contractAddress.ValueInterpreter,
@@ -754,7 +794,7 @@ const vault: NextPage = () => {
       } else {
         if (
           address ==
-          "0x05a6b68181bb48501a7a447a3f99936827e41d77114728960f22892f02e24928"
+          "0x5a6b68181bb48501a7a447a3f99936827e41d77114728960f22892f02e24928"
         ) {
           return zkp;
         } else {
@@ -766,7 +806,7 @@ const vault: NextPage = () => {
           } else {
             if (
               address ==
-              "0x038bd0f8aff67ade736159d373cf3399d15529445b147b6b3348cc96cdf66ad8"
+              "0x38bd0f8aff67ade736159d373cf3399d15529445b147b6b3348cc96cdf66ad8"
             ) {
               return ethzkp;
             } else {
@@ -806,60 +846,55 @@ const vault: NextPage = () => {
       address ==
       "0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7"
     ) {
-      return "eth";
+      return "ETH";
     } else {
       if (
         address ==
         "0x72df4dc5b6c4df72e4288857317caf2ce9da166ab8719ab8306516a2fddfff7"
       ) {
-        return "btc";
+        return "BTC";
       } else {
         if (
           address ==
-          "0x7a6dde277913b4e30163974bf3d8ed263abb7c7700a18524f5edf38a13d39ec"
+          "0x5a6b68181bb48501a7a447a3f99936827e41d77114728960f22892f02e24928"
         ) {
-          return "zkp";
+          return "AST";
         } else {
           if (
             address ==
             "0x7394cbe418daa16e42b87ba67372d4ab4a5df0b05c6e554d158458ce245bc10"
           ) {
-            return "tst";
+            return "TST";
           } else {
             if (
               address ==
-              "0x68f02f0573d85b5d54942eea4c1bf97c38ca0e3e34fe3c974d1a3feef6c33be"
+              "0x38bd0f8aff67ade736159d373cf3399d15529445b147b6b3348cc96cdf66ad8"
             ) {
-              return "ethzkp";
+              return "ETH-AST";
             } else {
               if (
                 address ==
                 "0x6d0845eb49bcbef8c91f9717623b56331cc4205a5113bddef98ec40f050edc8"
               ) {
-                return "btctst";
+                return "BTC-TST";
               } else {
+
                 if (
                   address ==
-                  "0x212040ea46c99455a30b62bfe9239f100271a198a0fdf0e86befc30e510e443"
+                  "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945"
                 ) {
-                  return "ethtst";
+                  return "ETH-BTC";
                 } else {
                   if (
                     address ==
-                    "0x61fdcf831f23d070b26a4fdc9d43c2fbba1928a529f51b5335cd7b738f97945"
+                    "0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a"
                   ) {
-                    return "ethbtc";
+                    return "alphaRoad";
                   } else {
-                    if (
-                      address ==
-                      "0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a"
-                    ) {
-                      return "alphaRoad";
-                    } else {
-                      return "ethtst";
-                    }
+                    return "ethtst";
                   }
                 }
+
               }
             }
           }
@@ -1275,59 +1310,65 @@ const vault: NextPage = () => {
         });
 
 
-      const res19 = provider.callContract({
-        contractAddress: contractAddress.IntegrationManager,
-        entrypoint: "getAvailableAssets",
-        calldata: [],
-      });
-      res19
-        .then((value) => {
-          let tabAsset = value.result;
-          console.log(value.result)
-          tabAsset[0] = hexToDecimalString(tabAsset[0]);
-          const lenghtTab = tabAsset.shift();
-          setGeneralAllowedTrackedAsset(tabAsset);
-          console.log(tabAsset)
-          console.log(generalAllowedTrackedAsset)
-          const res20 = provider.callContract({
-            contractAddress: contractAddress.IntegrationManager,
-            entrypoint: "getAvailableIntegrations",
-            calldata: [hexToDecimalString(vaultAddress)],
-          });
-          res20
-            .then((value) => {
-              console.log(value.result)
-              let tabIntegration = value.result;
-              let tabIntegrationFinal: string[][] = [];
-              let firstIndex =
-                1 + parseFloat(lenghtTab == undefined ? "0" : lenghtTab) * 2;
-              const removeApproveIntegration = tabIntegration.splice(
-                0,
-                firstIndex
-              );
-              for (
-                let index = 0;
-                index < tabIntegration.length;
-                index = index + 2
-              ) {
-                const element = tabIntegration[index];
-                const element2 = tabIntegration[index + 1];
-                let shortTab: string[] = [];
-                shortTab.push(element);
-                shortTab.push(element2);
-                tabIntegrationFinal.push(shortTab);
-              }
-              setGeneralAllowedIntegration(tabIntegrationFinal);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      console.log(generalAllowedIntegration)
-      console.log(generalAllowedTrackedAsset)
+      // const res19 = provider.callContract({
+      //   contractAddress: contractAddress.IntegrationManager,
+      //   entrypoint: "getAvailableAssets",
+      //   calldata: [],
+      // });
+      // res19
+      //   .then((value) => {
+      //     let tabAsset = value.result;
+      //     console.log(value.result)
+      //     tabAsset[0] = hexToDecimalString(tabAsset[0]);
+      //     const lenghtTab = tabAsset.shift();
+      //     setGeneralAllowedTrackedAsset(tabAsset);
+      //     console.log(tabAsset)
+      //     console.log(generalAllowedTrackedAsset)
+      //     const res20 = provider.callContract({
+      //       contractAddress: contractAddress.IntegrationManager,
+      //       entrypoint: "getAvailableIntegrations",
+      //       calldata: [hexToDecimalString(vaultAddress)],
+      //     });
+      //     res20
+      //       .then((value) => {
+      //         console.log(value.result)
+      //         let tabIntegration = value.result;
+      //         let tabIntegrationFinal: string[][] = [];
+      //         let firstIndex =
+      //           1 + parseFloat(lenghtTab == undefined ? "0" : lenghtTab) * 2;
+      //         const removeApproveIntegration = tabIntegration.splice(
+      //           0,
+      //           firstIndex
+      //         );
+      //         for (
+      //           let index = 0;
+      //           index < tabIntegration.length;
+      //           index = index + 2
+      //         ) {
+      //           const element = tabIntegration[index];
+      //           const element2 = tabIntegration[index + 1];
+      //           let shortTab: string[] = [];
+      //           shortTab.push(element);
+      //           shortTab.push(element2);
+      //           tabIntegrationFinal.push(shortTab);
+      //         }
+      //         setGeneralAllowedIntegration(tabIntegrationFinal);
+      //       })
+      //       .catch((err) => {
+      //         console.log(err);
+      //       });
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+      // console.log(generalAllowedIntegration)
+      // console.log(generalAllowedTrackedAsset)
+      // const res21 = provider.callContract({
+      //   contractAddress: vaultAddress,
+      //   entrypoint: "getTrackedAssets",
+      //   calldata: [],
+      // });
+
 
     }
   }, [vaultAddress]);
@@ -1340,6 +1381,37 @@ const vault: NextPage = () => {
       return moment(date).format("L");
     }
   };
+
+  useEffect(() => {
+    if (sellTokenId) {
+      const res18 = provider.callContract({
+        contractAddress: vaultAddress,
+        entrypoint: "getMintedBlockTimesTamp",
+        calldata: [sellTokenId, "0"],
+      });
+      res18
+        .then((value) => {
+          let TT = parseFloat(hexToDecimalString(value.result[0]))
+          let currentTT_ = Date.now()
+          let currentTT = parseInt(currentTT_.toString().slice(0, -3))
+          let resultDiff = currentTT - (TT + parseFloat(timeLock))
+          if (resultDiff < 0) {
+            setAllowedToSell(true)
+          }
+          else {
+            setAllowedToSell(false)
+          }
+          setRemainingTime(Math.abs(resultDiff))
+        }
+        )
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+  }, [sellTokenId]);
+
+
 
   useEffect(() => {
     const { account } = getStarknet();
@@ -1552,7 +1624,7 @@ const vault: NextPage = () => {
                 let coinAllocation_ = (
                   (parseFloat(coinPrice_) / parseFloat(gav)) *
                   100
-                ).toPrecision(3).toString();
+                ).toString();
                 coinAllocation_ = coinAllocation_.concat("%");
 
                 tab_[pas].balance = coinBalance_
@@ -2622,16 +2694,16 @@ const vault: NextPage = () => {
                                       fontWeight={"bold"}
                                       fontSize={"1.125rem"}
                                       color={
-                                        dailyIncome
-                                          ? dailyIncome < 0
+                                        vaultInfo?.dailyIncome
+                                          ? vaultInfo?.dailyIncome < 0
                                             ? "rgb(237,33,49)"
                                             : "#31c48d"
                                           : "#31c48d"
                                       }
                                     >
-                                      {dailyIncome == 0
+                                      {vaultInfo?.dailyIncome == 0
                                         ? "--"
-                                        : dailyIncome?.toPrecision(4)}
+                                        : vaultInfo?.dailyIncome?.toPrecision(4)}
                                       %
                                     </Text>
                                   </Flex>
@@ -2646,16 +2718,16 @@ const vault: NextPage = () => {
                                       fontWeight={"bold"}
                                       fontSize={"1.125rem"}
                                       color={
-                                        weeklyIncome
-                                          ? weeklyIncome < 0
+                                        vaultInfo?.weeklyIncome
+                                          ? vaultInfo?.weeklyIncome < 0
                                             ? "rgb(237,33,49)"
                                             : "#31c48d"
                                           : "#31c48d"
                                       }
                                     >
-                                      {weeklyIncome == 0
+                                      {vaultInfo?.weeklyIncome == 0
                                         ? "--"
-                                        : weeklyIncome?.toPrecision(4)}
+                                        : vaultInfo?.weeklyIncome?.toPrecision(4)}
                                       %
                                     </Text>
                                   </Flex>
@@ -2670,16 +2742,16 @@ const vault: NextPage = () => {
                                       fontWeight={"bold"}
                                       fontSize={"1.125rem"}
                                       color={
-                                        monthlyIncome
-                                          ? monthlyIncome < 0
+                                        vaultInfo?.monthlyIncome
+                                          ? vaultInfo?.monthlyIncome < 0
                                             ? "rgb(237,33,49)"
                                             : "#31c48d"
                                           : "#31c48d"
                                       }
                                     >
-                                      {monthlyIncome == 0
+                                      {vaultInfo?.monthlyIncome == 0
                                         ? "--"
-                                        : monthlyIncome?.toPrecision(4)}
+                                        : vaultInfo?.monthlyIncome?.toPrecision(4)}
                                       %
                                     </Text>
                                   </Flex>
@@ -2694,16 +2766,16 @@ const vault: NextPage = () => {
                                       fontWeight={"bold"}
                                       fontSize={"1.125rem"}
                                       color={
-                                        totalIncome
-                                          ? totalIncome < 0
+                                        vaultInfo?.totalIncome
+                                          ? vaultInfo?.totalIncome < 0
                                             ? "rgb(237,33,49)"
                                             : "#31c48d"
                                           : "#31c48d"
                                       }
                                     >
-                                      {totalIncome == 0
+                                      {vaultInfo?.totalIncome == 0
                                         ? "--"
-                                        : totalIncome?.toPrecision(4)}
+                                        : vaultInfo?.totalIncome?.toPrecision(4)}
                                       %
                                     </Text>
                                   </Flex>
@@ -2810,7 +2882,7 @@ const vault: NextPage = () => {
                                 <tbody>
                                   <tr key={1}>
                                     <td>
-                                      <Text fontSize={"2xl"} fontWeight={"semibold"}>Entrance Fee</Text>
+                                      <Text fontSize={"2xl"} >Entrance Fee</Text>
                                     </td>
                                     <td>
                                       <div>
@@ -2819,7 +2891,7 @@ const vault: NextPage = () => {
                                     </td>
                                   </tr>
                                   <tr key={2}>
-                                    <td>  <Text fontSize={"2xl"} fontWeight={"semibold"}>Exit Fee </Text></td>
+                                    <td>  <Text fontSize={"2xl"} >Exit Fee </Text></td>
                                     <td>
                                       <div>
                                         <Text fontWeight={"bold"} fontSize={"3xl"}> {exitFee}%</Text>
@@ -2827,7 +2899,7 @@ const vault: NextPage = () => {
                                     </td>
                                   </tr>
                                   <tr key={3}>
-                                    <td>   <Text fontSize={"2xl"} fontWeight={"semibold"}> Performance Fee </Text></td>
+                                    <td>   <Text fontSize={"2xl"} > Performance Fee </Text></td>
                                     <td>
                                       <div>
                                         <Text fontWeight={"bold"} fontSize={"3xl"}> {performanceFee}%</Text>
@@ -2835,7 +2907,7 @@ const vault: NextPage = () => {
                                     </td>
                                   </tr>
                                   <tr key={4}>
-                                    <td>   <Text fontSize={"2xl"} fontWeight={"semibold"}>Management Fee </Text></td>
+                                    <td>   <Text fontSize={"2xl"} >Management Fee </Text></td>
                                     <td>
                                       <div>
                                         <Text fontWeight={"bold"} fontSize={"3xl"}> {managementFee}%</Text>
@@ -2867,18 +2939,18 @@ const vault: NextPage = () => {
                                 <div className="fs-24 fw-600">
                                   Deposit Limits
                                 </div>
-                                <div className="fs-20 fw-600">
+                                <div className="fs-20 fw-200">
                                   minimum : {minAmount} {denominationAsset}
                                 </div>
-                                <div className="fs-20 fw-600">
+                                <div className="fs-20 fw-200">
                                   maximum : {maxAmount} {denominationAsset}
                                 </div>
                               </div>
                               <div>
                                 <div className="fs-24 fw-600">Timelock</div>
-                                <div className="fs-20 fw-600">
+                                <div className="fs-20 fw-200">
                                   After minting shares, you'll have to wait :{" "}
-                                  {timeLock} seconds before you can sell it
+                                  {timeLock / 3600} hours before you can sell it
                                 </div>
                               </div>
                               <div>
@@ -3095,17 +3167,6 @@ const vault: NextPage = () => {
                         <TabPanels>
                           <TabPanel>
                             <Box>
-                              {/* <div className={`${styles.mint}`}>
-  <div className='fs-14' style={{ fontWeight: "bold" }}>
-    <div>
-      {acccountAddress.substring(0, 7)}...
-    </div>
-    <div className='fs-14 '>
-      &nbsp;&nbsp;&nbsp;{isAllowedDepositor ? "allowed depositor" : "not allowed to mint"}
-    </div>
-  </div>
-</div> */}
-
                               <Flex
                                 direction={"column"}
                                 gap={"20px"}
@@ -3140,7 +3201,8 @@ const vault: NextPage = () => {
                                       value={buyValue}
                                       onChange={handleChange}
                                       defaultValue={0}
-                                      max={parseFloat(userBalance)}
+                                      min={parseFloat(minAmount)}
+                                      max={Math.min(parseFloat(userBalance), parseFloat(maxAmount))}
                                     >
                                       <NumberInputField />
                                     </NumberInput>
@@ -3189,6 +3251,10 @@ const vault: NextPage = () => {
                                         </Text>
                                       </Flex>
                                     </Flex>
+                                  </Flex>
+                                  <Flex direction={"row"} justifyContent={'space-between'} width={"90%"}>
+                                    <Text fontWeight={"light"}>minimum {minAmount}</Text>
+                                    <Text fontWeight={"light"}>maximum {maxAmount}</Text>
                                   </Flex>
                                   <Flex
                                     justifyContent={"space-between"}
@@ -3331,278 +3397,296 @@ const vault: NextPage = () => {
                               </Box>
 
                               {sellTokenId && (
-                                <Flex direction={"column"} marginTop={"40px"}>
-                                  <Box borderTop={"solid 2px #f6643c"} padding={"2vw"}>
-                                    <Flex direction={"column"} gap={"20px"} alignItems={"center"}>
-                                      <Text fontSize={"2xl"}>
-                                        ID {sellTokenId} : Allowed to sell 🎉
-                                      </Text>
-                                      <Text>
-                                        Selling{" "}
-                                        {(
+                                <>
+                                  {
+                                    allowedToSell != undefined ?
 
-                                          (parseFloat(
-                                            userShareInfo[userShareInfo.findIndex(item => item.tokenId = sellTokenId)]
-                                              .shareAmount
-                                          ) *
-                                            (parseFloat(percentShare) / 100)) / 1000000000000000000
+                                      allowedToSell == true ?
 
-                                        ).toPrecision(5)}{" "}
-                                        {symbol}
-                                      </Text>
-                                      <Slider
-                                        flex="1"
-                                        focusThumbOnChange={false}
-                                        value={parseFloat(percentShare)}
-                                        onChange={handleChange2}
-                                        width={"80%"}
-                                        colorScheme="#f6643c"
-                                      >
-                                        <SliderTrack bg="red.100">
-                                          <SliderFilledTrack bg="tomato" />
-                                        </SliderTrack>
-                                        <SliderThumb
-                                          fontSize="lg"
-                                          boxSize="50px"
-                                          children={percentShare + "%"}
-                                          color={"#f6643c"}
-                                        />
-                                      </Slider>
-                                      <div>
-                                        {percentShare == "0" ? (
-                                          <Text>
-                                            ~{" "}
-                                            {
-                                              userShareInfo[userShareInfo.findIndex(item => item.tokenId = sellTokenId)]
-                                                .shareAmount / 1000000000000000000
-                                            }{" "}
-                                            shares available
-                                          </Text>
-                                        ) : (
-                                          <Flex direction={"column"} justifyContent={"center"} alignItems={"center"}>
-                                            <Text fontWeight={"bold"}>
-                                              ~{" "}
-                                              {((
-                                                parseFloat(
-                                                  userShareInfo[
-                                                    userShareInfo.findIndex(item => item.tokenId = sellTokenId)
-                                                  ].shareAmount
-                                                ) *
-                                                (parseFloat(percentShare) / 100) *
-                                                parseFloat(sharePrice) -
-                                                parseFloat(
-                                                  userShareInfo[
-                                                    userShareInfo.findIndex(item => item.tokenId = sellTokenId)
-                                                  ].shareAmount
-                                                ) *
-                                                (parseFloat(percentShare) / 100) *
-                                                parseFloat(sharePrice) *
-                                                (((parseFloat(sharePrice) -
-                                                  parseFloat(
-                                                    userShareInfo[
-                                                      userShareInfo.findIndex(item => item.tokenId = sellTokenId)
-                                                    ].pricePurchased
-                                                  )) /
-                                                  parseFloat(sharePrice)) *
-                                                  (parseFloat(performanceFee) /
-                                                    100)) -
-                                                (parseFloat(
-                                                  userShareInfo[
-                                                    userShareInfo.findIndex(item => item.tokenId = sellTokenId)
-                                                  ].shareAmount
-                                                ) *
-                                                  (parseFloat(percentShare) / 100) *
-                                                  parseFloat(sharePrice) -
-                                                  parseFloat(
-                                                    userShareInfo[
-                                                      userShareInfo.findIndex(item => item.tokenId = sellTokenId)
-                                                    ].shareAmount
-                                                  ) *
-                                                  (parseFloat(percentShare) / 100) *
-                                                  parseFloat(sharePrice) *
-                                                  (((parseFloat(sharePrice) -
-                                                    parseFloat(
-                                                      userShareInfo[
-                                                        userShareInfo.findIndex(item => item.tokenId = sellTokenId)
-                                                      ].pricePurchased
-                                                    )) /
-                                                    parseFloat(sharePrice)) *
-                                                    (parseFloat(performanceFee) /
-                                                      100))) *
-                                                (parseFloat(exitFee) / 100)
-                                              ) / 1000000000000000000).toPrecision(2)}{" "}
-                                              {denominationAsset}
-                                            </Text>
-                                            <Text fontSize={"0.75rem"} fontWeight={"light"}>
-                                              including
-                                              Performance and exit fees
+
+                                        <Box borderTop={"solid 2px #f6643c"} padding={"2vw"} marginTop={"40px"}>
+                                          <Flex direction={"column"} gap={"20px"} alignItems={"center"}>
+                                            <Text fontWeight={"semibold"} fontSize={"2xl"}>
+                                              {remainingTime > 3600 ? `${(remainingTime / 3600).toPrecision(1)} more hours` : `${remainingTime / 60} more minutes`} before you can sell
                                             </Text>
                                           </Flex>
-                                        )}
-                                      </div>
+                                        </Box>
+                                        :
+                                        <Flex direction={"column"} marginTop={"40px"}>
 
-                                    </Flex>
+                                          <Box borderTop={"solid 2px #f6643c"} padding={"2vw"}>
+                                            <Flex direction={"column"} gap={"20px"} alignItems={"center"}>
 
-                                  </Box>
-                                  <Box>
-                                    <Flex direction={"column"} gap={"20px"} alignItems={"center"} padding={"2vw"} borderTop={"solid 2px #f6643c"}>
-                                      <Text fontSize={"2xl"}>Reedem funds with</Text>
-                                      <Flex minWidth={"20vw"} gap={"50px"}>
-                                        <div className={styles.asset_container}>
-                                          {trackedAssets.map((item, index) => (
-                                            <Button
-                                              key={index}
-                                              backgroundColor={"#0f0b1"}
-                                              type="button"
-                                              data-color="transparent"
-                                              onClick={() => addNewAsset(item.address, 0, 'ffff')}
-                                              className={`${styles.asset_button} ${sellShareDataTab.includes({ percent: 0, address: item.address, symbol: "d", rate: 0 })
-                                                ? styles.asset_selected
-                                                : ""
-                                                }`}
-                                            >
-                                              <Image src={returnImagefromAddress(item.address)} />
-                                              {sellShareDataTab.find((x) => x.address == item.address) && (
-                                                <>
-                                                  <span
-                                                    className={styles.asset_selected_checkmark}
-                                                  >
-                                                    <Image
-                                                      src={"/checkmark-circle-outline.svg"}
-                                                      width="48px"
-                                                      height="48px"
-                                                    />
-                                                  </span>
-                                                </>
-                                              )}
-                                            </Button>
-                                          ))}
-                                        </div>
-                                        <Flex direction={"column"} gap={"5px"}>
-                                          {dataSetChange ?
-                                            sellShareDataTab.map((item, index) => (
-                                              <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                                                <Box width={"40px"}> <Image src={returnImagefromAddress(item.address)} /></Box>
-                                                {sellShareDataTab[index].percent == 0 ?
-                                                  <>
-                                                    <NumberInput
-                                                      size="sm"
-                                                      defaultValue={10}
-                                                      min={10}
-                                                      step={1}
-                                                      value={sellValue}
-                                                      onChange={handleChange3}
-                                                    >
-                                                      <NumberInputField />
-                                                      <NumberInputStepper>
-                                                        <NumberIncrementStepper />
-                                                        <NumberDecrementStepper />
-                                                      </NumberInputStepper>
-                                                    </NumberInput>
-                                                    <Button backgroundColor={"#f6643c"} onClick={() => setSellValueToIndex(index)}>
-                                                      Set
-                                                    </Button>
-                                                  </>
-                                                  :
-                                                  <Button backgroundColor={"#f6643c"} onClick={() => removeIndex(index)}>Remove</Button>
-                                                }
-                                              </Flex>
+                                              <Text fontSize={"2xl"}>
+                                                ID {sellTokenId} : Allowed to sell 🎉
+                                              </Text>
+                                              <Text>
+                                                Selling{" "}
+                                                {(
 
-                                            ))
-                                            :
-                                            sellShareDataTab.map((item, index) => (
-                                              <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                                                <Box width={"40px"}> <Image src={returnImagefromAddress(item.address)} /></Box>
-                                                {sellShareDataTab[index].percent == 0 ?
-                                                  <>
-                                                    <NumberInput
-                                                      size="sm"
-                                                      min={10}
-                                                      max={100}
-                                                      step={1}
-                                                      value={sellValue}
-                                                      onChange={handleChange3}
-                                                    >
-                                                      <NumberInputField />
-                                                      <NumberInputStepper>
-                                                        <NumberIncrementStepper />
-                                                        <NumberDecrementStepper />
-                                                      </NumberInputStepper>
-                                                    </NumberInput>
-                                                    <Button backgroundColor={"#f6643c"} onClick={() => setSellValueToIndex(index)}>
-                                                      Set
-                                                    </Button>
-                                                  </>
-                                                  :
-                                                  <Button backgroundColor={"#f6643c"} onClick={() => removeIndex(index)}>Remove</Button>
-                                                }
-                                              </Flex>
-
-                                            ))}
-
-                                        </Flex>
-                                      </Flex>
-
-                                      <Flex direction={"column"} gap={"10px"} alignItems={"center"}>
-
-
-                                        <Flex direction={"column"} gap={"10px"} alignItems={"center"}>
-                                          {
-                                            sellShareDataTab.map((item, index) => (
-                                              <Flex direction={"column"} alignItems={"center"}>
-                                                <Flex direction={"row"} gap={"10px"}>
-                                                  <Text>{item.percent}% = {item.rate != 0 ? (item.rate * (item.percent / 100) * ((parseFloat(
-                                                    userShareInfo[
-                                                      userShareInfo.findIndex(item => item.tokenId = sellTokenId)
-                                                    ].shareAmount
+                                                  (parseFloat(
+                                                    userShareInfo[userShareInfo.findIndex(item => item.tokenId = sellTokenId)]
+                                                      .shareAmount
                                                   ) *
-                                                    (parseFloat(percentShare) / 100) *
-                                                    parseFloat(sharePrice)) / 1000000000000000000)).toPrecision(2)
+                                                    (parseFloat(percentShare) / 100)) / 1000000000000000000
 
+                                                ).toPrecision(5)}{" "}
+                                                {symbol}
+                                              </Text>
+                                              <Slider
+                                                flex="1"
+                                                focusThumbOnChange={false}
+                                                value={parseFloat(percentShare)}
+                                                onChange={handleChange2}
+                                                width={"80%"}
+                                                colorScheme="#f6643c"
+                                              >
+                                                <SliderTrack bg="red.100">
+                                                  <SliderFilledTrack bg="tomato" />
+                                                </SliderTrack>
+                                                <SliderThumb
+                                                  fontSize="lg"
+                                                  boxSize="50px"
+                                                  children={percentShare + "%"}
+                                                  color={"#f6643c"}
+                                                />
+                                              </Slider>
+                                              <div>
+                                                {percentShare == "0" ? (
+                                                  <Text>
+                                                    ~{" "}
+                                                    {
+                                                      userShareInfo[userShareInfo.findIndex(item => item.tokenId = sellTokenId)]
+                                                        .shareAmount / 1000000000000000000
+                                                    }{" "}
+                                                    shares available
+                                                  </Text>
+                                                ) : (
+                                                  <Flex direction={"column"} justifyContent={"center"} alignItems={"center"}>
+                                                    <Text fontWeight={"bold"}>
+                                                      ~{" "}
+                                                      {((
+                                                        parseFloat(
+                                                          userShareInfo[
+                                                            userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                          ].shareAmount
+                                                        ) *
+                                                        (parseFloat(percentShare) / 100) *
+                                                        parseFloat(sharePrice) -
+                                                        parseFloat(
+                                                          userShareInfo[
+                                                            userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                          ].shareAmount
+                                                        ) *
+                                                        (parseFloat(percentShare) / 100) *
+                                                        parseFloat(sharePrice) *
+                                                        (((parseFloat(sharePrice) -
+                                                          parseFloat(
+                                                            userShareInfo[
+                                                              userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                            ].pricePurchased
+                                                          )) /
+                                                          parseFloat(sharePrice)) *
+                                                          (parseFloat(performanceFee) /
+                                                            100)) -
+                                                        (parseFloat(
+                                                          userShareInfo[
+                                                            userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                          ].shareAmount
+                                                        ) *
+                                                          (parseFloat(percentShare) / 100) *
+                                                          parseFloat(sharePrice) -
+                                                          parseFloat(
+                                                            userShareInfo[
+                                                              userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                            ].shareAmount
+                                                          ) *
+                                                          (parseFloat(percentShare) / 100) *
+                                                          parseFloat(sharePrice) *
+                                                          (((parseFloat(sharePrice) -
+                                                            parseFloat(
+                                                              userShareInfo[
+                                                                userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                              ].pricePurchased
+                                                            )) /
+                                                            parseFloat(sharePrice)) *
+                                                            (parseFloat(performanceFee) /
+                                                              100))) *
+                                                        (parseFloat(exitFee) / 100)
+                                                      ) / 1000000000000000000).toPrecision(2)}{" "}
+                                                      {denominationAsset}
+                                                    </Text>
+                                                    <Text fontSize={"0.75rem"} fontWeight={"light"}>
+                                                      including
+                                                      Performance and exit fees
+                                                    </Text>
+                                                  </Flex>
+                                                )}
+                                              </div>
 
+                                            </Flex>
 
-                                                    : "⌛"} {returnSymbolfromAddress(item.address)} </Text>
-                                                  {item.rate != 0 && (item.rate * (item.percent / 100) * ((parseFloat(
-                                                    userShareInfo[
-                                                      userShareInfo.findIndex(item => item.tokenId = sellTokenId)
-                                                    ].shareAmount
-                                                  ) *
-                                                    (parseFloat(percentShare) / 100) *
-                                                    parseFloat(sharePrice)) / 1000000000000000000)) > parseFloat(trackedAssets[trackedAssets.findIndex((x) => x.address == item.address)].balance) ?
-                                                    <Text color={"red.400"}> Not enought {returnSymbolfromAddress(item.address)} in the fund</Text>
+                                          </Box>
+
+                                          <Box>
+                                            <Flex direction={"column"} gap={"20px"} alignItems={"center"} padding={"2vw"} borderTop={"solid 2px #f6643c"}>
+                                              <Text fontSize={"2xl"}>Reedem funds with</Text>
+                                              <Flex minWidth={"20vw"} gap={"50px"}>
+                                                <div className={styles.asset_container}>
+                                                  {trackedAssets.map((item, index) => (
+                                                    <Button
+                                                      key={index}
+                                                      backgroundColor={"#0f0b1"}
+                                                      type="button"
+                                                      data-color="transparent"
+                                                      onClick={() => addNewAsset(item.address, 0, 'ffff')}
+                                                      className={`${styles.asset_button} ${sellShareDataTab.includes({ percent: 0, address: item.address, symbol: "d", rate: 0 })
+                                                        ? styles.asset_selected
+                                                        : ""
+                                                        }`}
+                                                    >
+                                                      <Image src={returnImagefromAddress(item.address)} />
+                                                      {sellShareDataTab.find((x) => x.address == item.address) && (
+                                                        <>
+                                                          <span
+                                                            className={styles.asset_selected_checkmark}
+                                                          >
+                                                            <Image
+                                                              src={"/checkmark-circle-outline.svg"}
+                                                              width="48px"
+                                                              height="48px"
+                                                            />
+                                                          </span>
+                                                        </>
+                                                      )}
+                                                    </Button>
+                                                  ))}
+                                                </div>
+                                                <Flex direction={"column"} gap={"5px"}>
+                                                  {dataSetChange ?
+                                                    sellShareDataTab.map((item, index) => (
+                                                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                                                        <Box width={"40px"}> <Image src={returnImagefromAddress(item.address)} /></Box>
+                                                        {sellShareDataTab[index].percent == 0 ?
+                                                          <>
+                                                            <NumberInput
+                                                              size="sm"
+                                                              defaultValue={10}
+                                                              min={10}
+                                                              step={1}
+                                                              value={sellValue}
+                                                              onChange={handleChange3}
+                                                            >
+                                                              <NumberInputField />
+                                                              <NumberInputStepper>
+                                                                <NumberIncrementStepper />
+                                                                <NumberDecrementStepper />
+                                                              </NumberInputStepper>
+                                                            </NumberInput>
+                                                            <Button backgroundColor={"#f6643c"} onClick={() => setSellValueToIndex(index)}>
+                                                              Set
+                                                            </Button>
+                                                          </>
+                                                          :
+                                                          <Button backgroundColor={"#f6643c"} onClick={() => removeIndex(index)}>Remove</Button>
+                                                        }
+                                                      </Flex>
+
+                                                    ))
                                                     :
-                                                    <Text color={"green"}> Allowed </Text>
-                                                  }
+                                                    sellShareDataTab.map((item, index) => (
+                                                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                                                        <Box width={"40px"}> <Image src={returnImagefromAddress(item.address)} /></Box>
+                                                        {sellShareDataTab[index].percent == 0 ?
+                                                          <>
+                                                            <NumberInput
+                                                              size="sm"
+                                                              min={10}
+                                                              max={100}
+                                                              step={1}
+                                                              value={sellValue}
+                                                              onChange={handleChange3}
+                                                            >
+                                                              <NumberInputField />
+                                                              <NumberInputStepper>
+                                                                <NumberIncrementStepper />
+                                                                <NumberDecrementStepper />
+                                                              </NumberInputStepper>
+                                                            </NumberInput>
+                                                            <Button backgroundColor={"#f6643c"} onClick={() => setSellValueToIndex(index)}>
+                                                              Set
+                                                            </Button>
+                                                          </>
+                                                          :
+                                                          <Button backgroundColor={"#f6643c"} onClick={() => removeIndex(index)}>Remove</Button>
+                                                        }
+                                                      </Flex>
+
+                                                    ))}
 
                                                 </Flex>
-                                                {index + 1 != sellShareDataTab.length &&
-                                                  <Text>+</Text>
-                                                }
                                               </Flex>
 
-                                            ))
-                                          }
-                                        </Flex>
-                                        {
-                                          sellAllowed == true ?
-                                            <Button
-                                              backgroundColor={"#f6643c"}
-                                              color={"white"}
-                                              onClick={() => handleSellShare()}
-                                              size="md"
-                                              width={"200px"}
-                                            >
+                                              <Flex direction={"column"} gap={"10px"} alignItems={"center"}>
 
-                                              {" "}
-                                              Sell
-                                            </Button>
-                                            :
 
-                                            <Text fontWeight={"bold"} color={"#f6643c"}> Sum must be equal to 100%</Text>
-                                        }
+                                                <Flex direction={"column"} gap={"10px"} alignItems={"center"}>
+                                                  {
+                                                    sellShareDataTab.map((item, index) => (
+                                                      <Flex direction={"column"} alignItems={"center"}>
+                                                        <Flex direction={"row"} gap={"10px"}>
+                                                          <Text>{item.percent}% = {item.rate != 0 ? (item.rate * (item.percent / 100) * ((parseFloat(
+                                                            userShareInfo[
+                                                              userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                            ].shareAmount
+                                                          ) *
+                                                            (parseFloat(percentShare) / 100) *
+                                                            parseFloat(sharePrice)) / 1000000000000000000)).toPrecision(2)
 
-                                      </Flex>
-                                      {/* :
+
+
+                                                            : "⌛"} {returnSymbolfromAddress(item.address)} </Text>
+                                                          {item.rate != 0 && (item.rate * (item.percent / 100) * ((parseFloat(
+                                                            userShareInfo[
+                                                              userShareInfo.findIndex(item => item.tokenId = sellTokenId)
+                                                            ].shareAmount
+                                                          ) *
+                                                            (parseFloat(percentShare) / 100) *
+                                                            parseFloat(sharePrice)) / 1000000000000000000)) > parseFloat(trackedAssets[trackedAssets.findIndex((x) => x.address == item.address)].balance) ?
+                                                            <Text color={"red.400"}> Not enought {returnSymbolfromAddress(item.address)} in the fund</Text>
+                                                            :
+                                                            <Text color={"green"}> Allowed </Text>
+                                                          }
+
+                                                        </Flex>
+                                                        {index + 1 != sellShareDataTab.length &&
+                                                          <Text>+</Text>
+                                                        }
+                                                      </Flex>
+
+                                                    ))
+                                                  }
+                                                </Flex>
+                                                {
+                                                  sellAllowed == true ?
+                                                    <Button
+                                                      backgroundColor={"#f6643c"}
+                                                      color={"white"}
+                                                      onClick={() => handleSellShare()}
+                                                      size="md"
+                                                      width={"200px"}
+                                                    >
+
+                                                      {" "}
+                                                      Sell
+                                                    </Button>
+                                                    :
+
+                                                    <Text fontWeight={"bold"} color={"#f6643c"}> Sum must be equal to 100%</Text>
+                                                }
+
+                                              </Flex>
+                                              {/* :
                                         <Flex direction={"column"} gap={"10px"} alignItems={"center"}>
                                           <Flex direction={"row"} gap={"10px"}>
                                             {
@@ -3638,10 +3722,10 @@ const vault: NextPage = () => {
 
                                         </Flex>
                                       } */}
-                                    </Flex>
-                                  </Box>
-                                  <Flex>
-                                    {/* <Text>Sum must be 100% : </Text>
+                                            </Flex>
+                                          </Box>
+                                          <Flex>
+                                            {/* <Text>Sum must be 100% : </Text>
                                     {sellShareTab.map((p, index) => (
                                       <Text>
 
@@ -3651,10 +3735,18 @@ const vault: NextPage = () => {
                                           : "+"}
                                       </Text>
                                     ))} */}
-                                  </Flex>
+                                          </Flex>
 
 
-                                </Flex>
+                                        </Flex>
+                                      :
+                                      <Box borderTop={"solid 2px #f6643c"} padding={"2vw"} marginTop={"40px"}>
+                                        <Flex direction={"column"} gap={"20px"} alignItems={"center"}>
+                                          <Text fontWeight={"bold"} fontSize={"3xl"}> ⌛⌛ </Text>
+                                        </Flex>
+                                      </Box>
+                                  }
+                                </>
                               )}
                             </Flex>
                           </TabPanel>
@@ -3936,18 +4028,23 @@ const vault: NextPage = () => {
 
                                           :
 
-                                          trackedAssetsAddress.includes(buySwapToken) ?
-                                            <Button
-                                              backgroundColor={"#f6643c"}
-                                              color={"white"}
-                                              onClick={() => handleSwap()}
-                                              size="md"
-                                            >
-                                              {" "}
-                                              Swap
-                                            </Button>
+                                          poolExist == true ?
+
+                                            trackedAssetsAddress.includes(buySwapToken) ?
+                                              <Button
+                                                backgroundColor={"#f6643c"}
+                                                color={"white"}
+                                                onClick={() => handleSwap()}
+                                                size="md"
+                                              >
+                                                {" "}
+                                                Swap
+                                              </Button>
+                                              :
+                                              <Text fontWeight={"bold"} color={"#f6643c"}>Incoming asset not tracked</Text>
+
                                             :
-                                            <Text fontWeight={"bold"} color={"#f6643c"}>Incoming asset not tracked</Text>
+                                            <Text fontWeight={"bold"} color={"#f6643c"}>Pool not Exist</Text>
 
                                         :
                                         <Text fontWeight={"bold"} color={"#f6643c"}>Select the assets you want to Swap </Text>
@@ -4381,32 +4478,12 @@ const vault: NextPage = () => {
                                                       >
                                                         {bringLiquidityTokenFundBalance ? bringLiquidityTokenFundBalance.toPrecision(
                                                           2
-                                                        ) : "--"}
+                                                        ) : "0"}
                                                       </Text>
                                                     </Flex>
                                                   </Flex>
                                                 </Flex>
-                                                {/* <Flex direction={"row"}>
-                                               
-                                              <Flex direction={"column"} gap ={"5px"}>
-                                                <Text fontWeight={'light'} fontSize={"2xl"}> {TokenLPInput}</Text>
-                                                <Text fontWeight={'light'} > {liquidityLiquidityTokenFundBalance}</Text>
-                                                </Flex>
-                                              <Box
-                                                  style={{
-                                                    width: "50px",
-                                                    height: "50px",
-                                                    borderRadius: "10px",
-                                                    overflow: "hidden",
 
-                                                  }}
-                                                >
-                                                  <Image
-                                                    src={returnImagefromAddress(buySwapToken)}
-                                                    style={{ objectFit: "cover" }}
-                                                  />
-                                                </Box>
-                                              </Flex> */}
                                               </Flex>
                                               :
                                               <Text textAlign={"center"} fontWeight={"bold"}>
