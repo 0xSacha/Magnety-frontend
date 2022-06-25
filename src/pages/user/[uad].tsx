@@ -98,7 +98,7 @@ function UserPage(props: UserPageProps) {
 
   async function getFundInfo(address: string, amount: number) {
     let currentFundInfo = userFundInfo;
-    const res = await fetch(process.env.URL + `api/contract/` + address);
+    const res = await fetch(process.env.URL + `api/contract/` + address)
     if (res.status == 200) {
       const { data } = await res.json();
       currentFundInfo.push({

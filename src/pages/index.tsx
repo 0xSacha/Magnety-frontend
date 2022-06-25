@@ -2,6 +2,7 @@ import { useStarknetCall } from "@starknet-react/core";
 import type { NextPage } from "next";
 import { useMemo } from "react";
 import React, { useEffect } from "react";
+import { ContractInfo } from "../utils/type";
 
 import { toBN, hexToDecimalString } from "starknet/dist/utils/number";
 import { TransactionList } from "~/components/TransactionList";
@@ -44,9 +45,13 @@ import { GiRadiations } from "react-icons/gi";
 const AssetTab = [btc, eth, zkp, tst, ethzkp, btctst, ethtst, ethbtc]
 const ProtocolTab = [alphaRoad]
 
+
 const Home: NextPage = () => {
   const [vaultAmount, setVaultAmount] = React.useState<string>("");
   const { provider, account } = getStarknet();
+  const [userFundInfo, setUserFundInfo] = React.useState<fundInfo>([]);
+  const [vaultInfo, setVaultInfo] = React.useState<ContractInfo[]>();
+
   useEffect(() => {
     const res1 = provider.callContract({
       contractAddress: contractAddress.VaultFactory,
@@ -63,10 +68,24 @@ const Home: NextPage = () => {
       });
   }, []);
   // const [showFunds, setShowFunds] = useState(false);
+  useEffect(() => {
+    loadData()
+  }, []);
 
+  const loadData = async () => {
+    const res = await fetch(
+      process.env.URL + `api/contract/`
+    );
+    if (res.status == 200) {
+      await res.json().then((data) =>
+        setVaultInfo(data)
+      );
+    } else {
 
+    }
+  };
   return (
-    <Box margin={"auto"} paddingTop={"5%"} gap={"200px"}>
+    <Box margin={"auto"} gap={"200px"} padding={"5%"}>
       <Flex
         direction={"row"}
         flexWrap={"wrap"}
@@ -77,25 +96,25 @@ const Home: NextPage = () => {
       >
 
 
-        <Flex direction={"column"} gap={"4vh"} width={"45%"}>
+        <Flex direction={"column"} gap={"3vh"} width={"40%"}>
           <Flex flexWrap={"wrap"} gap={"12px"}>
             <Text fontWeight={"bold"} fontSize={"3rem"}>Discover </Text><Text color={"#f6643c"} fontWeight={"bold"} fontSize={"3rem"}>Extraordinary</Text> <Text fontWeight={"bold"} fontSize={"3rem"}>DeFi strategies</Text>
           </Flex>
+          <Text fontWeight={"semibold"} fontSize={"1.5rem"}>
+            Magnty push your asset management to the next level, currently in version ⍺
+          </Text>
           <Flex >
+
             <Flex gap={"1vh"} direction={"row"}>
-              <Text>this is url {process.env.URL}</Text>
-              {console.log(process.env.URL)}
-              <Button backgroundColor={"#00318973"} padding={"5px"}>
+              <Button backgroundColor={"#00318973"} padding={"25px"}>
                 <Link href={`/marketplace`} padding={"10px"}>
-
                   <Flex>
-
                     <Text fontWeight={"bold"} fontSize={"2xl"} >Delegate</Text>
                   </Flex>
                 </Link>
               </Button>
 
-              <Button backgroundColor={"#f6643c"} padding={"5px"}>
+              <Button backgroundColor={"#f6643c"} padding={"25px"}>
                 <Link href={`/create`} padding={"10px"}>
 
                   <Text fontWeight={"bold"} fontSize={"2xl"} >Monetize</Text>
@@ -186,7 +205,7 @@ const Home: NextPage = () => {
           </Box>
         </Link>
       </Flex>
-      <Flex direction={"row"} justifyContent={"space-evenly"} marginTop={"18vh"} marginBottom={"5vh"} padding={"2vh"}>
+      <Flex direction={"row"} justifyContent={"space-evenly"} marginTop={"14vh"} padding={"2vh"}>
         <Flex direction={"column"} justifyContent={"space-evenly"} gap={"20px"}>
           <Box
             className={` bg__dotted`}
@@ -257,6 +276,46 @@ const Home: NextPage = () => {
               </Flex>
             </Flex>
           </Flex>
+        </Box>
+        <Box
+          className={` bg__dotted`}
+          style={{ borderRadius: "10px" }}
+          borderLeft={"solid 2px #f6643c"}
+          borderRight={"solid 2px #f6643c"}
+          padding={"20px"}
+          width={"30%"}
+        >
+          <Flex direction={"column"} gap={"2vh"}>
+            <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
+              Last funds created
+            </Text>
+            {vaultInfo && vaultInfo.map((vault, index) => (
+              <Link href={`/vault/${vault.fundAddress}`}>
+                <Flex
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                >
+                  <Box
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      borderRadius: "50%",
+                      overflow: "hidden",
+                      backgroundColor: "black",
+                    }}
+                  >
+                    <img
+                      src={vault.image}
+                      style={{ objectFit: "cover" }}
+                    />
+                  </Box>
+                  <div>{vault.name}</div>
+                </Flex>
+              </Link>
+
+            ))}
+          </Flex>
+
         </Box>
 
         {/* <Box

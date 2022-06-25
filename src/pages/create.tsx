@@ -1304,6 +1304,7 @@ const Create: NextPage = () => {
                         <Text color={"white"}>
                           Fund Address : {deployedVaultAddress}
                         </Text>
+
                       </Flex>
                       :
                       <Flex direction={"column"}>

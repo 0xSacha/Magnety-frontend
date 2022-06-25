@@ -158,14 +158,10 @@ const Layout = (props: PropsWithChildren<unknown>) => {
   function ConnectWallet() {
     return (
       <div className="App">
-        <button
-          data-color="secondary"
-          style={{ display: "flex", margin: "12px auto" }}
-          onClick={onClick}
-        >
+        <Button padding={"5px"} borderRadius={"15px"} backgroundColor={"#f6643c"} onClick={onClick}>
           {" "}
           connect
-        </button>
+        </Button>
       </div>
     );
   }
@@ -383,18 +379,27 @@ const Layout = (props: PropsWithChildren<unknown>) => {
               }}
             >
               <Flex direction={"row"} justifyContent={"space-between"} margin={"5%"}>
-                <button className="social_button">
-                  <Image src={Twitter} width="21px" height="21px"></Image>
-                </button>
-                <button className="social_button">
-                  <Image src={Notion} width="17px" height="21px"></Image>
-                </button>
-                <button className="social_button">
-                  <Image src={Discord} width="21px" height="21px"></Image>
-                </button>
-                <button className="social_button">
-                  <Image src={Medium} width="21px" height="21px"></Image>
-                </button>
+                <Link href="https://twitter.com/magnetyfi">
+                  <button className="social_button">
+                    <Image src={Twitter} width="21px" height="21px"></Image>
+                  </button>
+                </Link>
+                <Link href="https://magnety.notion.site/magnety/Magnety-538f55a2ee1d4a39b8ed2141beb5e383">
+                  <button className="social_button">
+                    <Image src={Notion} width="17px" height="21px"></Image>
+                  </button>
+                </Link>
+                <Link href="https://discord.gg/magnety">
+                  <button className="social_button">
+                    <Image src={Discord} width="21px" height="21px"></Image>
+                  </button>
+                </Link>
+                <Link href="https://medium.com/@magnety.finance">
+
+                  <button className="social_button">
+                    <Image src={Medium} width="21px" height="21px"></Image>
+                  </button>
+                </Link>
               </Flex>
               <div className="fs-12 text-center">
                 © 2022 - Magnety - All Rights Reserved

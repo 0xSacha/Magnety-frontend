@@ -16,7 +16,15 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Icon } from "@chakra-ui/react";
 import { BsShare } from "react-icons/bs";
 import { BiArrowBack } from "react-icons/bi";
-
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
 import { MdOutlineSwapVert, MdArrowCircleDown } from "react-icons/md";
 import { AiOutlinePlus } from "react-icons/ai";
 
@@ -147,6 +155,8 @@ const vault: NextPage = () => {
   const [assetManagerName, setAssetManagerName] = React.useState<string>("");
   const [fundExist, setFundExist] = React.useState<Boolean>(true);
   const [loading, setLoading] = React.useState<Boolean>(true);
+  const [isOpenError, setIsOpenError] = React.useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = React.useState<string>("");
 
   const [vaultInfo, setVaultInfo] = React.useState<ContractInfo>();
   useEffect(() => {
@@ -217,7 +227,7 @@ const vault: NextPage = () => {
 
   const [sellShareTab, setSellShareTab] = React.useState<SellShareData>([]);
   const [generalAllowedTrackedAsset, setGeneralAllowedTrackedAsset] = React.useState<string[]>([]);
-  const [generalAllowedIntegration, setGeneralAllowedIntegration] = React.useState<string[]>([]);
+  const [generalAllowedIntegration, setGeneralAllowedIntegration] = React.useState<string[][]>([]);
 
 
   const [allowedTrackedAsset, setAllowedTrackedAsset] = React.useState<string[]>([]);
@@ -293,6 +303,7 @@ const vault: NextPage = () => {
   const [TokenLPInput, setTokenLPInput] = React.useState<number>(0);
   const [allowedToSell, setAllowedToSell] = React.useState<Boolean>();
   const [remainingTime, setRemainingTime] = React.useState<number>(0);
+  const [managementFeeToCollect, setManagementFeeToCollect] = React.useState<number>();
 
 
 
@@ -617,35 +628,6 @@ const vault: NextPage = () => {
       }
     }
   }, [sellShareDataTab]);
-
-  // const getAssetRate = async (_wantedPriceAsset: string, _denominationAsset: string) => {
-  //   console.log("promise Started")
-  //   console.log('calcul price of %d')
-  //   console.log(_wantedPriceAsset)
-  //   console.log('with deno %d')
-  //   console.log(_denominationAsset)
-
-  //   let _rateTab = rateTab
-  //   let obj = {address:_wantedPriceAsset, rate:0}
-  //   const res1 = provider.callContract({
-  //     contractAddress: contractAddress.ValueInterpreter,
-  //     entrypoint: "calculAssetValue",
-  //     calldata: [hexToDecimalString(_denominationAsset), "1000000000000000000", "0", hexToDecimalString(_wantedPriceAsset)],
-  //   });
-  //   res1
-  //     .then((value) => {
-  //       const newPrice = parseFloat(hexToDecimalString(value.result[0])) / 1000000000000000000;
-  //       console.log('got rate %d', newPrice)
-  //       obj.rate = newPrice
-  //       _rateTab.push(obj);
-  //       setRateTab(_rateTab);
-  //       console.log(rateTab)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       console.log("errurr")
-  //     });
-  // };
 
   useEffect(() => {
     if (buySwapToken) {
@@ -1300,8 +1282,6 @@ const vault: NextPage = () => {
             })
           }
           setTrackedAssets(TABBBE)
-          console.log(TABBBE)
-
           setTrackedAssetsLen(TABBBE.length);
         }
         )
@@ -1310,65 +1290,69 @@ const vault: NextPage = () => {
         });
 
 
-      // const res19 = provider.callContract({
-      //   contractAddress: contractAddress.IntegrationManager,
-      //   entrypoint: "getAvailableAssets",
-      //   calldata: [],
-      // });
-      // res19
-      //   .then((value) => {
-      //     let tabAsset = value.result;
-      //     console.log(value.result)
-      //     tabAsset[0] = hexToDecimalString(tabAsset[0]);
-      //     const lenghtTab = tabAsset.shift();
-      //     setGeneralAllowedTrackedAsset(tabAsset);
-      //     console.log(tabAsset)
-      //     console.log(generalAllowedTrackedAsset)
-      //     const res20 = provider.callContract({
-      //       contractAddress: contractAddress.IntegrationManager,
-      //       entrypoint: "getAvailableIntegrations",
-      //       calldata: [hexToDecimalString(vaultAddress)],
-      //     });
-      //     res20
-      //       .then((value) => {
-      //         console.log(value.result)
-      //         let tabIntegration = value.result;
-      //         let tabIntegrationFinal: string[][] = [];
-      //         let firstIndex =
-      //           1 + parseFloat(lenghtTab == undefined ? "0" : lenghtTab) * 2;
-      //         const removeApproveIntegration = tabIntegration.splice(
-      //           0,
-      //           firstIndex
-      //         );
-      //         for (
-      //           let index = 0;
-      //           index < tabIntegration.length;
-      //           index = index + 2
-      //         ) {
-      //           const element = tabIntegration[index];
-      //           const element2 = tabIntegration[index + 1];
-      //           let shortTab: string[] = [];
-      //           shortTab.push(element);
-      //           shortTab.push(element2);
-      //           tabIntegrationFinal.push(shortTab);
-      //         }
-      //         setGeneralAllowedIntegration(tabIntegrationFinal);
-      //       })
-      //       .catch((err) => {
-      //         console.log(err);
-      //       });
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
-      // console.log(generalAllowedIntegration)
-      // console.log(generalAllowedTrackedAsset)
-      // const res21 = provider.callContract({
-      //   contractAddress: vaultAddress,
-      //   entrypoint: "getTrackedAssets",
-      //   calldata: [],
-      // });
+      const res19 = provider.callContract({
+        contractAddress: contractAddress.IntegrationManager,
+        entrypoint: "getAvailableAssets",
+        calldata: [],
+      });
+      res19
+        .then((value) => {
+          let tabAsset = value.result;
+          tabAsset[0] = hexToDecimalString(tabAsset[0]);
+          const lenghtTab = tabAsset.shift();
+          setGeneralAllowedTrackedAsset(tabAsset);
+          const res20 = provider.callContract({
+            contractAddress: contractAddress.IntegrationManager,
+            entrypoint: "getAvailableIntegrations",
+            calldata: [],
+          });
+          res20
+            .then((value) => {
+              let tabIntegration = value.result;
+              const lenghtTab2 = tabIntegration.shift();
+              let tabIntegrationFinal: string[][] = [];
+              while (tabIntegration.includes("0x219209e083275171774dab1df80982e9df2096516f06319c5c6d71ae0a8480c")) {
+                let index = tabIntegration.findIndex((x) => x == "0x219209e083275171774dab1df80982e9df2096516f06319c5c6d71ae0a8480c")
+                tabIntegration.splice(index - 1, 2)
+              }
 
+              for (
+                let index = 0;
+                index < tabIntegration.length;
+                index = index + 2
+              ) {
+                const element = tabIntegration[index];
+                const element2 = tabIntegration[index + 1];
+                let shortTab: string[] = [];
+                shortTab.push(element);
+                shortTab.push(element2);
+                tabIntegrationFinal.push(shortTab);
+
+              }
+              setGeneralAllowedIntegration(tabIntegrationFinal);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      const res21 = provider.callContract({
+        contractAddress: comptroller,
+        entrypoint: "getManagementFeeValue",
+        calldata: [hexToDecimalString(vaultAddress)],
+      });
+      res21
+        .then((value) => {
+          let res_ = parseFloat(hexToDecimalString(value.result[0]))
+          let res = res_ / 1000000000000000000
+          setManagementFeeToCollect(res)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
     }
   }, [vaultAddress]);
@@ -1762,20 +1746,24 @@ const vault: NextPage = () => {
 
   const multicallWithdrawLiquidity = async (_tab: any[], _tab1: any[]) => {
     console.log("invoke");
-    let tx1 = await accountInterface.execute([
-      {
-        contractAddress: comptroller,
-        entrypoint: "executeCall",
-        calldata: _tab1,
-      },
-      {
-        contractAddress: comptroller,
-        entrypoint: "executeCall",
-        calldata: _tab,
-      },
-    ]);
-    console.log(tx1);
-    // return (tx1)
+    try {
+      await accountInterface.execute([
+        {
+          contractAddress: comptroller,
+          entrypoint: "executeCall",
+          calldata: _tab1,
+        },
+        {
+          contractAddress: comptroller,
+          entrypoint: "executeCall",
+          calldata: _tab,
+        },
+      ])
+    }
+    catch (err: any) {
+      handleErrorMessage(err)
+    }
+
   };
 
 
@@ -1866,25 +1854,67 @@ const vault: NextPage = () => {
 
   const multicallBringLiquidity = async (_tab: any[], _tab1: any[], _tab2) => {
     console.log("invoke");
-    let tx1 = await accountInterface.execute([
-      {
-        contractAddress: comptroller,
-        entrypoint: "executeCall",
-        calldata: _tab1,
-      },
-      {
-        contractAddress: comptroller,
-        entrypoint: "executeCall",
-        calldata: _tab2,
-      },
-      {
-        contractAddress: comptroller,
-        entrypoint: "executeCall",
-        calldata: _tab,
-      },
-    ]);
-    console.log(tx1);
+    try {
+      await accountInterface.execute([
+        {
+          contractAddress: comptroller,
+          entrypoint: "executeCall",
+          calldata: _tab1,
+        },
+        {
+          contractAddress: comptroller,
+          entrypoint: "executeCall",
+          calldata: _tab2,
+        },
+        {
+          contractAddress: comptroller,
+          entrypoint: "executeCall",
+          calldata: _tab,
+        },
+      ]);
+    }
+    catch (err: any) {
+      handleErrorMessage(err)
+    }
     // return (tx1)
+  };
+
+  const handleErrorMessage = (error: Error) => {
+    setErrorMessage(error.message);
+    setIsOpenError(true);
+  };
+
+  const handleCollectManagementFee = () => {
+    const newAmount = sellSwapTokenInput * 1000000000000000000;
+
+    let TabApprove: any[] = [];
+    TabApprove.push(hexToDecimalString(vaultAddress));
+    TabApprove.push(hexToDecimalString(sellSwapToken));
+    TabApprove.push("949021990203918389843157787496164629863144228991510976554585288817234167820");
+    TabApprove.push("3")
+    TabApprove.push("0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a")
+    TabApprove.push(newAmount.toString())
+    TabApprove.push("0")
+
+
+    let Tab: any[] = [];
+    Tab.push(hexToDecimalString(vaultAddress));
+    Tab.push(hexToDecimalString("0x4aec73f0611a9be0524e7ef21ab1679bdf9c97dc7d72614f15373d431226b6a"));
+    Tab.push(hexToDecimalString("0x2c0f7bf2d6cf5304c29171bf493feb222fef84bdaf17805a6574b0c2e8bcc87"));
+    Tab.push("6")
+    Tab.push(hexToDecimalString(sellSwapToken));
+    Tab.push(hexToDecimalString(buySwapToken));
+    Tab.push(newAmount.toString());
+    Tab.push("0");
+    Tab.push("0");
+    Tab.push("0");
+
+    if (!accountInterface.address) {
+      console.log("no account detected");
+    } else {
+      console.log("connected");
+      multicallSwap(TabApprove, Tab);
+    }
   };
 
   const handleSwap = () => {
@@ -1922,20 +1952,24 @@ const vault: NextPage = () => {
 
   const multicallSwap = async (_tabApprove: any[], _tab: any[]) => {
     console.log("invoke");
-    let tx1 = await accountInterface.execute([
-      {
-        contractAddress: comptroller,
-        entrypoint: "executeCall",
-        calldata: _tabApprove,
-      },
-      {
-        contractAddress: comptroller,
-        entrypoint: "executeCall",
-        calldata: _tab,
-      },
-    ]);
-    console.log(tx1);
-    // return (tx1)
+    try {
+      await accountInterface.execute([
+        {
+          contractAddress: comptroller,
+          entrypoint: "executeCall",
+          calldata: _tabApprove,
+        },
+        {
+          contractAddress: comptroller,
+          entrypoint: "executeCall",
+          calldata: _tab,
+        },
+      ]);
+    }
+    catch (err: any) {
+      handleErrorMessage(err)
+    }
+
   };
 
   const handleTrack = (_address: string) => {
@@ -2004,60 +2038,88 @@ const vault: NextPage = () => {
 
   const multicall2 = async (_tab: any[]) => {
     console.log("invoke");
-    let tx1 = await accountInterface.execute([
-      {
-        contractAddress: comptroller,
-        entrypoint: "sell_share",
-        calldata: _tab,
-      },
-    ]);
-    console.log(tx1);
-    // return (tx1)
+    try {
+      await accountInterface.execute([
+        {
+          contractAddress: comptroller,
+          entrypoint: "sell_share",
+          calldata: _tab,
+        },
+      ]);
+    }
+    catch (err: any) {
+      handleErrorMessage(err)
+    }
   };
 
   const multicall3 = async (_tab: string[]) => {
-    let tx1 = await accountInterface.execute([
-      {
-        contractAddress: contractAddress.Comptroller,
-        entrypoint: "addTrackedAsset",
-        calldata: _tab,
-      },
-    ]);
-    console.log(tx1);
+    try {
+      await accountInterface.execute([
+        {
+          contractAddress: contractAddress.Comptroller,
+          entrypoint: "addTrackedAsset",
+          calldata: _tab,
+        },
+      ]);
+    }
+    catch (err: any) {
+      handleErrorMessage(err)
+    }
   };
 
   const multicall4 = async (_tab: string[]) => {
-    let tx1 = await accountInterface.execute([
-      {
-        contractAddress: contractAddress.Comptroller,
-        entrypoint: "removeTrackedAsset",
-        calldata: _tab,
-      },
-    ]);
-    console.log(tx1);
+    try {
+      await accountInterface.execute([
+        {
+          contractAddress: contractAddress.Comptroller,
+          entrypoint: "removeTrackedAsset",
+          calldata: _tab,
+        },
+      ]);
+    }
+    catch (err: any) {
+      handleErrorMessage(err)
+    }
   };
 
 
   const multicall = async (_tab: any[], _tabA: any[]) => {
-    let tx1 = await accountInterface.execute([
-      {
-        contractAddress: denominationAssetAddress,
-        entrypoint: "approve",
-        calldata: _tabA,
-      },
-      {
-        contractAddress: comptroller,
-        entrypoint: "buyShare",
-        calldata: _tab,
-      },
-    ]);
-    console.log(tx1);
-    // return (tx1)
+    try {
+      await accountInterface.execute([
+        {
+          contractAddress: denominationAssetAddress,
+          entrypoint: "approve",
+          calldata: _tabA,
+        },
+        {
+          contractAddress: comptroller,
+          entrypoint: "buyShare",
+          calldata: _tab,
+        },
+      ]);
+    }
+    catch (err: any) {
+      handleErrorMessage(err)
+    }
+
   };
 
   return (
     <>
       <Box padding={"4vw"}>
+        <Modal isOpen={isOpenError} onClose={() => setIsOpenError(false)}>
+          <ModalOverlay />
+          <ModalContent backgroundColor={"#f6643c"}>
+            <ModalHeader>Transaction has been canceled</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              {/* <Text>Error : {errorMessage}</Text> */}
+            </ModalBody>
+
+            <ModalFooter>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
         {loading == true ? (
           <Text alignSelf={"center"} fontSize={"5xl"}>
             Just A moment ⌛⏳
@@ -2163,14 +2225,16 @@ const vault: NextPage = () => {
                     <Text
                       fontSize={"4xl"}
                       color={
-                        totalIncome
-                          ? totalIncome < 0
+                        vaultInfo?.totalIncome
+                          ? vaultInfo?.totalIncome < 0
                             ? "rgb(237,33,49)"
                             : "#31c48d"
                           : "#31c48d"
                       }
                     >
-                      {totalIncome == 0 ? "--" : totalIncome?.toPrecision(4)}%
+
+
+                      {vaultInfo?.totalIncome == 0 ? "--" : vaultInfo?.totalIncome?.toPrecision(2)}%
                     </Text>
                     <Text
                       fontSize={"-moz-initial"}
@@ -2321,9 +2385,15 @@ const vault: NextPage = () => {
                   marginRight={"2vw"}
                   marginTop={"-25px"}
                 >
-                  <Button backgroundColor={"#030135"} padding={"10px"}>
-                    <Icon as={BsShare} w={6} h={6} />
-                  </Button>
+                  <Text fontWeight={"light"} fontSize={"2xl"} marginTop={"5px"}>
+                    Did You Tweet Sir ?
+                  </Text>
+                  <a href={"http://twitter.com/share?text=My Fund is going on the moon, don't Miss it🚀 &url=" + process.env.URL + "vault/" + vaultAddress + "&hashtags=Magnety,Starknet,StarkPilled,L222"}>
+                    <Button backgroundColor={"#030135"} padding={"10px"}>
+                      <Icon as={BsShare} w={6} h={6} />
+                    </Button>
+                  </a>
+
                   {menuSelected == 1 ? (
                     <Button
                       backgroundColor={"#f6643c"}
@@ -2408,10 +2478,10 @@ const vault: NextPage = () => {
                           <Tab fontSize={"1xl"} fontWeight={"bold"}>
                             Policies
                           </Tab>
-                          {/* <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
                             Financial
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          {/* <Tab fontSize={"1xl"} fontWeight={"bold"}>
                             Activity
                           </Tab>
                           <Tab fontSize={"1xl"} fontWeight={"bold"}>
@@ -3027,44 +3097,106 @@ const vault: NextPage = () => {
                               className={`bg__dotted ${styles.financialTabContent}`}
                             >
                               <div>
-                                <div className="fs-24 fw-600">
-                                  General Information
-                                </div>
                                 <div>
                                   <div className="fw-600">
-                                    General Assets Vault (GAV)
+                                    Gross Asset Value
                                   </div>
                                   <div>
                                     <span className="fw-700">
-                                      1,993,516.452 MGTY
+                                      {parseFloat(gav).toPrecision(2)} {denominationAsset}
                                     </span>
-                                    <span>$1,993,516.452</span>
+
                                   </div>
                                 </div>
                               </div>
                               <div>
                                 <div>
                                   <div className="fw-600">
-                                    Net Assets Valut (NAV)
+                                    Daily Returns
                                   </div>
                                   <div>
                                     <span className="fw-700">
-                                      1,993,516.452 MGTY
+                                      {vaultInfo?.dailyIncome}%
+
                                     </span>
-                                    <span>$1,993,516.452</span>
+
                                   </div>
                                 </div>
                               </div>
                               <div>
-                                <div className="fs-24 fw-600">
-                                  Financial Metrics
-                                </div>
                                 <div>
                                   <div className="fw-600">
-                                    Return Month-to-Date
+                                    Weekly Returns
                                   </div>
                                   <div>
-                                    <span className="text-success">+0.5%</span>
+                                    <span className="fw-700">
+                                      {vaultInfo?.weeklyIncome}%
+                                    </span>
+
+                                  </div>
+                                </div>
+                              </div>
+                              <div>
+                                <div>
+                                  <div className="fw-600">
+                                    Monthly Returns
+                                  </div>
+                                  <div>
+                                    <span className="fw-700">
+                                      {vaultInfo?.monthlyIncome}%
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div>
+                                <div>
+                                  <div className="fw-600">
+                                    Total Returns
+                                  </div>
+                                  <div>
+                                    <span className="fw-700">
+                                      {vaultInfo?.totalIncome}%
+                                    </span>
+
+                                  </div>
+                                </div>
+                              </div>
+                              <div>
+                                <div>
+                                  <div className="fw-600">
+                                    Volatility
+                                  </div>
+                                  <div>
+                                    <span className="fw-700">
+                                      --
+                                    </span>
+
+                                  </div>
+                                </div>
+                              </div>
+                              <div>
+                                <div>
+                                  <div className="fw-600">
+                                    Shares Supply
+                                  </div>
+                                  <div>
+                                    <span className="fw-700">
+                                      {(parseFloat(shareSupply) / 1000000000000000000).toPrecision(2)} {symbol}
+                                    </span>
+
+                                  </div>
+                                </div>
+                              </div>
+                              <div>
+                                <div>
+                                  <div className="fw-600">
+                                    Shareholders
+                                  </div>
+                                  <div>
+                                    <span className="fw-700">
+                                      {shareHolders}
+                                    </span>
+
                                   </div>
                                 </div>
                               </div>
@@ -3772,6 +3904,9 @@ const vault: NextPage = () => {
                             </Tab>
                             <Tab fontSize={"1xl"} fontWeight={"bold"}>
                               Policies
+                            </Tab>
+                            <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                              Fee
                             </Tab>
                           </Flex>
                         </TabList>
@@ -4747,49 +4882,66 @@ const vault: NextPage = () => {
                                 {
                                   generalAllowedTrackedAsset && allowedTrackedAsset && generalAllowedIntegration && allowedIntegration ?
                                     <Flex direction={"row"} gap={"25px"} justifyContent={"center"} width={"100%"} alignItems={"baseline"}>
-                                      <Flex direction={"column"} gap={"25px"} justifyContent={"center"} alignItems={"center"} width={"40%"}>
-                                        <Text fontSize={"2xl"} textAlign={"center"}>Assets not tracked yet</Text>
-                                        <Flex direction={"column"} gap={"5px"} justifyContent={"center"} alignSelf={"center"} width={"100%"}>
-                                          {generalAllowedTrackedAsset.filter(item => allowedTrackedAsset.includes(item)).length == 0 ?
-                                            <Text>You are up to date with the current assets available on Magnety</Text>
-                                            :
-                                            generalAllowedTrackedAsset.filter(item => !allowedTrackedAsset.includes(item)).map((item, index) => (
-                                              <Flex flexWrap={"nowrap"} gap={"5px"} overflowY={"scroll"} width={"100%"} maxHeight={"10bh"}>
 
-                                                <Button
-                                                  key={index}
-                                                  type="button"
-                                                  backgroundColor={"#0f0b1"}
-                                                  data-color="transparent"
-                                                  onClick={() => addAllowedNewTrackedAsset(item)}
-                                                  className={`${styles.asset_button} ${allowNewTrackedAsset.includes(item)
-                                                    ? styles.asset_selected
-                                                    : ""
-                                                    }`}
-                                                >
-                                                  <div>
-                                                    <Image src={returnImagefromAddress(item)} />
-                                                    {allowNewTrackedAsset.includes(item) && (
-                                                      <>
-                                                        <span
-                                                          className={
-                                                            styles.asset_selected_checkmark
-                                                          }
-                                                        >
-                                                          <Image
-                                                            src={"/checkmark-circle-outline.svg"}
-                                                            width="24px"
-                                                            height="24px"
-                                                          />
-                                                        </span>
-                                                      </>
-                                                    )}
-                                                  </div>
-                                                </Button>
+                                      <Flex direction={"column"} gap={"5px"} justifyContent={"center"} alignSelf={"center"} width={"40%"}>
+                                        {console.log(generalAllowedTrackedAsset.filter(item => allowedTrackedAsset.includes(item)).length)}
+                                        {generalAllowedTrackedAsset.filter(item => allowedTrackedAsset.includes(item)).length == 0 ?
+                                          <Text>You are up to date with the current assets available on Magnety</Text>
+                                          :
+                                          <>
+                                            <Text>
+                                              {generalAllowedTrackedAsset.filter(item => allowedTrackedAsset.includes(item)).length} new assets to integrate
+                                            </Text>
 
-                                              </Flex>
-                                            ))}
-                                        </Flex>
+                                            <Flex flexWrap={"nowrap"} gap={"5px"} overflowY={"scroll"} width={"80%"} maxHeight={"4vh"}>
+                                              {generalAllowedTrackedAsset.filter(item => allowedTrackedAsset.includes(item)).map((item, index) => (
+                                                <>
+
+                                                  <Button
+                                                    key={index}
+                                                    type="button"
+                                                    backgroundColor={"#0f0b1"}
+                                                    data-color="transparent"
+                                                    onClick={() => addAllowedNewTrackedAsset(item)}
+                                                    className={`${styles.asset_button} ${allowNewTrackedAsset.includes(item)
+                                                      ? styles.asset_selected
+                                                      : ""
+                                                      }`}
+                                                  >
+                                                    <Box
+                                                      style={{
+                                                        width: "50px",
+                                                        height: "50px",
+                                                        borderRadius: "10px",
+                                                        overflow: "hidden",
+
+                                                      }}
+                                                    >
+                                                      <Image src={returnImagefromAddress(item)} />
+                                                      {/* {allowNewTrackedAsset.includes(item) && (
+                                                        <>
+                                                          <span
+                                                            className={
+                                                              styles.asset_selected_checkmark
+                                                            }
+                                                          >
+                                                            <Image
+                                                              src={"/checkmark-circle-outline.svg"}
+                                                              width="10px"
+                                                              height="10px"
+                                                            />
+                                                          </span>
+                                                        </>
+                                                      )} */}
+                                                    </Box>
+
+                                                  </Button>
+
+                                                </>
+                                              ))}
+                                            </Flex>
+                                          </>
+                                        }
                                       </Flex>
                                       {/* <Flex direction={"column"} gap={"25px"} justifyContent={"center"} alignItems={"center"} width={"40%"}>
                                         <Text fontSize={"2xl"} textAlign={"center"}>Tracked Assets</Text>
@@ -4825,6 +4977,34 @@ const vault: NextPage = () => {
                                     <Text> Fetching Data </Text>
                                 }
 
+                              </Flex>
+                            </TabPanel>
+                            <TabPanel>
+                              <Flex direction={"column"} gap={"5vh"} justifyContent={"center"} alignItems={"center"}>
+
+                                {
+                                  parseFloat(managementFee) == 0 ?
+                                    <Text fontWeight={"bold"} fontSize={"2xl"} textAlign={"center"}> Management Fees are not enabled on your Fund</Text>
+                                    :
+                                    <Text fontWeight={"bold"} fontSize={"2xl"} >You can collect {managementFee}% Fees from your Fund GAV each year   </Text>
+                                }
+                                {
+                                  managementFeeToCollect ?
+
+                                    <Box>
+                                      <Flex direction={"column"} gap={"2vh"} alignItems={"center"}>
+                                        <Text fontSize={"5xl"} color={"#f6643c"} fontWeight={"semibold"}> {managementFeeToCollect} {denominationAsset} to collect</Text>
+
+                                        {
+                                          managementFeeToCollect > 0 &&
+                                          <Button backgroundColor={"#f6643c"} size={"lg"} onClick={handleCollectManagementFee}> Collect </Button>
+                                        }
+                                      </Flex>
+                                    </Box>
+                                    :
+                                    <Text fontSize={"5xl"} color={"#f6643c"} fontWeight={"semibold"}> ⌛⌛</Text>
+
+                                }
                               </Flex>
                             </TabPanel>
                           </TabPanels>
