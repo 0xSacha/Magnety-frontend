@@ -116,13 +116,9 @@ function UserPage(props: UserPageProps) {
     }
     setUserFundInfo(currentFundInfo);
 
-    console.log(amount);
-    console.log(currentFundInfo.length);
     if (currentFundInfo.length == amount) {
-      console.log("donnnnnnne");
       setShowFunds(true);
     }
-    console.log(currentFundInfo);
   }
 
   async function getShareInfo(fund: string, tokenId: string, amount: number) {
@@ -146,11 +142,7 @@ function UserPage(props: UserPageProps) {
       });
     }
     setUserShareInfo(currentShareInfo);
-    console.log(userShareInfo)
-    console.log(amount);
-    console.log(currentShareInfo.length);
     if (currentShareInfo.length == amount) {
-      console.log("donnnnnnne");
       setShowFunds2(true);
     }
   }
@@ -165,7 +157,6 @@ function UserPage(props: UserPageProps) {
       });
       res
         .then((value) => {
-          console.log(value);
           const amount = parseFloat(hexToDecimalString(value.result[0]));
           setUserFundAmount(amount);
           for (let index = 0; index < amount; index++) {
@@ -176,7 +167,6 @@ function UserPage(props: UserPageProps) {
             });
             res2
               .then((value) => {
-                console.log(value);
                 getFundInfo(value.result[0], amount);
               })
               .catch((err) => {
@@ -188,8 +178,6 @@ function UserPage(props: UserPageProps) {
           console.log(err);
         });
     }
-    console.log("fff");
-    console.log(userAddress);
   }, [userAddress]);
 
   useEffect(() => {
@@ -202,7 +190,6 @@ function UserPage(props: UserPageProps) {
       });
       res
         .then((value) => {
-          console.log(value);
           const amount = parseFloat(hexToDecimalString(value.result[0]));
           setUserShareAmount(amount);
           for (let index = 0; index < amount; index++) {
@@ -266,7 +253,6 @@ function UserPage(props: UserPageProps) {
   const handleSubmit = () => {
     async function signFunction() {
       if (accountInterface == undefined) {
-        console.log("account undefined");
       } else {
         const nonce = await accountInterface.getNonce();
         const sig = await accountInterface
@@ -597,7 +583,6 @@ function UserPage(props: UserPageProps) {
                             backgroundColor: "black",
                           }}
                         >
-                          {/* {console.log(props.values.profilePic)} */}
                           <img
                             src={props.values.profilePic}
                             style={{ objectFit: "cover" }}
@@ -706,7 +691,6 @@ function UserPage(props: UserPageProps) {
                     {" "}
                     Funds under Management : {userFundAmount}
                   </Text>
-                  {console.log(userFundInfo)}
                   {userFundInfo != [] ? userFundInfo.map((vault, index) => (
                     <Link href={`/vault/${vault.address}`}>
                       <Flex
@@ -799,7 +783,6 @@ export async function getServerSideProps(context: any) {
     process.env.URL + `api/user/` + context.query.uad
   );
   if (res.status == 200) {
-    console.log(res);
     const { data } = await res.json();
     const user = data;
     return { props: { user } };

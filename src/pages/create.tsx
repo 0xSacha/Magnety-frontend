@@ -182,9 +182,6 @@ const Create: NextPage = () => {
 
 
   const Initialize = async (_tabA: String[], _tabI: any[], _tabDB: ContractInfo) => {
-    console.log("yoo")
-    console.log(_tabA)
-    console.log(account.address)
     try {
       await account.execute([
         {
@@ -225,7 +222,6 @@ const Create: NextPage = () => {
     // (even if the issue is closed, the underlying Starknet issue remains)
     const raw = await fetch("/Vault.json");
     const compiled = json.parse(await raw.text());
-    console.log(compiled)
     return compiled;
   };
 
@@ -248,8 +244,6 @@ const Create: NextPage = () => {
       });
 
       if (erc20Response.address) {
-        console.log("Waiting for Tx to be Accepted on Starknet - ERC20 Deployment...");
-        console.log(erc20Response.address)
         setDeployedVaultAddress(erc20Response.address);
         await provider.waitForTransaction(erc20Response.transaction_hash).then(() => settxAccepted(1));
       }
@@ -412,7 +406,6 @@ const Create: NextPage = () => {
         }}
         onSubmit={(values, actions) => {
 
-          console.log("go submited")
           setTimeout(() => {
             // alert(JSON.stringify(values, null, 8));
 
@@ -544,9 +537,6 @@ const Create: NextPage = () => {
             _tabA.push(amount.toString())
             _tabA.push("0")
 
-            console.log(_tabI)
-            console.log(data)
-            console.log(_tabA)
             Initialize(_tabA, _tabI, data)
             actions.setSubmitting(false);
           }, 1000);

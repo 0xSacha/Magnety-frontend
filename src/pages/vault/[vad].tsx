@@ -376,7 +376,6 @@ const vault: NextPage = () => {
 
   useEffect(() => {
     if (withdrawLiquidtyToken) {
-      console.log(withdrawLiquidtyToken)
 
       let LP1 = ""
       let LP2 = ""
@@ -403,7 +402,6 @@ const vault: NextPage = () => {
 
 
 
-      console.log("lesgo")
 
 
       const res1 = provider.callContract({
@@ -445,7 +443,6 @@ const vault: NextPage = () => {
         .then((value) => {
           const fundBalance__ = hexToDecimalString(value.result[0]);
           const fundBalance_ = parseFloat(fundBalance__) / 1000000000000000000;
-          console.log(fundBalance_)
           setBringLiquidityTokenFundBalance(fundBalance_)
         })
         .catch((err) => {
@@ -617,7 +614,6 @@ const vault: NextPage = () => {
                 const newPrice = parseFloat(hexToDecimalString(value.result[0])) / 1000000000000000000;
                 _sellShareDataTab[index].rate = newPrice
                 setSellShareDataTab(_sellShareDataTab)
-                console.log(sellShareDataTab)
               })
               .catch((err) => {
                 console.log(err);
@@ -680,7 +676,6 @@ const vault: NextPage = () => {
     setDataSetChange(!dataSetChange)
 
     if (sellShareDataTab.length != 0) {
-      console.log(sellShareDataTab)
       let count = 0
       for (let index = 0; index < sellShareDataTab.length; index++) {
         count = parseFloat(count.toString()) + parseFloat((sellShareDataTab[index].percent.toString()));
@@ -704,7 +699,6 @@ const vault: NextPage = () => {
     setDataSetChange(!dataSetChange)
 
     if (sellShareDataTab.length != 0) {
-      console.log(sellShareDataTab)
       let count = 0
       for (let index = 0; index < sellShareDataTab.length; index++) {
         count = count + sellShareDataTab[index].percent;
@@ -1745,7 +1739,6 @@ const vault: NextPage = () => {
 
 
   const multicallWithdrawLiquidity = async (_tab: any[], _tab1: any[]) => {
-    console.log("invoke");
     try {
       await accountInterface.execute([
         {
@@ -1853,7 +1846,6 @@ const vault: NextPage = () => {
   };
 
   const multicallBringLiquidity = async (_tab: any[], _tab1: any[], _tab2) => {
-    console.log("invoke");
     try {
       await accountInterface.execute([
         {
@@ -1951,7 +1943,6 @@ const vault: NextPage = () => {
   };
 
   const multicallSwap = async (_tabApprove: any[], _tab: any[]) => {
-    console.log("invoke");
     try {
       await accountInterface.execute([
         {
@@ -2037,7 +2028,6 @@ const vault: NextPage = () => {
   };
 
   const multicall2 = async (_tab: any[]) => {
-    console.log("invoke");
     try {
       await accountInterface.execute([
         {
@@ -2388,7 +2378,7 @@ const vault: NextPage = () => {
                   <Text fontWeight={"light"} fontSize={"2xl"} marginTop={"5px"}>
                     Did You Tweet Sir ?
                   </Text>
-                  <a href={"http://twitter.com/share?text=My Fund is going on the moon, don't Miss it🚀 &url=" + process.env.URL + "vault/" + vaultAddress + "&hashtags=Magnety,Starknet,StarkPilled,L222"}>
+                  <a href={"http://twitter.com/share?text=My Fund is going to the moon, don't Miss the opportunity to 🚀 &url=" + process.env.URL + "vault/" + vaultAddress + "&hashtags=Magnety,Starknet,StarkPilled,L222"}>
                     <Button backgroundColor={"#030135"} padding={"10px"}>
                       <Icon as={BsShare} w={6} h={6} />
                     </Button>
@@ -3905,12 +3895,12 @@ const vault: NextPage = () => {
                             <Tab fontSize={"1xl"} fontWeight={"bold"}>
                               Track
                             </Tab>
-                            <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                            {/* <Tab fontSize={"1xl"} fontWeight={"bold"}>
                               Policies
                             </Tab>
                             <Tab fontSize={"1xl"} fontWeight={"bold"}>
                               Fee
-                            </Tab>
+                            </Tab> */}
                           </Flex>
                         </TabList>
                         <Box
@@ -4887,7 +4877,6 @@ const vault: NextPage = () => {
                                     <Flex direction={"row"} gap={"25px"} justifyContent={"center"} width={"100%"} alignItems={"baseline"}>
 
                                       <Flex direction={"column"} gap={"5px"} justifyContent={"center"} alignSelf={"center"} width={"40%"}>
-                                        {console.log(generalAllowedTrackedAsset.filter(item => allowedTrackedAsset.includes(item)).length)}
                                         {generalAllowedTrackedAsset.filter(item => allowedTrackedAsset.includes(item)).length == 0 ?
                                           <Text>You are up to date with the current assets available on Magnety</Text>
                                           :

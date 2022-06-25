@@ -40,7 +40,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // RESPONSE PUT REQUESTS
     PUT: async (req: NextApiRequest, res: NextApiResponse) => {
       const { Contract } = await connect() // connect to database
-      console.log(req.body)
       res.json(
         await Contract.findOneAndUpdate({ fundAddress: `${address}` }, req.body, { upsert: true }).catch(catcher)
       )

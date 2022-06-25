@@ -18,13 +18,11 @@ export default () => {
     {
       label: "MarketPlace",
       onClick: (event: MouseEvent) => {
-        console.log("MarketPlace clicked");
       },
     },
     {
       label: "Create",
       onClick: (event: MouseEvent) => {
-        console.log("Staking clicked");
       },
     },
   ];

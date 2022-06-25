@@ -58,7 +58,6 @@ export function DeployFund() {
                 await library.waitForTransaction(deployment.deployTransactionHash).then(() => settxAccepted(1));
             }
         };
-        console.log("deploying")
 
         await _deployTarget();
     };
