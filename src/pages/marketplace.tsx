@@ -71,7 +71,8 @@ const vault: NextPage = () => {
           {vaultInfo &&
             <SimpleGrid columns={2} spacing={10}>
               {vaultInfo.map((key, index) => (
-                <Link href={"/vault/" + key.fundAddress} width={"100%"} style={{ textDecoration: "none" }}>
+                <Link href={"/vault/" + key.fundAddress}>
+                  <a>
                   <Box
                     className={` bg__dotted`}
                     padding={"10px"}
