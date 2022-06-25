@@ -378,27 +378,26 @@ const Layout = (props: PropsWithChildren<unknown>) => {
               }}
             >
               <Flex direction={"row"} justifyContent={"space-between"} margin={"5%"}>
-                <Link href="https://twitter.com/magnetyfi">
+                <a href="https://twitter.com/magnetyfi" target="_blank">
                   <button className="social_button">
                     <Image src={Twitter} width="21px" height="21px"></Image>
                   </button>
-                </Link>
-                <Link href="https://magnety.notion.site/magnety/Magnety-538f55a2ee1d4a39b8ed2141beb5e383">
+                </a>
+                <a href="https://magnety.notion.site/magnety/Magnety-538f55a2ee1d4a39b8ed2141beb5e383" target="_blank">
                   <button className="social_button">
                     <Image src={Notion} width="17px" height="21px"></Image>
                   </button>
-                </Link>
-                <Link href="https://discord.gg/magnety">
+                </a>
+                <a href="https://discord.gg/magnety" target="_blank">
                   <button className="social_button">
                     <Image src={Discord} width="21px" height="21px"></Image>
                   </button>
-                </Link>
-                <Link href="https://medium.com/@magnety.finance">
-
+                </a>
+                <a href="https://medium.com/@magnety.finance" target="_blank">
                   <button className="social_button">
                     <Image src={Medium} width="21px" height="21px"></Image>
                   </button>
-                </Link>
+                </a>
               </Flex>
               <div className="fs-12 text-center">
                 © 2022 - Magnety - All Rights Reserved

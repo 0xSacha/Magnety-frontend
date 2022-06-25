@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Link from 'next/link'
 import { NextPage } from "next";
 import styles from "~/styles/vault.module.scss";
 import { useAppSelector } from "../app/hooks";
@@ -21,8 +22,7 @@ import {
   Box,
   Flex,
   Text,
-  Stack,
-  Link,
+  Stack
 } from "@chakra-ui/react";
 import moment from "moment";
 import eth from "../image/ETH.png";
@@ -71,7 +71,8 @@ const vault: NextPage = () => {
           {vaultInfo &&
             <SimpleGrid columns={2} spacing={10}>
               {vaultInfo.map((key, index) => (
-                <Link href={"/vault/" + key.fundAddress} width={"100%"} style={{ textDecoration: "none" }}>
+                <Link href={"/vault/" + key.fundAddress}>
+                  <a>
                   {console.log(key)}
 
                   <Box
@@ -106,7 +107,7 @@ const vault: NextPage = () => {
                             }}
                           >
                             <img
-                              src={key?.image}
+                              src={key.image}
                               style={{ objectFit: "cover" }}
                             />
                           </Box>
@@ -344,6 +345,7 @@ const vault: NextPage = () => {
                       </Flex>
                     </Box>
                   </Box>
+                  </a>
                 </Link>
               ))}
             </SimpleGrid>
