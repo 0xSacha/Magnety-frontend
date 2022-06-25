@@ -232,6 +232,7 @@ const Create: NextPage = () => {
   const onDeployFund = async () => {
 
     if (deploying == false) {
+      setDeploying(true);
       const raw = await fetch("/Vault.json");
       const compiled = json.parse(await raw.text());
       const erc20Response = await provider.deployContract({
@@ -245,7 +246,7 @@ const Create: NextPage = () => {
           ),
         ]
       });
-      setDeploying(true);
+
       if (erc20Response.address) {
         console.log("Waiting for Tx to be Accepted on Starknet - ERC20 Deployment...");
         console.log(erc20Response.address)

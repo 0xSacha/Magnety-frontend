@@ -21,7 +21,18 @@ import {
   Input,
   Link,
   Text,
+  Stack,
 } from "@chakra-ui/react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ReferenceLine,
+} from "recharts";
 
 import neon from "../image/logo_neon.png"
 
@@ -40,6 +51,7 @@ import ethtst from "../image/ETH-TST.png";
 import ethbtc from "../image/ETH-BTC.png";
 import { Asset } from "~/registry/tokenSupported";
 import { GiRadiations } from "react-icons/gi";
+import moment from "moment";
 
 // const [userFundInfo, setUserFundInfo] = useState<fundInfo[]>([]);
 const AssetTab = [btc, eth, zkp, tst, ethzkp, btctst, ethtst, ethbtc]
@@ -49,8 +61,15 @@ const ProtocolTab = [alphaRoad]
 const Home: NextPage = () => {
   const [vaultAmount, setVaultAmount] = React.useState<string>("");
   const { provider, account } = getStarknet();
-  const [userFundInfo, setUserFundInfo] = React.useState<fundInfo>([]);
   const [vaultInfo, setVaultInfo] = React.useState<ContractInfo[]>();
+  const [vaultInfoStakingVault, setVaultInfoStakingVault] = React.useState<ContractInfo>();
+
+  const dateFormatter = (date) => {
+    // return moment(date).unix();
+
+    return moment(date).format("L");
+
+  };
 
   useEffect(() => {
     const res1 = provider.callContract({
@@ -70,6 +89,7 @@ const Home: NextPage = () => {
   // const [showFunds, setShowFunds] = useState(false);
   useEffect(() => {
     loadData()
+    loadDataStaking()
   }, []);
 
   const loadData = async () => {
@@ -84,6 +104,21 @@ const Home: NextPage = () => {
 
     }
   };
+
+  const loadDataStaking = async () => {
+    const res = await fetch(
+      process.env.URL + `api/contract/0x3acdb97d5fc69eeb39ba3517754372c88ccdcc8563d7c49636fde0b0a8f93da`
+    );
+    if (res.status == 200) {
+      await res.json().then((data) =>
+
+        setVaultInfoStakingVault(data.data)
+      );
+    } else {
+
+    }
+  };
+
   return (
     <Box margin={"auto"} gap={"200px"} padding={"5%"}>
       <Flex
@@ -91,7 +126,7 @@ const Home: NextPage = () => {
         flexWrap={"wrap"}
         width={"100%"}
         justifyContent={"space-evenly"}
-      // alignItems={"center"}
+        alignItems={"center"}
 
       >
 
@@ -125,85 +160,282 @@ const Home: NextPage = () => {
 
           </Flex>
         </Flex>
-        <Link href={"/vault/"}>
-          <Box
-            className={` bg__dotted`}
-            padding={"10px"}
-            style={{ borderRadius: "10px" }}
-          >
-            <Box
-              backgroundColor={"#0f0b1f"}
-              style={{ borderRadius: "10px" }}
-              borderTop={"solid 2px #f6643c"}
-              borderBottom={"solid 2px #f6643c"}
-            >
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <div style={{ width: "25%", float: "left" }}>
-                  <div
-                    style={{
-                      width: "60px",
-                      height: "60px",
-                      margin: "10px",
-                      borderRadius: "50%",
-                      background: "black",
-                    }}
-                  ></div>
-                </div>
-                <div style={{ width: "40%", float: "left" }}>
-                  <Text fontSize={"2xl"} fontWeight={"bold"}>
-                    FlexFund
-                  </Text>
-                  <Flex gap={"3px"}>
-                    {[
-                      ...Array(
-                        Object.keys(VDatabase["0x738bb79798127c6d026013b4067a20694a091ddde9b69e36b0a384c9b94610f"].tags).length
-                      ),
-                    ].map((e, i) => {
-                      return (
-                        <Text
-                          fontSize={"0.8rem"}
-                          fontWeight={"light"}
-                        >
-                          {"#" + VDatabase["0x738bb79798127c6d026013b4067a20694a091ddde9b69e36b0a384c9b94610f"].tags[i]}
-                        </Text>
-                      );
-                    })}
-                  </Flex>
-                </div>
-                <div style={{ width: "35%", float: "left" }}></div>
-              </div>
+        {vaultInfoStakingVault !== undefined &&
+          <Link href={"/vault/" + vaultInfoStakingVault.fundAddress} width={"35%"} style={{ textDecoration: "none" }}>
+            {console.log(vaultInfoStakingVault)}
 
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                }}
+            <Box
+              className={` bg__dotted`}
+              padding={"10px"}
+              style={{ borderRadius: "10px" }}
+
+            >
+              <Box
+                backgroundColor={"#0f0b1f"}
+                style={{ borderRadius: "10px" }}
+                borderTop={"solid 2px #f6643c"}
+                borderBottom={"solid 2px #f6643c"}
+                padding={"3vh"}
               >
-                <div
-                  style={{
-                    width: "60%",
-                    float: "left",
-                    paddingLeft: "10px",
-                  }}
+
+                <Flex
+                  width={"100%"}
+                  direction={"column"}
+                  justifyContent={"center"}
+                  gap={"2vh"}
                 >
-                  <p>Value Managed :</p>
-                  <p>Risk Factor :</p>
-                </div>
-                <div style={{ width: "40%", float: "left" }}>
-                  <p>APR :</p>
-                  <p>REWARDS :</p>
-                </div>
-              </div>
+                  <Flex direction={"row"} alignItems={"center"} justifyContent={"space-between"}>
+
+                    <Box
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        borderRadius: "50%",
+                        overflow: "hidden",
+                        backgroundColor: "black",
+                      }}
+                    >
+                      <img
+                        src={vaultInfoStakingVault?.image}
+                        style={{ objectFit: "cover" }}
+                      />
+                    </Box>
+
+                    <Flex direction={"column"} alignItems={"center"}>
+                      <Text fontSize={"3xl"} fontWeight={"bold"}>
+                        {vaultInfoStakingVault?.name}
+                      </Text>
+
+
+                      <Stack direction={"row"}>
+                        {[...Array(Object.keys(vaultInfoStakingVault.tags).length)].map(
+                          (e, i) => {
+                            return (
+                              <Text fontWeight={"light"} fontSize={"0.75rem"}>
+                                {"#" + vaultInfoStakingVault.tags[i]}
+                              </Text>
+                            );
+                          }
+                        )}
+                      </Stack>
+                    </Flex>
+
+
+                  </Flex>
+                  <Flex
+                    direction={"row"}
+                    gap={"1vw"}
+                    alignItems={"center"}
+                  >
+                    <Flex direction={"column"}>
+                      <Flex direction={"row"}>
+                        <Text fontSize={"4xl"}>
+                          {" "}
+                          {vaultInfoStakingVault.dataFinance[vaultInfoStakingVault.dataFinance.length - 1].sharePrice < 1
+                            ?
+                            (vaultInfoStakingVault.dataFinance[vaultInfoStakingVault.dataFinance.length - 1].sharePrice
+                            ).toPrecision(2)
+                            : vaultInfoStakingVault.dataFinance[vaultInfoStakingVault.dataFinance.length - 1].sharePrice
+                          }
+
+
+                        </Text>
+                        <Box
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            borderRadius: "15px",
+                            overflow: "hidden",
+                            backgroundColor: "transparent",
+                          }}
+                        >
+                          <Image
+                            src={eth}
+                          />
+                        </Box>
+
+                      </Flex>
+
+                      <Text fontSize={"2xl"}>/ Share</Text>
+
+                    </Flex>
+                    <Text
+                      fontSize={"4xl"}
+                      color={
+                        vaultInfoStakingVault.totalIncome
+                          ? vaultInfoStakingVault.totalIncome > 0
+                            ? "#31c48d"
+                            : "rgb(237,33,49)"
+                          : "#31c48d"
+
+                      }
+                    >
+                      {" "}
+                      {vaultInfoStakingVault.totalIncome == 0
+                        ? "--"
+                        :
+                        vaultInfoStakingVault.totalIncome
+                      }
+                      %{" "}
+                    </Text>
+                  </Flex>
+                  <Flex marginTop={"-3vh"}>
+                    <ResponsiveContainer
+                      width="100%"
+                      aspect={12.0 / 3.0}
+
+                    >
+                      <AreaChart data={vaultInfoStakingVault.dataFinanceD}>
+                        <Tooltip />
+                        <defs>
+                          <linearGradient
+                            id="splitColor"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                          >
+                            <stop
+                              offset="5%"
+                              stopColor={
+                                vaultInfoStakingVault.dataFinanceD[0]
+                                  ? vaultInfoStakingVault.dataFinanceD[0].sharePrice >
+                                    vaultInfoStakingVault.dataFinanceD[vaultInfoStakingVault.dataFinanceD.length - 1]
+                                      .sharePrice
+                                    ? "rgb(237,33,49)"
+                                    : "#31c48d"
+                                  : "rgb(237,33,49)"
+
+                              }
+                              stopOpacity={0.9}
+                            />
+                            <stop
+                              offset="90%"
+                              stopColor="#31c48d"
+                              stopOpacity={0}
+                            />
+                            {/* <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.1}/> */}
+                          </linearGradient>
+                        </defs>
+                        <Area
+                          type="monotone"
+                          dataKey={
+                            "sharePrice"
+                          }
+                          stroke={
+                            vaultInfoStakingVault.dataFinanceD[0]
+                              ? vaultInfoStakingVault.dataFinanceD[0].sharePrice >
+                                vaultInfoStakingVault.dataFinanceD[vaultInfoStakingVault.dataFinanceD.length - 1]
+                                  .sharePrice
+                                ? "rgb(237,33,49)"
+                                : "#31c48d"
+                              : "rgb(237,33,49)"
+
+                          }
+                          fill="url(#splitColor)"
+                          fillOpacity={0.6}
+                          strokeWidth={2}
+                        />
+                        {/* <Area type="monotone" dataKey="sharePriceInitial" stroke="" fill="url(#splitColor2)" /> */}
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </Flex>
+                  <Flex direction={"row"} justifyContent={"space-between"}>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"light"} fontSize={"1xl"}>
+                        Daily
+                      </Text>
+                      <Text
+                        fontWeight={"bold"}
+                        fontSize={"1.125rem"}
+                        color={
+                          vaultInfoStakingVault?.dailyIncome
+                            ? vaultInfoStakingVault?.dailyIncome < 0
+                              ? "rgb(237,33,49)"
+                              : "#31c48d"
+                            : "#31c48d"
+                        }
+                      >
+                        {vaultInfoStakingVault?.dailyIncome == 0
+                          ? "--"
+                          : vaultInfoStakingVault?.dailyIncome?.toPrecision(4)}
+                        %
+                      </Text>
+
+                    </Flex>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"light"} fontSize={"1xl"}>
+                        Weekly
+                      </Text>
+                      <Text
+                        fontWeight={"bold"}
+                        fontSize={"1.125rem"}
+                        color={
+                          vaultInfoStakingVault?.weeklyIncome
+                            ? vaultInfoStakingVault?.weeklyIncome < 0
+                              ? "rgb(237,33,49)"
+                              : "#31c48d"
+                            : "#31c48d"
+                        }
+                      >
+                        {vaultInfoStakingVault?.weeklyIncome == 0
+                          ? "--"
+                          : vaultInfoStakingVault?.weeklyIncome?.toPrecision(4)}
+                        %
+                      </Text>
+
+                    </Flex>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"light"} fontSize={"1xl"}>
+                        Monthly
+                      </Text>
+                      <Text
+                        fontWeight={"bold"}
+                        fontSize={"1.125rem"}
+                        color={
+                          vaultInfoStakingVault?.monthlyIncome
+                            ? vaultInfoStakingVault?.monthlyIncome < 0
+                              ? "rgb(237,33,49)"
+                              : "#31c48d"
+                            : "#31c48d"
+                        }
+                      >
+                        {vaultInfoStakingVault?.monthlyIncome == 0
+                          ? "--"
+                          : vaultInfoStakingVault?.monthlyIncome?.toPrecision(4)}
+                        %
+                      </Text>
+
+                    </Flex>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"light"} fontSize={"1xl"}>
+                        Total
+                      </Text>
+                      <Text
+                        fontWeight={"bold"}
+                        fontSize={"1.125rem"}
+                        color={
+                          vaultInfoStakingVault?.totalIncome
+                            ? vaultInfoStakingVault?.totalIncome < 0
+                              ? "rgb(237,33,49)"
+                              : "#31c48d"
+                            : "#31c48d"
+                        }
+                      >
+                        {vaultInfoStakingVault?.totalIncome == 0
+                          ? "--"
+                          : vaultInfoStakingVault?.totalIncome?.toPrecision(4)}
+                        %
+                      </Text>
+
+                    </Flex>
+
+                  </Flex>
+                </Flex>
+              </Box>
             </Box>
-          </Box>
-        </Link>
+          </Link>
+        }
       </Flex>
       <Flex direction={"row"} justifyContent={"space-evenly"} marginTop={"14vh"} padding={"2vh"}>
         <Flex direction={"column"} justifyContent={"space-evenly"} gap={"20px"}>
@@ -289,31 +521,33 @@ const Home: NextPage = () => {
             <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
               Last funds created
             </Text>
-            {vaultInfo && vaultInfo.map((vault, index) => (
-              <Link href={`/vault/${vault.fundAddress}`}>
-                <Flex
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                >
-                  <Box
-                    style={{
-                      width: "60px",
-                      height: "60px",
-                      borderRadius: "50%",
-                      overflow: "hidden",
-                      backgroundColor: "black",
-                    }}
+            <Flex direction={"column"} overflowY={"scroll"} maxHeight={"18vh"} gap={"1vh"} >
+              {vaultInfo && vaultInfo.map((vault, index) => (
+                <Link href={`/vault/${vault.fundAddress}`}>
+                  <Flex
+                    justifyContent={"space-between"}
+                    alignItems={"center"}
                   >
-                    <img
-                      src={vault.image}
-                      style={{ objectFit: "cover" }}
-                    />
-                  </Box>
-                  <div>{vault.name}</div>
-                </Flex>
-              </Link>
+                    <Box
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        borderRadius: "50%",
+                        overflow: "hidden",
+                        backgroundColor: "black",
+                      }}
+                    >
+                      <img
+                        src={vault.image}
+                        style={{ objectFit: "cover" }}
+                      />
+                    </Box>
+                    <div>{vault.name}</div>
+                  </Flex>
+                </Link>
 
-            ))}
+              ))}
+            </Flex>
           </Flex>
 
         </Box>

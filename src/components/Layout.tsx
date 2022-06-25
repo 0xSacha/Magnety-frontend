@@ -158,7 +158,7 @@ const Layout = (props: PropsWithChildren<unknown>) => {
   function ConnectWallet() {
     return (
       <div className="App">
-        <Button padding={"5px"} borderRadius={"15px"} backgroundColor={"#f6643c"} onClick={onClick}>
+        <Button padding={"5px"} borderRadius={"15px"} backgroundColor={"#f6643c"} onClick={onClick} width={"100%"}>
           {" "}
           connect
         </Button>

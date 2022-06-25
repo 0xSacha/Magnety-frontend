@@ -526,7 +526,6 @@ function UserPage(props: UserPageProps) {
                   // on submit form
                   setTimeout(() => {
                     console.log(actions);
-                    alert(JSON.stringify(values, null, 2));
                     const data: UserInfo = {
                       userAddress: userAddress as String,
                       name: values.name,
@@ -753,7 +752,7 @@ function UserPage(props: UserPageProps) {
                     {" "}
                     {userShareAmount} Shares
                   </Text>
-                  <Flex flexWrap={"nowrap"} overflowY={"scroll"} width={"100%"} height={"10vh"}>
+                  <Flex direction={"column"} overflowY={"scroll"} width={"100%"} height={"10vh"}>
                     {userShareInfo != [] ? userShareInfo.map((vault, index) => (
                       <Link href={`/vault/${vault.address}`}>
                         <Flex

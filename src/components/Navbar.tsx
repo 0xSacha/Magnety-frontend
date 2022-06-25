@@ -16,21 +16,9 @@ export default () => {
 
   const NAVBAR_ITEMS: HeaderListItem[] = [
     {
-      label: "Home",
-      onClick: (event: MouseEvent) => {
-        console.log("MarketPlace clicked");
-      },
-    },
-    {
       label: "MarketPlace",
       onClick: (event: MouseEvent) => {
         console.log("MarketPlace clicked");
-      },
-    },
-    {
-      label: "Staking",
-      onClick: (event: MouseEvent) => {
-        console.log("Staking clicked");
       },
     },
     {
@@ -77,6 +65,20 @@ export default () => {
         </div>
         <div className={styles.divider}></div>
         {/* Navbar Links */}
+        <ul>
+          <Link href={"/"}>
+            <li /* onClick={(event) => item.onClick(event)} */ className={''}>
+              Home
+            </li>
+          </Link>
+        </ul>
+        <ul>
+          <Link href={process.env.URL + "/vault/0x3acdb97d5fc69eeb39ba3517754372c88ccdcc8563d7c49636fde0b0a8f93da"}>
+            <li className={''}>
+              Staking
+            </li>
+          </Link>
+        </ul>
         <ul>
           {NAVBAR_ITEMS.map((item, index) => (
             <Link href={"/" + item.label.toLowerCase()}>
