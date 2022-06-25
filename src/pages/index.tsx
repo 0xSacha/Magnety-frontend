@@ -188,8 +188,8 @@ const Home: NextPage = () => {
 
                     <Box
                       style={{
-                        width: "100px",
-                        height: "100px",
+                        width: "80px",
+                        height: "80px",
                         borderRadius: "50%",
                         overflow: "hidden",
                         backgroundColor: "black",
@@ -202,7 +202,7 @@ const Home: NextPage = () => {
                     </Box>
 
                     <Flex direction={"column"} alignItems={"center"}>
-                      <Text fontSize={"3xl"} fontWeight={"bold"}>
+                      <Text fontSize={"2xl"} fontWeight={"bold"}>
                         {vaultInfoStakingVault?.name}
                       </Text>
 
@@ -482,7 +482,7 @@ const Home: NextPage = () => {
         >
           <Flex direction={"column"} gap={"25px"}>
             <Flex direction={"column"}>
-              <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
+              <Text fontSize={"2xl"} color={"whiteAlpha"} fontWeight='extrabold'>
                 {AssetTab.length} Token Supported
               </Text>
               <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"100px"}>
@@ -495,7 +495,7 @@ const Home: NextPage = () => {
               </Flex>
             </Flex>
             <Flex direction={"column"}>
-              <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
+              <Text fontSize={"2xl"} color={"whiteAlpha"} fontWeight='extrabold'>
                 {ProtocolTab.length} Protocol supported
               </Text>
               <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"100px"}>
@@ -518,7 +518,7 @@ const Home: NextPage = () => {
           width={"30%"}
         >
           <Flex direction={"column"} gap={"2vh"}>
-            <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
+            <Text fontSize={"2xl"} color={"whiteAlpha"} fontWeight='extrabold'>
               Last funds created
             </Text>
             <Flex direction={"column"} overflowY={"scroll"} maxHeight={"18vh"} gap={"1vh"} >
