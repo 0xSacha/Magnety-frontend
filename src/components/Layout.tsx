@@ -3,7 +3,6 @@ import Navbar from "./Navbar";
 import { getStarknet } from "../starknetWrapper";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { setAccount, selectCount, increment } from "../app/counterSlice";
-import { IncrementCounter } from "./IncrementCounter";
 import Profile from "./Profile";
 import Image from "next/image";
 import {

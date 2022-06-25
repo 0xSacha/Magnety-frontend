@@ -1,7 +1,7 @@
 import { useContract } from '@starknet-react/core'
 import { Abi } from 'starknet'
 
-import Erc20Abi from '~/abi/erc20.json'
+import Erc20Abi from '../abi/ERC20.json'
 
 export function useTokenContract() {
   return useContract({

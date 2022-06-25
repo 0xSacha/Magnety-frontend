@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { number } from 'starknet'
 
-import type { AppState, AppThunk } from '../../app/store'
+import type { AppState, AppThunk } from '../app/store'
 
 export interface CounterState {
   value: number

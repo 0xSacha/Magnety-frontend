@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </NextHead>
         <Layout>
           <ChakraProvider>
-          <Global styles={GlobalStyles} />
+            <Global styles={GlobalStyles} />
             <Component {...pageProps} />
           </ChakraProvider>
         </Layout>

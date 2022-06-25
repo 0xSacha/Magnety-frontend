@@ -4,6 +4,10 @@ const nextConfig = {
   env: {
     URL: `http://localhost:3000/`
   },
+  typescript: {
+    ignoreBuildErrors: true
+  }
+
 
 }
 
