@@ -2369,9 +2369,9 @@ const vault: NextPage = () => {
                           style={{ fontWeight: "bold" }}
                         >
                           {assetManagerShareAmount
-                            ? (assetManagerShareAmount / (parseFloat(shareSupply))
+                            ? ((assetManagerShareAmount / parseFloat(shareSupply)
                             ) *
-                            100
+                            100).toPrecision(2)
                             : "--"}
                           %
                         </Text>
@@ -2421,7 +2421,7 @@ const vault: NextPage = () => {
                       </Flex>
                     </Button>
                   )}
-                  {assetManager == acccountAddress &&
+                  {assetManager == acccountAddress ?
 
                     menuSelected == 5 ? (
                     <Button
@@ -2449,7 +2449,10 @@ const vault: NextPage = () => {
                         </Text>
                       </Flex>
                     </Button>
-                  )}
+                  )
+                :
+                <></>
+                }
                 </Flex>
               </Flex>
               <Box
