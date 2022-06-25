@@ -2378,7 +2378,7 @@ const vault: NextPage = () => {
                   <Text fontWeight={"light"} fontSize={"2xl"} marginTop={"5px"}>
                     Did You Tweet Sir ?
                   </Text>
-                  <a href={"http://twitter.com/share?text=My Fund is going to the moon, don't Miss the opportunity to 🚀 &url=" + process.env.URL + "vault/" + vaultAddress + "&hashtags=Magnety,Starknet,StarkPilled,L222"}>
+                  <a href={"http://twitter.com/share?text=My Fund is going to the moon, invest now & fly with us🚀 &url=" + process.env.URL + "vault/" + vaultAddress + "&hashtags=Magnety,Starknet,StarkPilled,L222"}>
                     <Button backgroundColor={"#030135"} padding={"10px"}>
                       <Icon as={BsShare} w={6} h={6} />
                     </Button>
