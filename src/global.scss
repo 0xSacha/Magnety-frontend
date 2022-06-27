@@ -22,12 +22,16 @@ body {
 
 // page navbar with content
 div.page {
-  --sidebar-width: 260px;
+  --sidebar-width: 22vw;
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr var(--sidebar-width);
   height: 100vh;
   max-height: 100vh;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 0;
+  }
   .page__content {
     height: 100%;
     padding-top: $headerHeight;
@@ -66,6 +70,9 @@ div.page {
     z-index: 0;
   }
   .page__sidebar_wrapper {
+    @media (max-width: 768px) {
+      display: none;
+    }
     position: relative;
     margin-top: $headerHeight;
     .page__sidebar_backdrop{
