@@ -252,11 +252,6 @@ const Create: NextPage = () => {
 
 
 
-  useEffect(() => {
-    onDeployFund()
-
-  }, []);
-
 
   // useEffect(() => {
   //   if (!compiledTarget) {
@@ -545,6 +540,21 @@ const Create: NextPage = () => {
         {(props) => (
           <Form>
             <Flex direction={"column"} gap={"20px"}>
+              {deploying == false && 
+            <div
+                className={` bg__dotted`}
+                style={{ padding: "6%", borderRadius: "20px" }}
+              >
+
+                    <Button backgroundColor={"#f6643c"} onClick={()=> onDeployFund()}>
+                       <Text>
+                       Click here and deploy your fund
+                    </Text>
+                  
+                  </Button>
+                
+                </div>
+                }
               <div
                 className={` bg__dotted`}
                 style={{ padding: "6%", borderRadius: "20px" }}
