@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // RESPONSE FOR GET REQUESTS
     GET: async (req: NextApiRequest, res: NextApiResponse) => {
       const { Contract } = await connect() // connect to database
-      res.json(await Contract.find({}).sort({ $natural: -1 }).limit(50).catch(catcher))
+      res.json(await Contract.find({}).sort({ $natural: -1 }).limit(15).catch(catcher))
     },
     // RESPONSE POST REQUESTS
     // POST: async (req: NextApiRequest, res: NextApiResponse) => {
