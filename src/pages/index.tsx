@@ -94,7 +94,7 @@ const Home: NextPage = () => {
 
   const loadData = async () => {
     const res = await fetch(
-      process.env.URL + `api/contract/`
+      process.env.URL + `api/contract/last`
     );
     if (res.status == 200) {
       await res.json().then((data) =>
@@ -151,13 +151,10 @@ const Home: NextPage = () => {
 
               <Button backgroundColor={"#f6643c"} padding={"25px"}>
                 <Link href={`/create`} padding={"10px"}>
-
                   <Text fontWeight={"bold"} fontSize={"2xl"} >Monetize</Text>
-
                 </Link>
               </Button>
             </Flex>
-
           </Flex>
         </Flex>
         {vaultInfoStakingVault !== undefined &&

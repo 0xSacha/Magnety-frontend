@@ -14,8 +14,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // RESPONSE FOR GET REQUESTS
     GET: async (req: NextApiRequest, res: NextApiResponse) => {
       const { Contract } = await connect() // connect to database
-      res.json(await Contract.find({}).sort({ $natural: -1 }).limit(50).catch(catcher))
-    },
+      res.json(await Contract.find().limit(5).sort({$natural:-1}).catch(catcher))
+    }
+
     // RESPONSE POST REQUESTS
     // POST: async (req: NextApiRequest, res: NextApiResponse) => {
     //     if(!req.body.name || !req.body.symbol || !req.body.description || !req.body.type || !req.body.min || !req.body.max || !req.body.lockup || !req.body.limit || !req.body. entranceFees || !req.body.exitFees || !req.body.managementFees || !req.body.performanceFees || !req.body.tags || req.body.image) {
