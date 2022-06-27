@@ -164,7 +164,7 @@ const Home: NextPage = () => {
               className={` bg__dotted`}
               padding={"10px"}
               style={{ borderRadius: "10px" }}
-
+              width={"30%"}
             >
               <Box
                 backgroundColor={"#0f0b1f"}
@@ -184,11 +184,10 @@ const Home: NextPage = () => {
 
                     <Box
                       style={{
-                        width: "80px",
-                        height: "80px",
-                        borderRadius: "50%",
-                        overflow: "hidden",
-                        backgroundColor: "black",
+                        width: "30%",
+                        height: "30%",
+                        borderRadius: "15px",
+                        overflow:"hidden"
                       }}
                     >
                       <img
@@ -198,7 +197,7 @@ const Home: NextPage = () => {
                     </Box>
 
                     <Flex direction={"column"} alignItems={"center"}>
-                      <Text fontSize={"2xl"} fontWeight={"bold"}>
+                      <Text fontSize={"1xl"} fontWeight={"bold"}>
                         {vaultInfoStakingVault?.name}
                       </Text>
 
@@ -207,7 +206,7 @@ const Home: NextPage = () => {
                         {[...Array(Object.keys(vaultInfoStakingVault.tags).length)].map(
                           (e, i) => {
                             return (
-                              <Text fontWeight={"light"} fontSize={"0.75rem"}>
+                              <Text fontWeight={"light"} fontSize={"0.5rem"}>
                                 {"#" + vaultInfoStakingVault.tags[i]}
                               </Text>
                             );
@@ -225,7 +224,7 @@ const Home: NextPage = () => {
                   >
                     <Flex direction={"column"}>
                       <Flex direction={"row"}>
-                        <Text fontSize={"4xl"}>
+                        <Text fontSize={"2xl"}>
                           {" "}
                           {vaultInfoStakingVault.dataFinance[vaultInfoStakingVault.dataFinance.length - 1].sharePrice < 1
                             ?
@@ -238,8 +237,8 @@ const Home: NextPage = () => {
                         </Text>
                         <Box
                           style={{
-                            width: "50px",
-                            height: "50px",
+                            width: "20%",
+                            height: "20%",
                             borderRadius: "15px",
                             overflow: "hidden",
                             backgroundColor: "transparent",
@@ -252,11 +251,11 @@ const Home: NextPage = () => {
 
                       </Flex>
 
-                      <Text fontSize={"2xl"}>/ Share</Text>
+                      <Text fontSize={"1xl"}>/ Share</Text>
 
                     </Flex>
                     <Text
-                      fontSize={"4xl"}
+                      fontSize={"2xl"}
                       color={
                         vaultInfoStakingVault.totalIncome
                           ? vaultInfoStakingVault.totalIncome > 0
@@ -434,7 +433,7 @@ const Home: NextPage = () => {
         }
       </Flex>
       <Flex direction={"row"} justifyContent={"space-evenly"} marginTop={"14vh"} padding={"2vh"}>
-        <Flex direction={"column"} justifyContent={"space-evenly"} gap={"20px"}>
+        <Flex direction={"column"} justifyContent={"space-evenly"} gap={"20px"} width={"30%"}>
           <Box
             className={` bg__dotted`}
             style={{ borderRadius: "10px" }}
@@ -483,7 +482,7 @@ const Home: NextPage = () => {
               </Text>
               <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"100px"}>
                 {AssetTab.map((p, index) => (
-                  <Box width={"10%"}>
+                  <Box width={"50px"}>
                     <Image src={p} />
                   </Box>
                 ))}
@@ -496,7 +495,7 @@ const Home: NextPage = () => {
               </Text>
               <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"100px"}>
                 {ProtocolTab.map((p, index) => (
-                  <Box width={"10%"}>
+                  <Box width={"50px"}>
                     <Image src={p} />
                   </Box>
                 ))}
@@ -517,7 +516,7 @@ const Home: NextPage = () => {
             <Text fontSize={"2xl"} color={"whiteAlpha"} fontWeight='extrabold'>
               Last funds created
             </Text>
-            <Flex direction={"column"} overflowY={"scroll"} maxHeight={"18vh"} gap={"1vh"} >
+            <Flex direction={"column"} overflowY={"scroll"} maxHeight={"25vh"} gap={"1vh"} >
               {vaultInfo && vaultInfo.map((vault, index) => (
                 <Link href={`/vault/${vault.fundAddress}`}>
                   <Flex

@@ -2135,7 +2135,7 @@ const vault: NextPage = () => {
                   </Box>
                   <Flex direction={"column"}>
                     <Flex direction={"row"} alignItems={"center"}>
-                      <Text fontWeight={"extrabold"} fontSize={"4xl"}>
+                      <Text fontWeight={"extrabold"} fontSize={"2vw"}>
                         {" "}
                         {name}
                       </Text>
@@ -2153,7 +2153,7 @@ const vault: NextPage = () => {
                         {[...Array(Object.keys(vaultInfo.tags).length)].map(
                           (e, i) => {
                             return (
-                              <Text fontWeight={"semibold"} fontSize={"1.5rem"}>
+                              <Text fontWeight={"semibold"} fontSize={"1vw"}>
                                 {"#" + vaultInfo.tags[i]}
                               </Text>
                             );
@@ -2180,7 +2180,7 @@ const vault: NextPage = () => {
                     </Text>
                   </Flex>
                 </Flex>
-                <Box maxWidth={"40vw"} marginLeft={"1vw"}>
+                <Box maxWidth={"60%"} marginLeft={"1vw"}>
                   <Text fontWeight={"light"} fontSize={"2xl"}>
                     {vaultInfo?.strategy}
                   </Text>
@@ -2261,7 +2261,7 @@ const vault: NextPage = () => {
                     <Text fontWeight={"bold"} fontSize={"2xl"}>
                       {parseFloat(gav) < 0.01
                         ? parseFloat(gav).toExponential(2)
-                        : parseFloat(gav)}
+                        : parseFloat(gav).toPrecision(3)}
                     </Text>
                   </Flex>
                   <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
