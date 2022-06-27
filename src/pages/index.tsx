@@ -53,6 +53,8 @@ import { Asset } from "~/registry/tokenSupported";
 import { GiRadiations } from "react-icons/gi";
 import moment from "moment";
 
+import styles from '../styles/index.module.scss'
+
 // const [userFundInfo, setUserFundInfo] = useState<fundInfo[]>([]);
 const AssetTab = [btc, eth, zkp, tst, ethzkp, btctst, ethtst, ethbtc]
 const ProtocolTab = [alphaRoad]
@@ -120,76 +122,37 @@ const Home: NextPage = () => {
   };
 
   return (
-    <Box margin={"auto"} gap={"200px"} padding={"5%"}>
-      <Flex
-        direction={"row"}
-        flexWrap={"wrap"}
-        width={"100%"}
-        justifyContent={"space-evenly"}
-        alignItems={"center"}
-
-      >
-
-
-        <Flex direction={"column"} gap={"3vh"} width={"40%"}>
-          <Flex flexWrap={"wrap"} gap={"12px"}>
-            <Text fontWeight={"bold"} fontSize={"3rem"}>Discover </Text><Text color={"#f6643c"} fontWeight={"bold"} fontSize={"3rem"}>Extraordinary</Text> <Text fontWeight={"bold"} fontSize={"3rem"}>DeFi strategies</Text>
+    <Box className={styles.container}>
+      <Flex className={styles.wrapper}>
+        <Flex className={styles.hero}>
+          <Flex className={styles.hero_text}>
+            <Text>Discover </Text>
+            <Text color={"#f6643c"}>Extraordinary</Text>
+            <Text>DeFi&nbsp;strategies</Text>
           </Flex>
-          <Text fontWeight={"semibold"} fontSize={"1.5rem"}>
-            Magnty push your asset management to the next level, currently in version ⍺
-          </Text>
-          <Flex >
-
-            <Flex gap={"1vh"} direction={"row"}>
-              <Button backgroundColor={"#00318973"} padding={"25px"}>
-                <Link href={`/marketplace`} padding={"10px"}>
-                  <Flex>
-                    <Text fontWeight={"bold"} fontSize={"2xl"} >Delegate</Text>
-                  </Flex>
+          <Text>Magnety push your asset management to the next level, currently in version ⍺</Text>
+          <Flex>
+            <Flex className={styles.hero_btns}>
+              <Button backgroundColor={"#00318973"}>
+                <Link href={`/marketplace`}>
+                    <Text>Delegate</Text>
                 </Link>
               </Button>
-
-              <Button backgroundColor={"#f6643c"} padding={"25px"}>
-                <Link href={`/create`} padding={"10px"}>
-                  <Text fontWeight={"bold"} fontSize={"2xl"} >Monetize</Text>
+              <Button backgroundColor={"#f6643c"}>
+                <Link href={`/create`}>
+                  <Text>Monetize</Text>
                 </Link>
               </Button>
             </Flex>
           </Flex>
         </Flex>
         {vaultInfoStakingVault !== undefined &&
-          <Link href={"/vault/" + vaultInfoStakingVault.fundAddress} width={"35%"} style={{ textDecoration: "none" }}>
-
-            <Box
-              className={` bg__dotted`}
-              padding={"10px"}
-              style={{ borderRadius: "10px" }}
-              width={"30%"}
-            >
-              <Box
-                backgroundColor={"#0f0b1f"}
-                style={{ borderRadius: "10px" }}
-                borderTop={"solid 2px #f6643c"}
-                borderBottom={"solid 2px #f6643c"}
-                padding={"3vh"}
-              >
-
-                <Flex
-                  width={"100%"}
-                  direction={"column"}
-                  justifyContent={"center"}
-                  gap={"2vh"}
-                >
-                  <Flex direction={"row"} alignItems={"center"} justifyContent={"space-between"}>
-
-                    <Box
-                      style={{
-                        width: "30%",
-                        height: "30%",
-                        borderRadius: "15px",
-                        overflow:"hidden"
-                      }}
-                    >
+          <Link href={"/vault/" + vaultInfoStakingVault.fundAddress}>
+            <Box className={styles.hero_vault}>
+              <Box className={styles.content}>
+                <Flex className={styles.flex}>
+                  <Flex className={styles.title}>
+                    <Box className={styles.box}>
                       <img
                         src={vaultInfoStakingVault?.image}
                         style={{ objectFit: "cover" }}
@@ -197,16 +160,15 @@ const Home: NextPage = () => {
                     </Box>
 
                     <Flex direction={"column"} alignItems={"center"}>
-                      <Text fontSize={"1xl"} fontWeight={"bold"}>
+                      <Text>
                         {vaultInfoStakingVault?.name}
                       </Text>
-
 
                       <Stack direction={"row"}>
                         {[...Array(Object.keys(vaultInfoStakingVault.tags).length)].map(
                           (e, i) => {
                             return (
-                              <Text fontWeight={"light"} fontSize={"0.5rem"}>
+                              <Text>
                                 {"#" + vaultInfoStakingVault.tags[i]}
                               </Text>
                             );
@@ -214,17 +176,11 @@ const Home: NextPage = () => {
                         )}
                       </Stack>
                     </Flex>
-
-
                   </Flex>
-                  <Flex
-                    direction={"row"}
-                    gap={"1vw"}
-                    alignItems={"center"}
-                  >
+                  <Flex className={styles.share}>
                     <Flex direction={"column"}>
                       <Flex direction={"row"}>
-                        <Text fontSize={"2xl"}>
+                        <Text>
                           {" "}
                           {vaultInfoStakingVault.dataFinance[vaultInfoStakingVault.dataFinance.length - 1].sharePrice < 1
                             ?
@@ -232,30 +188,14 @@ const Home: NextPage = () => {
                             ).toPrecision(2)
                             : vaultInfoStakingVault.dataFinance[vaultInfoStakingVault.dataFinance.length - 1].sharePrice
                           }
-
-
                         </Text>
-                        <Box
-                          style={{
-                            width: "20%",
-                            height: "20%",
-                            borderRadius: "15px",
-                            overflow: "hidden",
-                            backgroundColor: "transparent",
-                          }}
-                        >
-                          <Image
-                            src={eth}
-                          />
+                        <Box>
+                          <Image src={eth}/>
                         </Box>
-
                       </Flex>
-
-                      <Text fontSize={"1xl"}>/ Share</Text>
-
+                      <Text>/ Share</Text>
                     </Flex>
                     <Text
-                      fontSize={"2xl"}
                       color={
                         vaultInfoStakingVault.totalIncome
                           ? vaultInfoStakingVault.totalIncome > 0
@@ -278,7 +218,6 @@ const Home: NextPage = () => {
                     <ResponsiveContainer
                       width="100%"
                       aspect={12.0 / 3.0}
-
                     >
                       <AreaChart data={vaultInfoStakingVault.dataFinanceD}>
                         <Tooltip />
@@ -335,14 +274,12 @@ const Home: NextPage = () => {
                       </AreaChart>
                     </ResponsiveContainer>
                   </Flex>
-                  <Flex direction={"row"} justifyContent={"space-between"}>
+                  <Flex className={styles.plotlegend}>
                     <Flex direction={"column"}>
-                      <Text fontWeight={"light"} fontSize={"1xl"}>
+                      <Text className={styles.date}>
                         Daily
                       </Text>
-                      <Text
-                        fontWeight={"bold"}
-                        fontSize={"1.125rem"}
+                      <Text className={styles.percent}
                         color={
                           vaultInfoStakingVault?.dailyIncome
                             ? vaultInfoStakingVault?.dailyIncome < 0
@@ -359,12 +296,10 @@ const Home: NextPage = () => {
 
                     </Flex>
                     <Flex direction={"column"}>
-                      <Text fontWeight={"light"} fontSize={"1xl"}>
+                      <Text className={styles.date}>
                         Weekly
                       </Text>
-                      <Text
-                        fontWeight={"bold"}
-                        fontSize={"1.125rem"}
+                      <Text className={styles.percent}
                         color={
                           vaultInfoStakingVault?.weeklyIncome
                             ? vaultInfoStakingVault?.weeklyIncome < 0
@@ -381,12 +316,10 @@ const Home: NextPage = () => {
 
                     </Flex>
                     <Flex direction={"column"}>
-                      <Text fontWeight={"light"} fontSize={"1xl"}>
+                      <Text className={styles.date}>
                         Monthly
                       </Text>
-                      <Text
-                        fontWeight={"bold"}
-                        fontSize={"1.125rem"}
+                      <Text className={styles.percent}
                         color={
                           vaultInfoStakingVault?.monthlyIncome
                             ? vaultInfoStakingVault?.monthlyIncome < 0
@@ -403,12 +336,10 @@ const Home: NextPage = () => {
 
                     </Flex>
                     <Flex direction={"column"}>
-                      <Text fontWeight={"light"} fontSize={"1xl"}>
+                      <Text className={styles.date}>
                         Total
                       </Text>
-                      <Text
-                        fontWeight={"bold"}
-                        fontSize={"1.125rem"}
+                      <Text className={styles.percent}
                         color={
                           vaultInfoStakingVault?.totalIncome
                             ? vaultInfoStakingVault?.totalIncome < 0
