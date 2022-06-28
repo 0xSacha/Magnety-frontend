@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   env: {
-    URL: "https://app.magnety.finance/"
+    URL: "http://localhost:3000/"
   },
   typescript: {
     ignoreBuildErrors: true

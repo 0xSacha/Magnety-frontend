@@ -26,22 +26,38 @@
     flex-direction: column;
     gap: 2vw;
     width: 40%;
+
+    @media (max-width: 768px) {
+        width: 90%;
+    }
 }
 
 .hero_text{
     flex-wrap: wrap;
     gap: 12px;
     width: 40%;
+
+    @media (max-width: 768px) {
+        width: 90%;
+    }
 }
 
 .hero_text > p{
     font-weight: bold;
     font-size: 3vw;
+
+    @media (max-width: 768px) {
+        font-size: 9vw;
+    }
 }
 
 .hero > p{
     font-weight: 600;
     font-size: 1.5vw;
+
+    @media (max-width: 768px) {
+        font-size: 4vw;
+    }
 }
 
 .hero > div > div{
@@ -56,11 +72,19 @@
 
 .hero_btns > button{
     padding: 1.3vw;
+
+    @media (max-width: 768px) {
+        padding: 3.8vw;
+    }
 }
 
 .hero_btns > button > p{
     font-weight: bold;
     font-size: 1.3vw;
+
+    @media (max-width: 768px) {
+        font-size: 3.8vw;
+    }
 }
 
 .hero_vault{
@@ -74,7 +98,7 @@
     }
 
     @media (max-width: 768px) {
-        width: 40%;
+        display: none;
     }
 
     .content{
