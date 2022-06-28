@@ -209,7 +209,7 @@ const Home: NextPage = () => {
                       {vaultInfoStakingVault.totalIncome == 0
                         ? "--"
                         :
-                        vaultInfoStakingVault.totalIncome
+                        vaultInfoStakingVault.totalIncome.toPrecision(2)
                       }
                       %{" "}
                     </Text>
