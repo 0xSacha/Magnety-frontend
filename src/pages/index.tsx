@@ -363,115 +363,77 @@ const Home: NextPage = () => {
           </Link>
         }
       </Flex>
-      <Flex direction={"row"} justifyContent={"space-evenly"} marginTop={"14vh"} padding={"2vh"}>
-        <Flex direction={"column"} justifyContent={"space-evenly"} gap={"20px"} width={"30%"}>
-          <Box
-            className={` bg__dotted`}
-            style={{ borderRadius: "10px" }}
-            borderTop={"solid 2px #f6643c"}
-            borderBottom={"solid 2px #f6643c"}
-            padding={"20px"}
-          >
+      <Flex className={styles.stats}>
+        <Flex className={styles.col1}>
+          <Box className={styles.box_carbon}>
             <Flex direction={"column"}>
-              <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
-                Total Funds created
+              <Text className={styles.title}>
+                Total Funds&nbsp;created
               </Text>
-              <Text fontWeight={"bold"} fontSize={"4xl"} color={"#f6643cbb"}>
+              <Text className={styles.value}>
                 {vaultAmount ? vaultAmount : ""}
               </Text>
             </Flex>
           </Box>
-          <Box
-            backgroundColor={"#f6643c"}
-            style={{ borderRadius: "10px" }}
-            borderTop={"solid 2px #f6643c"}
-            borderBottom={"solid 2px #f6643c"}
-            padding={"20px"}
-          >
+          <Box className={styles.box_orange}>
             <Flex direction={"column"}>
-              <Text fontSize={"3xl"} color={"whiteAlpha"} fontWeight='extrabold'>
-                Total Value Locked
+              <Text className={styles.title}>
+                Total Value&nbsp;Locked
               </Text>
-              <Text fontWeight={"bold"} fontSize={"4xl"} color={"whiteAlpha"}>
+              <Text className={styles.value}>
                 12.236 ETH
               </Text>
             </Flex>
           </Box>
         </Flex>
-        <Box
-          className={` bg__dotted`}
-          style={{ borderRadius: "10px" }}
-          borderTop={"solid 2px #f6643c"}
-          borderBottom={"solid 2px #f6643c"}
-          padding={"20px"}
-          width={"30%"}
-        >
-          <Flex direction={"column"} gap={"25px"}>
+        <Flex className={styles.col2}>
+          <Box className={styles.box_carbon}>
             <Flex direction={"column"}>
-              <Text fontSize={"2xl"} color={"whiteAlpha"} fontWeight='extrabold'>
+              <Text className={styles.title}>
                 {AssetTab.length} Token Supported
               </Text>
-              <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"100px"}>
-                {AssetTab.map((p, index) => (
-                  <Box width={"50px"}>
-                    <Image src={p} />
-                  </Box>
-                ))}
-
+              <Flex className={styles.content}>
+                <div className={styles.carousel}>
+                  {AssetTab.map((p, index) => (
+                      <Image className={styles.image} src={p} />
+                  ))}
+                </div>
               </Flex>
             </Flex>
+          </Box>
+          <Box className={styles.box_carbon}>
             <Flex direction={"column"}>
-              <Text fontSize={"2xl"} color={"whiteAlpha"} fontWeight='extrabold'>
-                {ProtocolTab.length} Protocol supported
+              <Text className={styles.title}>
+                {ProtocolTab.length} Protocol Supported
               </Text>
-              <Flex overflowY={"scroll"} padding={"15px"} gap={"20px"} flexWrap={"wrap"} maxHeight={"100px"}>
-                {ProtocolTab.map((p, index) => (
-                  <Box width={"50px"}>
-                    <Image src={p} />
-                  </Box>
-                ))}
-
+              <Flex className={styles.content}>
+                <div className={styles.carousel}>
+                  {ProtocolTab.map((p, index) => (
+                      <Image src={p} />
+                  ))}
+                </div>
               </Flex>
             </Flex>
-          </Flex>
-        </Box>
-        <Box
-          className={` bg__dotted`}
-          style={{ borderRadius: "10px" }}
-          borderLeft={"solid 2px #f6643c"}
-          borderRight={"solid 2px #f6643c"}
-          padding={"20px"}
-          width={"30%"}
-        >
-          <Flex direction={"column"} gap={"2vh"}>
-            <Text fontSize={"2xl"} color={"whiteAlpha"} fontWeight='extrabold'>
+          </Box>
+        </Flex>
+        <Box className={styles.col3}>
+          <Flex>
+            <Text className={styles.title}>
               Last funds created
             </Text>
-            <Flex direction={"column"} overflowY={"scroll"} maxHeight={"25vh"} gap={"1vh"} >
+            <Flex className={styles.vaults}>
               {vaultInfo && vaultInfo.map((vault, index) => (
                 <Link href={`/vault/${vault.fundAddress}`}>
-                  <Flex
-                    justifyContent={"space-between"}
-                    alignItems={"center"}
-                  >
-                    <Box
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        borderRadius: "50%",
-                        overflow: "hidden",
-                        backgroundColor: "black",
-                      }}
-                    >
+                  <Flex>
+                    <Box className={styles.image}>
                       <img
                         src={vault.image}
                         style={{ objectFit: "cover" }}
                       />
                     </Box>
-                    <div>{vault.name}</div>
+                    <div className={styles.name}>{vault.name}</div>
                   </Flex>
                 </Link>
-
               ))}
             </Flex>
           </Flex>
