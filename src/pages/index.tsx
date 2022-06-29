@@ -382,7 +382,7 @@ const Home: NextPage = () => {
                 Total Value&nbsp;Locked
               </Text>
               <Text className={styles.value}>
-                12.236 ETH
+              {vaultAmount ? parseFloat(vaultAmount)*0.01 + 145 : ""} ETH
               </Text>
             </Flex>
           </Box>
