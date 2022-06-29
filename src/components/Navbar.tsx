@@ -105,6 +105,9 @@ export default () => {
         </div>
         <div className={styles.wrapper}>
             <div className={styles.menu}>
+              <Link href={"/"}>
+                <div className={styles.link} onClick={() => setIsSidebarOpen(false)}>Home</div>
+              </Link>
               <Link href={"/vault/0x3acdb97d5fc69eeb39ba3517754372c88ccdcc8563d7c49636fde0b0a8f93da"}>
                 <div className={styles.link} onClick={() => setIsSidebarOpen(false)}>Staking</div>
               </Link>
