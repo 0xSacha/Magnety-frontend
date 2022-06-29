@@ -179,7 +179,7 @@ const Home: NextPage = () => {
                   </Flex>
                   <Flex className={styles.share}>
                     <Flex direction={"column"}>
-                      <Flex direction={"row"}>
+                      <Flex direction={"row"} alignItems={"center"}>
                         <Text>
                           {" "}
                           {vaultInfoStakingVault.dataFinance[vaultInfoStakingVault.dataFinance.length - 1].sharePrice < 1
