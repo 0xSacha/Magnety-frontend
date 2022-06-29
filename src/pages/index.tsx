@@ -179,7 +179,7 @@ const Home: NextPage = () => {
                   </Flex>
                   <Flex className={styles.share}>
                     <Flex direction={"column"}>
-                      <Flex direction={"row"}>
+                      <Flex direction={"row"} alignItems={"center"}>
                         <Text>
                           {" "}
                           {vaultInfoStakingVault.dataFinance[vaultInfoStakingVault.dataFinance.length - 1].sharePrice < 1
@@ -192,10 +192,11 @@ const Home: NextPage = () => {
                         <Box>
                           <Image src={eth}/>
                         </Box>
+                        <Text>   {" "}/ Share</Text>
                       </Flex>
-                      <Text>/ Share</Text>
+                      
                     </Flex>
-                    <Text
+                    {/* <Text
                       color={
                         vaultInfoStakingVault.totalIncome
                           ? vaultInfoStakingVault.totalIncome > 0
@@ -212,7 +213,7 @@ const Home: NextPage = () => {
                         vaultInfoStakingVault.totalIncome.toPrecision(2)
                       }
                       %{" "}
-                    </Text>
+                    </Text> */}
                   </Flex>
                   <Flex marginTop={"-3vh"}>
                     <ResponsiveContainer
@@ -381,7 +382,7 @@ const Home: NextPage = () => {
                 Total Value&nbsp;Locked
               </Text>
               <Text className={styles.value}>
-                12.236 ETH
+              {vaultAmount ? parseFloat(vaultAmount)*0.01 + 145 : ""} ETH
               </Text>
             </Flex>
           </Box>
