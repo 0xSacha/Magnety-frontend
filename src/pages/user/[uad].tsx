@@ -1,7 +1,7 @@
 import React, { Ref, useEffect, useRef, useState } from "react";
+import Link from 'next/link'
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import styles from "~/styles/vault.module.scss";
 import { useAppSelector } from "../../app/hooks";
 import { selectCount } from "../../app/counterSlice";
 import UDatabase from "./users.json";
@@ -12,6 +12,7 @@ import { UserInfo } from "../../utils/type";
 import Image from "next/image";
 import ImageUpload from "~/components/FileUpload";
 import ImageUpload2 from "~/components/FileUpload2";
+import styles from '~/styles/user.module.scss';
 
 import {
   Modal,
@@ -31,7 +32,6 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
-  Link,
   Text,
 } from "@chakra-ui/react";
 import { Field, Form, Formik, FormikProps } from "formik";
@@ -300,25 +300,13 @@ function UserPage(props: UserPageProps) {
 
   return (
     <>
-      <div className={`${styles.pageContainer}`}>
-        <div
-          className="bg__dotted"
-          style={{
-            borderRadius: "15px",
-            padding: "4px 6px 40px 5px",
-            position: "relative",
-          }}
-        >
-          <Box
-            style={{
-              height: "160px",
-              borderRadius: "15px 15px 0 0",
-              backgroundColor: "black",
-              backgroundSize: "cover",
-              backgroundPosition: "center bottom",
-            }}
-          >
-            <div style={{ objectFit: "cover", backgroundColor: "black" }} />
+      <div className={styles.container}>
+        <div className={styles.wrapper}>
+          <Box className={styles.box_baner}>
+            <div style={{ 
+              objectFit: "cover", 
+              backgroundColor: "black" }}
+            />
           </Box>
           <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
             <ModalOverlay />
@@ -328,7 +316,6 @@ function UserPage(props: UserPageProps) {
               <ModalBody>
                 <Text>Error : {errorMessage}</Text>
               </ModalBody>
-
               <ModalFooter></ModalFooter>
             </ModalContent>
           </Modal>
@@ -362,17 +349,8 @@ function UserPage(props: UserPageProps) {
               )}
             </div>
           )}
-          <Box
-            style={{
-              height: "180px",
-              width: "180px",
-              marginLeft: `calc(50% - 90px)`,
-              marginTop: "-90px",
-              borderRadius: "50%",
-              backgroundSize: "cover",
-              backgroundPosition: "center bottom",
-            }}
-          >
+
+          <Box className={styles.box_pp}>
             <img
               src={props.user.profilePic}
               style={{ objectFit: "cover", borderRadius: "50%" }}
@@ -381,66 +359,29 @@ function UserPage(props: UserPageProps) {
 
           {!editMode ? (
             <>
-              <div
-                style={{
-                  display: "table",
-                  clear: "both",
-                  width: "100%",
-                  marginTop: "-70px",
-                }}
-              >
-                <Flex
-                  width={"calc(50% + 90px)"}
-                  float={"left"}
-                  direction={"column"}
-                >
-                  <Flex direction={"row"} gap={"12px"} alignItems={"center"}>
-                    <p
-                      className="fs-35"
-                      style={{ fontWeight: "bold", marginLeft: "2vw" }}
-                    >
+              <div className={styles.info}>
+                <Flex className={styles.p_info}>
+                  <Flex>
+                    <p>
                       {userInfo.name}
                     </p>
-                    <Button
-                      width={"100px"}
-                      marginLeft={"2vw"}
-                      background={"transparent"}
-                    >
+                    <div>
                       <Link
                         href={`https://goerli.voyager.online/contract/${userInfo.userAddress}`}
                       >
-                        <p className="fs-20" style={{ fontWeight: "light" }}>
+                        <p>
                           {userInfo.userAddress.slice(0, 4) +
                             "..." +
                             userInfo.userAddress.slice(-4)}
                         </p>
                       </Link>
-                    </Button>
+                    </div>
                   </Flex>
-
-                  <span
-                    className="fs-18"
-                    style={{
-                      fontWeight: "semi-bold",
-                      marginLeft: "2vw",
-                      marginTop: "1vw",
-                      maxWidth: "25vw",
-                    }}
-                  >
+                  <span>
                     {userInfo.description}
                   </span>
                 </Flex>
-                <div
-                  style={{
-                    width: `calc(50% - 90px)`,
-                    float: "left",
-                    paddingTop: "9px",
-                    paddingLeft: "15px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "10px",
-                  }}
-                >
+                <div className={styles.socials}>
                   <div className="fw-500" style={{ display: "flex" }}>
                     <div style={{ marginLeft: "50px" }}>
                       --{" "}
@@ -664,7 +605,6 @@ function UserPage(props: UserPageProps) {
                         </Box>
                       </Flex> */}
                     </Flex>
-
                     {/* <Button
                 mt={4}
                 colorScheme="teal"
@@ -681,92 +621,62 @@ function UserPage(props: UserPageProps) {
         </div>
 
         {!editMode && (
-          <Flex direction={"row"} justifyContent={"space-between"} margin={"2vw"}>
-            <Flex className={`${styles.vaultCard}`}>
+          <Flex className={styles.funds_container}>
+            <Box className={styles.funds}>
+            <Flex>
               {showFunds == false ? (
                 <Text>Fetching Funds</Text>
               ) : (
-                <div>
-                  <Text fontWeight={"semibold"} fontSize={"3xl"}>
-                    {" "}
-                    Funds under Management : {userFundAmount}
+                <>
+                  <Text className={styles.title}>
+                  {userFundAmount} Funds
                   </Text>
-                  {userFundInfo != [] ? userFundInfo.map((vault, index) => (
-                    <Link href={`/vault/${vault.address}`}>
-                      <Flex
-                        justifyContent={"space-between"}
-                        alignItems={"center"}
-                      >
-                        <Box
-                          style={{
-                            width: "60px",
-                            height: "60px",
-                            borderRadius: "50%",
-                            overflow: "hidden",
-                            backgroundColor: "black",
-                          }}
-                        >
-                          <img
-                            src={vault.image}
-                            style={{ objectFit: "cover" }}
-                          />
-                        </Box>
-                        <div>{vault.name}</div>
-                      </Flex>
-                    </Link>
-                  ))
-                    :
-                    <Text>⌛</Text>}
-                </div>
-              )}
-            </Flex>
-            <Box
-              backgroundColor={"#0f0b1f"}
-              style={{ borderRadius: "10px" }}
-              borderTop={"solid 2px #f6643c"}
-              borderBottom={"solid 2px #f6643c"}
-              padding={"20px"}
-              width={"40%"}
-            >
-              {showFunds2 == false ? (
-                <Text>Fetching Shares</Text>
-              ) : (
-                <Flex direction={"column"} gap={"1vw"}>
-                  <Text fontWeight={"semibold"} fontSize={"3xl"}>
-                    {" "}
-                    {userShareAmount} Shares
-                  </Text>
-                  <Flex direction={"column"} overflowY={"scroll"} width={"100%"} height={"10vh"}>
-                    {userShareInfo != [] ? userShareInfo.map((vault, index) => (
+                  <Flex className={styles.vaults}>
+                      {userFundInfo && userFundInfo.map((vault, index) => (
                       <Link href={`/vault/${vault.address}`}>
-                        <Flex
-                          gap={"1vw"}
-                          alignItems={"center"}
-                        >
-                          <Box
-                            style={{
-                              width: "30px",
-                              height: "30px",
-                              borderRadius: "50%",
-                              overflow: "hidden",
-                              backgroundColor: "black",
-                            }}
-                          >
-                            <img
+                          <Flex>
+                          <Box className={styles.image}>
+                              <img
                               src={vault.image}
                               style={{ objectFit: "cover" }}
-                            />
+                              />
                           </Box>
-                          <div>{vault.name}</div>
-                          <div>ID: {vault.tokenId}</div>
-                        </Flex>
+                          <div className={styles.name}>{vault.name}</div>
+                          </Flex>
                       </Link>
-                    ))
-                      :
-                      <Flex>⌛</Flex>
-                    }</Flex>
-                </Flex>
+                      ))}
+                  </Flex>
+                </>
               )}
+            </Flex>
+            </Box>
+            <Box className={styles.funds}>
+            <Flex>
+              {showFunds == false ? (
+                <Text>Fetching Shares</Text>
+              ) : (
+                <>
+                  <Text className={styles.title}>
+                    {userShareAmount} Shares
+                  </Text>
+                  <Flex className={styles.vaults}>
+                      {userShareInfo && userShareInfo.map((vault, index) => (
+                      <Link href={`/vault/${vault.address}`}>
+                          <Flex>
+                          <Box className={styles.image}>
+                              <img
+                              src={vault.image}
+                              style={{ objectFit: "cover" }}
+                              />
+                          </Box>
+                          <div className={styles.name}>{vault.name}</div>
+                          </Flex>
+                      </Link>
+                      ))}
+                  </Flex>
+                </>
+              )}
+            </Flex>
             </Box>
           </Flex>
         )}

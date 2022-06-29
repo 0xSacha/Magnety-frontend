@@ -438,7 +438,6 @@ const Home: NextPage = () => {
               ))}
             </Flex>
           </Flex>
-
         </Box>
       </Flex>
     </Box>
