@@ -194,26 +194,7 @@ const Home: NextPage = () => {
                         </Box>
                         <Text>   {" "}/ Share</Text>
                       </Flex>
-                      
                     </Flex>
-                    {/* <Text
-                      color={
-                        vaultInfoStakingVault.totalIncome
-                          ? vaultInfoStakingVault.totalIncome > 0
-                            ? "#31c48d"
-                            : "rgb(237,33,49)"
-                          : "#31c48d"
-
-                      }
-                    >
-                      {" "}
-                      {vaultInfoStakingVault.totalIncome == 0
-                        ? "--"
-                        :
-                        vaultInfoStakingVault.totalIncome.toPrecision(2)
-                      }
-                      %{" "}
-                    </Text> */}
                   </Flex>
                   <Flex marginTop={"-3vh"}>
                     <ResponsiveContainer
@@ -249,7 +230,6 @@ const Home: NextPage = () => {
                               stopColor="#31c48d"
                               stopOpacity={0}
                             />
-                            {/* <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0.1}/> */}
                           </linearGradient>
                         </defs>
                         <Area
@@ -271,7 +251,6 @@ const Home: NextPage = () => {
                           fillOpacity={0.6}
                           strokeWidth={2}
                         />
-                        {/* <Area type="monotone" dataKey="sharePriceInitial" stroke="" fill="url(#splitColor2)" /> */}
                       </AreaChart>
                     </ResponsiveContainer>
                   </Flex>
@@ -294,7 +273,6 @@ const Home: NextPage = () => {
                           : vaultInfoStakingVault?.dailyIncome?.toPrecision(4)}
                         %
                       </Text>
-
                     </Flex>
                     <Flex direction={"column"}>
                       <Text className={styles.date}>
@@ -314,7 +292,6 @@ const Home: NextPage = () => {
                           : vaultInfoStakingVault?.weeklyIncome?.toPrecision(4)}
                         %
                       </Text>
-
                     </Flex>
                     <Flex direction={"column"}>
                       <Text className={styles.date}>
@@ -354,9 +331,7 @@ const Home: NextPage = () => {
                           : vaultInfoStakingVault?.totalIncome?.toPrecision(4)}
                         %
                       </Text>
-
                     </Flex>
-
                   </Flex>
                 </Flex>
               </Box>

@@ -1,0 +1,114 @@
+.grid{
+    grid-gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    
+}
+
+.hero_vault{
+    background-image: url("/bg.svg");
+    padding: 0.5vw;
+    border-radius: 10px;
+    width: 100%;
+
+    .content{
+        background-color: #0f0b1f;
+        border-radius: 10px;
+        border-top: solid 2px #f6643c;
+        border-bottom: solid 2px #f6643c;
+        padding: 3vh;
+
+        .flex{
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            gap: 2vh;
+
+            .title{
+                flex-direction: row; 
+                align-items: center;
+
+                .box{
+                    width: 30%;
+                    aspect-ratio: 1;
+                    border-radius: 15px;
+                    overflow: hidden;
+
+                    @media (max-width: 768px) {
+                        width: 15%;
+                    }
+                }
+
+                > div {
+                    align-items: start; 
+                    margin-left: 1vw;
+
+                    > p{
+                        font-size: 2vw;
+                        font-weight: bold;
+
+                        @media (max-width: 768px) {
+                            font-size: 4vw;
+                        }
+                    }
+
+                    .shares{
+                        font-size: 1.4vw;
+                        font-weight: bold;
+
+                        @media (max-width: 768px) {
+                            font-size: 3vw;
+                        }
+                    }
+
+                    > div{
+
+                        > p{
+                            font-size: 0.8vw;
+                            font-weight: 100;
+
+                            @media (max-width: 768px) {
+                                font-size: 2vw;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.plotlegend{
+    flex-direction: row;
+    justify-content: space-between;
+    
+    .date {
+        font-size: 1vw;
+        font-weight: 400;
+
+        @media (max-width: 768px) {
+            font-size: 2.4vw;
+        }
+
+        @media (max-width: 425px) {
+            font-size: 3.4vw;
+        }
+    }
+
+    .percent {
+        font-size: 1.125vw;
+        font-weight: 600;
+
+        @media (max-width: 768px) {
+            font-size: 2vw;
+        }
+
+        @media (max-width: 425px) {
+            font-size: 3vw;
+        }
+    }
+}
