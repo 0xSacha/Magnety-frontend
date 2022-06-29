@@ -195,7 +195,7 @@ const Home: NextPage = () => {
                       </Flex>
                       <Text>/ Share</Text>
                     </Flex>
-                    <Text
+                    {/* <Text
                       color={
                         vaultInfoStakingVault.totalIncome
                           ? vaultInfoStakingVault.totalIncome > 0
@@ -212,7 +212,7 @@ const Home: NextPage = () => {
                         vaultInfoStakingVault.totalIncome.toPrecision(2)
                       }
                       %{" "}
-                    </Text>
+                    </Text> */}
                   </Flex>
                   <Flex marginTop={"-3vh"}>
                     <ResponsiveContainer
