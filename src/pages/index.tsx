@@ -192,8 +192,9 @@ const Home: NextPage = () => {
                         <Box>
                           <Image src={eth}/>
                         </Box>
+                        <Text>   {" "}/ Share</Text>
                       </Flex>
-                      <Text>/ Share</Text>
+                      
                     </Flex>
                     {/* <Text
                       color={
