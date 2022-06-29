@@ -3,7 +3,7 @@ import styles from "../styles/header.module.scss";
 import Image from 'next/image'
 import { useRouter } from "next/router";
 import Link from 'next/link'
-import {FaBars} from 'react-icons/fa'
+import {FaBars, FaTimes} from 'react-icons/fa'
 
 type HeaderListItem = {
   label: string;
@@ -13,6 +13,7 @@ type HeaderListItem = {
 
 export default () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
 
   const NAVBAR_ITEMS: HeaderListItem[] = [
@@ -81,17 +82,38 @@ export default () => {
         <ul>
           {NAVBAR_ITEMS.map((item, index) => (
             <Link href={"/" + item.label.toLowerCase()}>
-              <li key={index} /* onClick={(event) => item.onClick(event)} */ className={item.customClass ?? ''}>
+              <li key={index} className={item.customClass ?? ''}>
                 {item.label}
               </li>
             </Link>
           ))}
         </ul>
       </div>
+
       <div className={`${styles.headerContainerMobile}`}>
           <Link href="/"><img style={{ cursor: "pointer" }} src="/logo1.svg" alt="A" width={'32px'} height={'46px'} /></Link>
-          <div><FaBars /></div>
+          <div onClick={() => setIsSidebarOpen(true)}><FaBars /></div>
       </div>
+
+      <aside className={styles.sidebarcontainer}
+          style={{
+            opacity: isSidebarOpen ? '100%' : '0',
+            top: isSidebarOpen ? '0' : '-100%'
+          }}>
+        <div className={styles.icon} onClick={() => setIsSidebarOpen(false)}>
+            <FaTimes/>
+        </div>
+        <div className={styles.wrapper}>
+            <div className={styles.menu}>
+              <Link href={"/vault/0x3acdb97d5fc69eeb39ba3517754372c88ccdcc8563d7c49636fde0b0a8f93da"}>
+                <div className={styles.link} onClick={() => setIsSidebarOpen(false)}>Staking</div>
+              </Link>
+              <Link href={"/marketplace"}>
+                <div className={styles.link} onClick={() => setIsSidebarOpen(false)}>Marketplace</div>
+              </Link>
+            </div>
+        </div>
+      </aside>
     </>
   );
 };

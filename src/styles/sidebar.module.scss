@@ -1,0 +1,59 @@
+@import "../variables.scss";
+
+.sidebarcontainer {
+  min-height: $headerHeight;
+  margin-bottom: -$headerHeight;
+  width: 100%;
+  grid-column: 1/-1;
+  display: flex;
+  z-index: 1000;
+  align-items: center;
+  background-color: #0f0b1f; /*$primaryColor*/
+  backdrop-filter: blur(5px);
+  line-height: 19px;
+  box-sizing: border-box;
+  // border-bottom: 1px solid #0b0951;
+
+  .icon{
+    position: absolute;
+    top: 1.2rem;
+    right: 1.5rem;
+    background: transparent;
+    font-size: 2rem;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .wrapper{
+    color: #fff;
+
+    .menu{
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(6, 80px);
+      text-align: center;
+      @media screen and (max-width: 480px) {
+          grid-template-rows: repeat(6, 60px);
+      }
+
+      .link{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        text-decoration: none;
+        list-style: none;
+        transition: 0.2s ease-in-out;
+        color: #fff;
+        cursor: pointer;
+        font-weight: bold;
+        font-style: italic;
+        text-transform: uppercase;
+        &:hover {
+            color: #000;
+            transition: 0.2s ease-in-out
+        }
+      }
+    }
+  }
+}
