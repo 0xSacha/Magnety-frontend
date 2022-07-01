@@ -177,6 +177,38 @@
     }
 }
 
+.user_info{
+    direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .personal_info{
+        direction: row;
+        gap: 1vw;
+        align-items: center;
+
+        .imgbox{
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: black;
+        }
+
+        .wrap{
+            flex-direction: column;
+        }
+    }
+
+    .twitter{
+
+    }
+
+    .interact{
+
+    }
+}
+
 .asset_container{
    
     display: flex;

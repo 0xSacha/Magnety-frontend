@@ -2258,31 +2258,18 @@ const vault: NextPage = () => {
               borderRadius={"25px"}
               display={"flex"}
               flexDirection={"column"}
-              gap={"1vh"}
+              gap={"3vh"}
             >
-              <Flex
-                direction={"row"}
-                alignItems={"center"}
-                justifyContent={"space-between"}
-              >
-                <Flex direction={"row"} gap={"1vw"}>
-                  <Box
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      borderRadius: "50%",
-                      overflow: "hidden",
-                      backgroundColor: "black",
-                    }}
-                  >
+              <Flex className={styles.user_info}>
+                <Flex className={styles.personal_info}>
+                  <Box className={styles.imgbox}>
                     <img
                       src={assetManagerImage}
                       style={{ objectFit: "cover" }}
                     />
                   </Box>
                   <Flex direction={"column"}>
-                    <div>
-                      <Flex direction={"row"} gap={"0.5rem"}>
+                      <Flex direction={"column"}>
                         <Text fontWeight={"light"} fontSize={"2xl"}>
                           Managed by{" "}
                         </Text>
@@ -2304,9 +2291,6 @@ const vault: NextPage = () => {
                             </a>
                           </Link>
                         </Text>
-                      </Flex>
-                    </div>
-                    <Flex direction={"column"}>
                       <Flex direction={"row"} gap={"2px"}>
                         <Text fontSize={"0.8rem"} fontWeight={"light"}>
                           Last active{" "}
@@ -2341,17 +2325,18 @@ const vault: NextPage = () => {
                   direction={"row"}
                   gap={"1vw"}
                   marginRight={"2vw"}
-                  marginTop={"-25px"}
+                  alignItems={"center"}
                 >
                   <Text fontWeight={"light"} fontSize={"2xl"} marginTop={"5px"}>
-                    Did You Tweet Sir ?
+                    Tweet it !
                   </Text>
                   <a href={"http://twitter.com/share?text=My Fund is going to the moon, invest now & fly with us🚀 &url=" + process.env.URL + "vault/" + vaultAddress + "&hashtags=Magnety,Starknet,StarkPilled,L222"}>
                     <Button backgroundColor={"#030135"} padding={"10px"}>
                       <Icon as={BsShare} w={6} h={6} />
                     </Button>
                   </a>
-
+                  
+                  <Flex direction={"column"} gap={"1vw"}>
                   {menuSelected == 1 ? (
                     <Button
                       backgroundColor={"#f6643c"}
@@ -2379,6 +2364,7 @@ const vault: NextPage = () => {
                       </Flex>
                     </Button>
                   )}
+                  
                   {assetManager == acccountAddress ?
 
                     menuSelected == 5 ? (
@@ -2411,6 +2397,7 @@ const vault: NextPage = () => {
                 :
                 <></>
                 }
+                </Flex>
                 </Flex>
               </Flex>
               <Box
