@@ -178,12 +178,17 @@
 }
 
 .user_info{
-    direction: row;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
 
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 2.5vw;
+    }
+
     .personal_info{
-        direction: row;
+        flex-direction: row;
         gap: 1vw;
         align-items: center;
 
@@ -205,7 +210,12 @@
     }
 
     .interact{
+        flex-direction: column;
+        gap: 1vw;
 
+        @media (max-width: 768px) {
+            display: none;;
+        }
     }
 }
 

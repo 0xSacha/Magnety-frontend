@@ -2170,7 +2170,7 @@ const vault: NextPage = () => {
                     </Text>
                   </Flex>
                 </Flex>
-                <Box  className={styles.descp}>
+                <Box className={styles.descp}>
                   <Text>
                     {vaultInfo?.strategy}
                   </Text>
@@ -2269,28 +2269,28 @@ const vault: NextPage = () => {
                     />
                   </Box>
                   <Flex direction={"column"}>
-                      <Flex direction={"column"}>
-                        <Text fontWeight={"light"} fontSize={"2xl"}>
-                          Managed by{" "}
-                        </Text>
-                        <Text fontWeight={"semibold"} fontSize={"2xl"}>
-                          <Link href={"../user/" + assetManager}>
-                            <a>
-                              {assetManagerName != "" ? (
-                                assetManagerName
-                              ) : (
-                                <>
-                                  {assetManager.substring(0, 5)}
-                                  ...
-                                  {assetManager.substring(
-                                    assetManager.length - 5,
-                                    assetManager.length
-                                  )}
-                                </>
-                              )}
-                            </a>
-                          </Link>
-                        </Text>
+                    <Flex direction={"column"}>
+                      <Text fontWeight={"light"} fontSize={"2xl"}>
+                        Managed by{" "}
+                      </Text>
+                      <Text fontWeight={"semibold"} fontSize={"2xl"}>
+                        <Link href={"../user/" + assetManager}>
+                          <a>
+                            {assetManagerName != "" ? (
+                              assetManagerName
+                            ) : (
+                              <>
+                                {assetManager.substring(0, 5)}
+                                ...
+                                {assetManager.substring(
+                                  assetManager.length - 5,
+                                  assetManager.length
+                                )}
+                              </>
+                            )}
+                          </a>
+                        </Link>
+                      </Text>
                       <Flex direction={"row"} gap={"2px"}>
                         <Text fontSize={"0.8rem"} fontWeight={"light"}>
                           Last active{" "}
@@ -2313,7 +2313,7 @@ const vault: NextPage = () => {
                           {assetManagerShareAmount
                             ? ((assetManagerShareAmount / parseFloat(shareSupply)
                             ) *
-                            100).toPrecision(2)
+                              100).toPrecision(2)
                             : "--"}
                           %
                         </Text>
@@ -2335,69 +2335,69 @@ const vault: NextPage = () => {
                       <Icon as={BsShare} w={6} h={6} />
                     </Button>
                   </a>
-                  
-                  <Flex direction={"column"} gap={"1vw"}>
-                  {menuSelected == 1 ? (
-                    <Button
-                      backgroundColor={"#f6643c"}
-                      padding={"10px"}
-                      onClick={() => setMenuSelected(0)}
-                    >
-                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                        <Icon as={BiArrowBack} w={6} h={6} />
-                        <Text fontWeight={"bold"} fontSize={"2xl"}>
-                          Back
-                        </Text>
-                      </Flex>
-                    </Button>
-                  ) : (
-                    <Button
-                      backgroundColor={"#f6643c"}
-                      padding={"10px"}
-                      onClick={() => setMenuSelected(1)}
-                    >
-                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                        <Icon as={GiPayMoney} w={6} h={6} />
-                        <Text fontWeight={"bold"} fontSize={"2xl"}>
-                          Invest
-                        </Text>
-                      </Flex>
-                    </Button>
-                  )}
-                  
-                  {assetManager == acccountAddress ?
 
-                    menuSelected == 5 ? (
-                    <Button
-                      backgroundColor={"#f6643c"}
-                      padding={"10px"}
-                      onClick={() => setMenuSelected(0)}
-                    >
-                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                        <Icon as={BiArrowBack} w={6} h={6} />
-                        <Text fontWeight={"bold"} fontSize={"2xl"}>
-                          Back
-                        </Text>
-                      </Flex>
-                    </Button>
-                  ) : (
-                    <Button
-                      backgroundColor={"#f6643c"}
-                      padding={"10px"}
-                      onClick={() => setMenuSelected(5)}
-                    >
-                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                        <Icon as={MdManageSearch} w={6} h={6} />
-                        <Text fontWeight={"bold"} fontSize={"2xl"}>
-                          Manage
-                        </Text>
-                      </Flex>
-                    </Button>
-                  )
-                :
-                <></>
-                }
-                </Flex>
+                  <Flex className={styles.interact}>
+                    {menuSelected == 1 ? (
+                      <Button
+                        backgroundColor={"#f6643c"}
+                        padding={"10px"}
+                        onClick={() => setMenuSelected(0)}
+                      >
+                        <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                          <Icon as={BiArrowBack} w={6} h={6} />
+                          <Text fontWeight={"bold"} fontSize={"2xl"}>
+                            Back
+                          </Text>
+                        </Flex>
+                      </Button>
+                    ) : (
+                      <Button
+                        backgroundColor={"#f6643c"}
+                        padding={"10px"}
+                        onClick={() => setMenuSelected(1)}
+                      >
+                        <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                          <Icon as={GiPayMoney} w={6} h={6} />
+                          <Text fontWeight={"bold"} fontSize={"2xl"}>
+                            Invest
+                          </Text>
+                        </Flex>
+                      </Button>
+                    )}
+
+                    {assetManager == acccountAddress ?
+
+                      menuSelected == 5 ? (
+                        <Button
+                          backgroundColor={"#f6643c"}
+                          padding={"10px"}
+                          onClick={() => setMenuSelected(0)}
+                        >
+                          <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                            <Icon as={BiArrowBack} w={6} h={6} />
+                            <Text fontWeight={"bold"} fontSize={"2xl"}>
+                              Back
+                            </Text>
+                          </Flex>
+                        </Button>
+                      ) : (
+                        <Button
+                          backgroundColor={"#f6643c"}
+                          padding={"10px"}
+                          onClick={() => setMenuSelected(5)}
+                        >
+                          <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                            <Icon as={MdManageSearch} w={6} h={6} />
+                            <Text fontWeight={"bold"} fontSize={"2xl"}>
+                              Manage
+                            </Text>
+                          </Flex>
+                        </Button>
+                      )
+                      :
+                      <></>
+                    }
+                  </Flex>
                 </Flex>
               </Flex>
               <Box
