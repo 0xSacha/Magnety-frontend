@@ -1,3 +1,182 @@
+.top{
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
+}
+
+.vault_info{
+    width: 60%;
+    flex-direction: column;
+    gap : 1vw;
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
+
+    .head {
+        flex-direction: row;
+        gap: 2vw;
+        align-items: center;
+
+        .imgbox{
+            width: 120px;
+            aspect-ratio: 1;
+            border-radius: 30px;
+            overflow: hidden;
+            background-color: black;
+        }
+
+        .name{
+            flex-direction: column;
+
+            .titlespan{
+                flex-direction: row;
+                align-items: center;
+
+                .title{
+                    font-weight: 800;
+                    font-size: 2vw;
+
+                    @media (max-width: 768px) {
+                        font-size: 4.5vw;
+                    }
+                }
+
+                .symbol{
+                    font-weight: 400;
+                    font-size: 1vw;
+                    margin-left: 5px;
+
+                    @media (max-width: 768px) {
+                        font-size: 2.5vw;
+                    }
+                }
+            }
+
+            .tags{
+                flex-direction: row;
+
+                > p{
+                    font-weight: 300;
+                    font-size: 1vw;
+                    margin-top: 2px;
+                    margin-right: 2px;
+
+                    @media (max-width: 768px) {
+                        font-size: 2.5vw;
+                    }
+                }
+            }
+
+            .link{
+                font-weight: 200;
+                font-size: 1.5vw;
+
+                @media (max-width: 768px) {
+                    font-size: 2.4vw;
+                }
+            }
+        }
+    }
+
+    .descp{
+        margin-left: 1vw;
+        max-width: 95%;
+
+        @media (max-width: 768px) {
+            max-width: 100%;
+        }
+
+        > p {
+            font-size: 2vw;
+            font-weight: 200;
+            text-align: justify;
+
+            @media (max-width: 768px) {
+                font-size: 4vw;
+            }
+        }
+    }
+}
+
+.finance_info{
+    width: 40%;
+    flex-direction: column;
+    padding: 1vw;
+    align-items: center;
+    gap: 2vh;
+
+    @media (max-width: 768px) {
+        width: 80%;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .imgrow{
+        flex-direction: row; 
+        align-items: center;
+        gap: 0.5vw;
+        justify-content: center;
+
+        .imgbox{
+            width: 20%;
+            aspect-ratio: 1;
+            overflow: hidden;
+            background-color: transparent;
+        }
+
+        .imgtitle{
+            flex-direction: column;
+
+            > p{
+                font-size: 2vw;
+                @media (max-width: 768px) {
+                    font-size: 4vw;
+                }
+            }
+        }
+    }
+
+    .stats{
+        flex-direction: row;
+        border-radius: 20px;
+        gap: 2vw;
+        padding: 2vh;
+        border-top:  2px solid #f6643c; ;
+        border-bottom:  2px solid #f6643c; ;
+        background-color: #01000dc7;
+        background-image: url("/bg.svg");
+
+        > div{
+            flex-direction: column;
+            gap: 0px;
+            align-items: center;
+
+            :nth-child(1){
+                font-weight: 400;
+                font-size: 1vw;
+
+                @media (max-width: 768px) {
+                    font-size: 3.5vw;
+                }
+            }
+
+            :nth-child(2){
+                font-weight: 600;
+                font-size: 1.5vw;
+
+                @media (max-width: 768px) {
+                    font-size: 4vw;
+                }
+            }
+        }
+    }
+}
+
 .asset_container{
    
     display: flex;

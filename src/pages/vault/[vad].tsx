@@ -2116,44 +2116,34 @@ const vault: NextPage = () => {
           </Text>
         ) : fundExist == true ? (
           <Flex direction={"column"} gap={"2vw"}>
-            <Flex direction={"row"} justifyContent={"space-between"}>
-              <Flex direction={"column"} gap={"1vw"}>
-                <Flex direction={"row"} gap={"2vw"} alignItems={"center"}>
-                  <Box
-                    style={{
-                      width: "120px",
-                      height: "120px",
-                      borderRadius: "30px",
-                      overflow: "hidden",
-                      backgroundColor: "black",
-                    }}
-                  >
+            <Flex className={styles.top}>
+
+              {/* vault info */}
+              <Flex className={styles.vault_info}>
+                <Flex className={styles.head}>
+                  <Box className={styles.imgbox}>
                     <img
                       src={vaultInfo?.image}
                       style={{ objectFit: "cover" }}
                     />
                   </Box>
-                  <Flex direction={"column"}>
-                    <Flex direction={"row"} alignItems={"center"}>
-                      <Text fontWeight={"extrabold"} fontSize={"2vw"}>
+                  <Flex className={styles.name}>
+                    <Flex className={styles.titlespan}>
+                      <Text className={styles.title}>
                         {" "}
                         {name}
                       </Text>
-                      <Text
-                        fontWeight={"semibold"}
-                        fontSize={"1xl"}
-                        marginLeft={"5px"}
-                      >
+                      <Text className={styles.symbol}>
                         ({symbol})
                       </Text>
                     </Flex>
 
                     {vaultInfo !== undefined && (
-                      <Stack direction={"row"}>
+                      <Stack className={styles.tags}>
                         {[...Array(Object.keys(vaultInfo.tags).length)].map(
                           (e, i) => {
                             return (
-                              <Text fontWeight={"semibold"} fontSize={"1vw"}>
+                              <Text>
                                 {"#" + vaultInfo.tags[i]}
                               </Text>
                             );
@@ -2161,7 +2151,7 @@ const vault: NextPage = () => {
                         )}
                       </Stack>
                     )}
-                    <Text fontWeight={"light"} fontSize={"1rem"}>
+                    <Text className={styles.link}>
                       <Link
                         href={"https://goerli.voyager.online/contract/" + vad}
                       >
@@ -2173,47 +2163,32 @@ const vault: NextPage = () => {
                                 ...
                               </>
                             )}
-                            <ExternalLinkIcon mx="2px" marginTop={"-2px"} />
+                            <ExternalLinkIcon mx="1.5vw" marginTop={"-2px"} />
                           </>
                         </a>
                       </Link>
                     </Text>
                   </Flex>
                 </Flex>
-                <Box maxWidth={"60%"} marginLeft={"1vw"}>
-                  <Text fontWeight={"light"} fontSize={"2xl"}>
+                <Box  className={styles.descp}>
+                  <Text>
                     {vaultInfo?.strategy}
                   </Text>
                 </Box>
               </Flex>
 
-              <Flex
-                direction={"column"}
-                padding={"1vw"}
-                marginRight={"1vw"}
-                alignItems={"center"}
-                gap={"2vh"}
-                marginTop={"-50px"}
-              >
-                <Flex direction={"row"} alignItems={"center"} gap={"0.5vw"}>
+              {/* Finance info */}
+              <Flex className={styles.finance_info}>
+                <Flex className={styles.imgrow}>
                   {denominationAsset != "deno" && (
-                    <Box
-                      style={{
-                        width: "80px",
-                        height: "80px",
-                        borderRadius: "15px",
-                        overflow: "hidden",
-                        backgroundColor: "transparent",
-                      }}
-                    >
+                    <Box className={styles.imgbox}>
                       <Image
                         src={returnImagefromAddress(denominationAssetAddress)}
                       />
                     </Box>
                   )}
-                  <Flex direction={"column"}>
+                  <Flex className={styles.imgtitle}>
                     <Text
-                      fontSize={"4xl"}
                       color={
                         vaultInfo?.totalIncome
                           ? vaultInfo?.totalIncome < 0
@@ -2229,60 +2204,53 @@ const vault: NextPage = () => {
                     <Text
                       fontSize={"-moz-initial"}
                       marginTop={"-10px"}
-                      marginLeft={"60px"}
+                      marginLeft={"30px"}
                     >
                       Projected APR
                     </Text>
                   </Flex>
                 </Flex>
 
-                <Flex
-                  direction={"row"}
-                  borderRadius={"20px"}
-                  gap={"2vw"}
-                  padding={"2vh"}
-                  borderTop={" 2px solid #f6643c; "}
-                  borderBottom={" 2px solid #f6643c; "}
-                  backgroundColor={"#01000dc7"}
-                  className={` bg__dotted`}
-                >
-                  <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
-                    <Text fontWeight={"light"} fontSize={"-moz-initial"}>
+                <Flex className={styles.stats}>
+                  <Flex>
+                    <Text>
                       Risk
                     </Text>
-                    <Text fontWeight={"bold"} fontSize={"2xl"}>
+                    <Text>
                       Low
                     </Text>
                   </Flex>
-                  <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
-                    <Text fontWeight={"light"} fontSize={"-moz-initial"}>
+                  <Flex>
+                    <Text>
                       GAV
                     </Text>
-                    <Text fontWeight={"bold"} fontSize={"2xl"}>
+                    <Text>
                       {parseFloat(gav) < 0.01
                         ? parseFloat(gav).toExponential(2)
                         : parseFloat(gav).toPrecision(3)}
                     </Text>
                   </Flex>
-                  <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
-                    <Text fontWeight={"light"} fontSize={"-moz-initial"}>
+                  <Flex>
+                    <Text>
                       Rank
                     </Text>
-                    <Text fontWeight={"bold"} fontSize={"2xl"}>
+                    <Text>
                       --
                     </Text>
                   </Flex>
-                  <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
-                    <Text fontWeight={"light"} fontSize={"-moz-initial"}>
+                  <Flex>
+                    <Text>
                       Access
                     </Text>
-                    <Text fontWeight={"bold"} fontSize={"2xl"}>
+                    <Text>
                       {isPublic == "1" ? "Public" : "Private"}
                     </Text>
                   </Flex>
                 </Flex>
               </Flex>
             </Flex>
+
+            {/* User info */}
             <Box
               className={` bg__dotted`}
               padding={"3vh"}
