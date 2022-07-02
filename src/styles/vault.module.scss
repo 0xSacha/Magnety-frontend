@@ -233,6 +233,21 @@
     }
 }
 
+.menuline{
+    padding: 1vw;
+    border-top: solid 1px #f6643c;
+
+    @media (max-width: 768px) {
+        border-top: solid 0px #f6643c;
+    }
+}
+
+.menu{
+    @media (max-width: 768px) {
+        display: none !important;
+    }
+}
+
 .graph_menu{
     flex-direction: column;
     align-items: center;
@@ -292,6 +307,10 @@
 
                         :nth-child(1){
                             font-size: 3.6vw;
+
+                            @media (max-width: 768px) {
+                                font-size: 5vw;
+                            }
                         }
 
                         :nth-child(2){
@@ -299,11 +318,19 @@
                             aspect-ratio: 1;
                             overflow: hidden;
                             background-color: transparent;
+
+                            @media (max-width: 768px) {
+                                font-size: 5.3vw;
+                            }
                         }
                     }
 
                     > p{
-                        font-size: 3.4vw
+                        font-size: 3.4vw;
+
+                        @media (max-width: 768px) {
+                            font-size: 4vw;
+                        }
                     }
                 }
                 >p{

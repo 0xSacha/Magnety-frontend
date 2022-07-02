@@ -68,6 +68,18 @@
 .hero_btns{
     gap: 1vh;
     flex-direction: row;
+
+    :nth-child(1){
+        @media (max-width: 768px) {
+            background-color: #f6643c;
+        }
+    }
+
+    :nth-child(2){
+        @media (max-width: 768px) {
+            display: none;
+        }
+    }
 }
 
 .hero_btns > button{

@@ -2392,15 +2392,11 @@ const vault: NextPage = () => {
                   </Flex>
                 </Flex>
               </Flex>
-              <Box
-                // backgroundColor={"linear-gradient(blue, pink)"}
-                padding={"1vw"}
-                borderTop={"solid 1px #f6643c"}
-              >
+              <Box className={styles.menuline}>
                 {menuSelected == 0 ? (
                   <Tabs>
                     <Flex className={styles.graph_menu}>
-                      <TabList>
+                      <TabList  className={styles.menu}>
                         <Flex>
                           <Tab>
                             Overview
