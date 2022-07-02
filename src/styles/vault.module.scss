@@ -8,6 +8,20 @@
     }
 }
 
+.bigbox{
+    padding: 3vh;
+    background-color: #01000dc7;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+    background-image: url("/bg.svg");
+
+    @media (max-width: 768px) {
+        margin: -3vw;
+    }
+}
+
 .vault_info{
     width: 60%;
     flex-direction: column;
@@ -182,7 +196,7 @@
     align-items: center;
     justify-content: space-between;
 
-    @media (max-width: 768px) {
+    @media (max-width: 425px) {
         flex-direction: column;
         gap: 2.5vw;
     }
@@ -214,7 +228,153 @@
         gap: 1vw;
 
         @media (max-width: 768px) {
-            display: none;;
+            display: none;
+        }
+    }
+}
+
+.graph_menu{
+    flex-direction: column;
+    align-items: center;
+    gap: 1vw;
+
+    >div{
+        >div{
+            flex-direction: row;
+            align-items: center;
+            >button{
+                font-size: 2vw;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.graph_container{
+
+    >div{
+        padding-top: 3vw;
+        padding-left: 1.5vw;
+        padding-right: 1.5vw;
+
+        @media (max-width: 768px) {
+            padding: 3vw;
+        }
+    }
+}
+.graph{
+    >div{
+        flex-direction: column;
+        gap: 1rem;
+
+        .wrapper{
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            
+            .toptext{
+                flex-direction: row;
+                gap: 1vw;
+                align-items: center;
+                justify-content: center;
+                height: 10vw;
+
+                @media (max-width: 768px) {
+                    width: 100%;
+                }
+
+                >div{
+                    flex-direction: column;
+
+                    >div{
+                        flex-direction: row;
+                        align-items: center;
+
+                        :nth-child(1){
+                            font-size: 3.6vw;
+                        }
+
+                        :nth-child(2){
+                            width: 3.4vw;
+                            aspect-ratio: 1;
+                            overflow: hidden;
+                            background-color: transparent;
+                        }
+                    }
+
+                    > p{
+                        font-size: 3.4vw
+                    }
+                }
+                >p{
+                    font-size: 3vw;
+                }
+            }
+
+            .selectors{
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+                width: 50%;
+
+                @media (max-width: 768px) {
+                    display: none;
+                }
+
+                :nth-child(1){
+                    font-size: 2.3vw;
+                }
+
+                :nth-child(2){
+                    flex-direction: row;
+
+                    > button{
+                        font-size: 2.3vw;
+                    }
+                }
+            }
+        }
+
+        .infos{
+            flex-direction: row;
+            justify-content: space-between;
+
+            @media (max-width: 768px) {
+                flex-direction: column-reverse;
+                gap: 2vw;
+            }
+            :nth-child(1){
+                flex-direction: column;
+                gap: .200rem;
+
+                :nth-child(1){
+                    font-size: 2.3vw;
+                }
+
+                :nth-child(2){
+                    font-size: 2.3vw;
+                }
+            }
+            :nth-child(2){
+                flex-direction: row;
+                gap: 1rem;
+                justify-content: space-between;
+
+                >div{
+                    flex-direction: column;
+                    gap: .200rem;
+                    align-items: center;
+
+                    :nth-child(1){
+                        font-size: 2.3vw;
+                    }
+    
+                    :nth-child(2){
+                        font-size: 2.3vw;
+                    }
+                }
+
+            }
         }
     }
 }

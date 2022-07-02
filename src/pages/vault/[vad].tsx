@@ -2251,15 +2251,7 @@ const vault: NextPage = () => {
             </Flex>
 
             {/* User info */}
-            <Box
-              className={` bg__dotted`}
-              padding={"3vh"}
-              backgroundColor={"#01000dc7"}
-              borderRadius={"25px"}
-              display={"flex"}
-              flexDirection={"column"}
-              gap={"3vh"}
-            >
+            <Box className={styles.bigbox}>
               <Flex className={styles.user_info}>
                 <Flex className={styles.personal_info}>
                   <Box className={styles.imgbox}>
@@ -2407,62 +2399,51 @@ const vault: NextPage = () => {
               >
                 {menuSelected == 0 ? (
                   <Tabs>
-                    <Flex
-                      direction={"column"}
-                      alignItems={"center"}
-                      gap={"1vw"}
-                    >
+                    <Flex className={styles.graph_menu}>
                       <TabList>
-                        <Flex direction={"row"} alignItems={"center"}>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                        <Flex>
+                          <Tab>
                             Overview
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Holdings
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Fees
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Policies
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Financial
                           </Tab>
-                          {/* <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          {/* <Tab>
                             Activity
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Depositors
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Social
                           </Tab> */}
                         </Flex>
                       </TabList>
                       <Box
-                        width={"60vw"}
                         minHeight={"30vw"}
                         borderRadius="10%"
                         borderTop={"solid 2px #f6643c"}
                         borderBottom={"solid 2px #f6643c"}
                         backgroundColor="blackAlpha.400"
-                        padding={"2%"}
+                        marginTop={"1vw"}
+                        width={"100%"}
                       >
-                        <TabPanels>
-                          <TabPanel>
-                            <Flex flexDirection={"column"} gap={"1rem"}>
-                              <Flex
-                                justifyContent={"space-between"}
-                                direction={"row"}
-                              >
-                                <Flex
-                                  direction={"row"}
-                                  gap={"1vw"}
-                                  alignItems={"center"}
-                                >
-                                  <Flex direction={"column"}>
-                                    <Flex direction={"row"}>
+                        <TabPanels className={styles.graph_container}>
+                          <TabPanel className={styles.graph}>
+                            <Flex>
+                              <Flex className={styles.wrapper}>
+                                <Flex className={styles.toptext}>
+                                  <Flex className={styles.price}>
+                                    <Flex>
                                       <Text fontSize={"4xl"}>
                                         {" "}
                                         {chartSelected == 1
@@ -2470,25 +2451,17 @@ const vault: NextPage = () => {
                                             ? parseFloat(
                                               sharePrice
                                             ).toExponential(2)
-                                            : parseFloat(sharePrice)
+                                            : parseFloat(sharePrice).toFixed(2)
                                           }`
                                           : `GAV: ${parseFloat(gav) < 1
                                             ? parseFloat(gav).toExponential(
                                               2
                                             )
-                                            : parseFloat(gav)
+                                            : parseFloat(gav).toFixed(2)
                                           }`}
                                       </Text>
                                       {denominationAsset != "deno" && (
-                                        <Box
-                                          style={{
-                                            width: "50px",
-                                            height: "50px",
-                                            borderRadius: "15px",
-                                            overflow: "hidden",
-                                            backgroundColor: "transparent",
-                                          }}
-                                        >
+                                        <Box>
                                           <Image
                                             src={returnImagefromAddress(
                                               denominationAssetAddress
@@ -2498,11 +2471,10 @@ const vault: NextPage = () => {
                                       )}
                                     </Flex>
                                     {chartSelected == 1 && (
-                                      <Text fontSize={"2xl"}>/ Share</Text>
+                                      <Text>/ Share</Text>
                                     )}
                                   </Flex>
                                   <Text
-                                    fontSize={"4xl"}
                                     color={
                                       timeframe == 0
                                         ? dailyIncome
@@ -2552,16 +2524,12 @@ const vault: NextPage = () => {
                                     %{" "}
                                   </Text>
                                 </Flex>
-                                <Flex
-                                  direction={"row"}
-                                  alignItems={"center"}
-                                  gap={"1rem"}
-                                >
+                                <Flex className={styles.selectors}>
                                   <Select onChange={handleInputChange}>
                                     <option value={1}>Share price</option>
                                     <option value={2}>Gross Asset value</option>
                                   </Select>
-                                  <Flex direction={"row"} gap={"1px"}>
+                                  <Flex>
                                     <Button
                                       borderRadius={"25% 0% 0% 25%"}
                                       backgroundColor={
@@ -2589,7 +2557,6 @@ const vault: NextPage = () => {
                                     >
                                       1M
                                     </Button>
-
                                     <Button
                                       borderRadius={"0% 25% 25% 0%"}
                                       backgroundColor={
@@ -2679,38 +2646,27 @@ const vault: NextPage = () => {
                                   {/* <Area type="monotone" dataKey="sharePriceInitial" stroke="" fill="url(#splitColor2)" /> */}
                                 </AreaChart>
                               </ResponsiveContainer>
-                              <Flex
-                                direction={"row"}
-                                justifyContent={"space-between"}
-                              >
-                                <Flex direction={"column"} gap={".200rem"}>
-                                  <Text
-                                    fontWeight={"light"}
-                                    fontSize={".875rem"}
-                                  >
+                              <Flex className={styles.infos}>
+                                <Flex>
+                                  <Text>
                                     Creation Date
                                   </Text>
-                                  <Text
-                                    fontWeight={"bold"}
-                                    fontSize={"1.125rem"}
-                                  >
+                                  <Text>
                                     {vaultInfo?.dataFinance != undefined &&
                                       moment(
                                         vaultInfo?.dataFinance[0].date
                                       ).format("dddd, MMMM Do, YYYY h:mm:ss A")}
                                   </Text>
                                 </Flex>
-                                <Flex direction={"row"} gap={"1rem"}>
-                                  <Flex direction={"column"} gap={".200rem"}>
+                                <Flex>
+                                  <Flex>
                                     <Text
-                                      fontWeight={"light"}
-                                      fontSize={".875rem"}
+                                       
                                     >
                                       Last Day
                                     </Text>
                                     <Text
-                                      fontWeight={"bold"}
-                                      fontSize={"1.125rem"}
+                                       
                                       color={
                                         vaultInfo?.dailyIncome
                                           ? vaultInfo?.dailyIncome < 0
@@ -2725,16 +2681,14 @@ const vault: NextPage = () => {
                                       %
                                     </Text>
                                   </Flex>
-                                  <Flex direction={"column"} gap={".200rem"}>
+                                  <Flex  >
                                     <Text
-                                      fontWeight={"light"}
-                                      fontSize={".875rem"}
+                                       
                                     >
                                       Last Week
                                     </Text>
                                     <Text
-                                      fontWeight={"bold"}
-                                      fontSize={"1.125rem"}
+                                       
                                       color={
                                         vaultInfo?.weeklyIncome
                                           ? vaultInfo?.weeklyIncome < 0
@@ -2749,16 +2703,14 @@ const vault: NextPage = () => {
                                       %
                                     </Text>
                                   </Flex>
-                                  <Flex direction={"column"} gap={".200rem"}>
+                                  <Flex  >
                                     <Text
-                                      fontWeight={"light"}
-                                      fontSize={".875rem"}
+                                       
                                     >
                                       Last Month
                                     </Text>
                                     <Text
-                                      fontWeight={"bold"}
-                                      fontSize={"1.125rem"}
+                                       
                                       color={
                                         vaultInfo?.monthlyIncome
                                           ? vaultInfo?.monthlyIncome < 0
@@ -2773,16 +2725,12 @@ const vault: NextPage = () => {
                                       %
                                     </Text>
                                   </Flex>
-                                  <Flex direction={"column"} gap={".200rem"}>
-                                    <Text
-                                      fontWeight={"light"}
-                                      fontSize={".875rem"}
-                                    >
+                                  <Flex >
+                                    <Text>
                                       Since Creation
                                     </Text>
                                     <Text
-                                      fontWeight={"bold"}
-                                      fontSize={"1.125rem"}
+                                       
                                       color={
                                         vaultInfo?.totalIncome
                                           ? vaultInfo?.totalIncome < 0
@@ -3222,17 +3170,13 @@ const vault: NextPage = () => {
                   </Tabs>
                 ) : menuSelected == 1 ? (
                   <Tabs>
-                    <Flex
-                      direction={"column"}
-                      alignItems={"center"}
-                      gap={"1vw"}
-                    >
-                      <TabList borderBottom={"0px solid "}>
-                        <Flex direction={"row"} alignItems={"center"}>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                    <Flex className={styles.graph_menu}>
+                      <TabList>
+                        <Flex>
+                          <Tab>
                             Buy
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Sell
                           </Tab>
                         </Flex>
