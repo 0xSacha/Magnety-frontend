@@ -146,8 +146,15 @@
         .imgtitle{
             flex-direction: column;
 
-            > p{
-                font-size: 2vw;
+            :nth-child(1){
+                font-size: 2.6vw;
+                @media (max-width: 768px) {
+                    font-size: 2vw;
+                }
+            }
+
+            :nth-child(2){
+                font-size: 1vw;
                 @media (max-width: 768px) {
                     font-size: 2vw;
                 }
@@ -258,7 +265,7 @@
             flex-direction: row;
             align-items: center;
             >button{
-                font-size: 2vw;
+                font-size: 1.6vw;
                 font-weight: bold;
             }
         }
@@ -281,7 +288,7 @@
     >div{
         flex-direction: column;
         gap: 1rem;
-
+        
         .wrapper{
             flex-direction: row;
             justify-content: space-between;
@@ -300,13 +307,15 @@
 
                 >div{
                     flex-direction: column;
-
+                    padding-left: 20px;
+                    
                     >div{
                         flex-direction: row;
                         align-items: center;
+                        
 
                         :nth-child(1){
-                            font-size: 3.6vw;
+                            font-size: 2.6vw;
 
                             @media (max-width: 768px) {
                                 font-size: 5vw;
@@ -314,7 +323,7 @@
                         }
 
                         :nth-child(2){
-                            width: 3.4vw;
+                            width: 3vw;
                             aspect-ratio: 1;
                             overflow: hidden;
                             background-color: transparent;
@@ -326,7 +335,7 @@
                     }
 
                     > p{
-                        font-size: 3.4vw;
+                        font-size: 1.7vw;
 
                         @media (max-width: 768px) {
                             font-size: 4vw;
@@ -342,21 +351,20 @@
                 flex-direction: column;
                 align-items: center;
                 gap: 1rem;
-                width: 50%;
 
                 @media (max-width: 768px) {
                     display: none;
                 }
 
                 :nth-child(1){
-                    font-size: 1.5vw;
+                    font-size: 1.2vw;
                 }
 
                 :nth-child(2){
                     flex-direction: row;
 
                     > button{
-                        font-size: 1.5vw;
+                        font-size: 1.2vw;
                     }
                 }
             }
@@ -365,6 +373,7 @@
         .infos{
             flex-direction: row;
             justify-content: space-between;
+            text-align: center;
 
             @media (max-width: 768px) {
                 flex-direction: column-reverse;

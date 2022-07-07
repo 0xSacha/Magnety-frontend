@@ -2189,7 +2189,6 @@ const vault: NextPage = () => {
                   )}
                   <Flex className={styles.imgtitle}>
                     <Text
-                    fontSize={"3vw"}
                       color={
                         vaultInfo?.totalIncome
                           ? vaultInfo?.totalIncome < 0
@@ -2441,7 +2440,7 @@ const vault: NextPage = () => {
                                 <Flex className={styles.toptext}>
                                   <Flex className={styles.price}>
                                     <Flex>
-                                      <Text fontSize={"4xl"}>
+                                      <Text>
                                         {" "}
                                         {chartSelected == 1
                                           ? `${parseFloat(sharePrice) < 1
@@ -2645,14 +2644,14 @@ const vault: NextPage = () => {
                               </ResponsiveContainer>
                               <Flex className={styles.infos}>
                                 <Flex>
-                                  <Text>
+                                  <Text style={{textAlign: "left"}}>
                                     Creation Date
                                   </Text>
-                                  <Text>
+                                  <Text style={{textAlign: "left"}}>
                                     {vaultInfo?.dataFinance != undefined &&
                                       moment(
                                         vaultInfo?.dataFinance[0].date
-                                      ).format("dddd, MMMM Do, YYYY h:mm:ss A")}
+                                      ).format("dddd, MMMM Do, YYYY")}
                                   </Text>
                                 </Flex>
                                 <Flex>
