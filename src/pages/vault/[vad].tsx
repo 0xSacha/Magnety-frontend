@@ -2189,6 +2189,7 @@ const vault: NextPage = () => {
                   )}
                   <Flex className={styles.imgtitle}>
                     <Text
+                    fontSize={"3vw"}
                       color={
                         vaultInfo?.totalIncome
                           ? vaultInfo?.totalIncome < 0
@@ -2473,26 +2474,26 @@ const vault: NextPage = () => {
                                   <Text
                                     color={
                                       timeframe == 0
-                                        ? dailyIncome
-                                          ? dailyIncome > 0
+                                        ? vaultInfo
+                                          ? vaultInfo.dailyIncome > 0
                                             ? "#31c48d"
                                             : "rgb(237,33,49)"
                                           : "#31c48d"
                                         : timeframe == 1
-                                          ? weeklyIncome
-                                            ? weeklyIncome > 0
+                                          ? vaultInfo
+                                            ? vaultInfo.weeklyIncome > 0
                                               ? "#31c48d"
                                               : "rgb(237,33,49)"
                                             : "#31c48d"
                                           : timeframe == 2
-                                            ? monthlyIncome
-                                              ? monthlyIncome > 0
+                                            ? vaultInfo
+                                              ? vaultInfo.monthlyIncome > 0
                                                 ? "#31c48d"
                                                 : "rgb(237,33,49)"
                                               : "#31c48d"
                                             : timeframe == 3
-                                              ? totalIncome
-                                                ? totalIncome > 0
+                                              ? vaultInfo
+                                                ? vaultInfo.totalIncome > 0
                                                   ? "#31c48d"
                                                   : "rgb(237,33,49)"
                                                 : "#31c48d"
@@ -2501,21 +2502,21 @@ const vault: NextPage = () => {
                                   >
                                     {" "}
                                     {timeframe == 0
-                                      ? dailyIncome == 0
+                                      ? vaultInfo.dailyIncome == 0
                                         ? "--"
-                                        : dailyIncome?.toPrecision(4)
+                                        : vaultInfo.dailyIncome?.toPrecision(2)
                                       : timeframe == 1
-                                        ? weeklyIncome == 0
+                                        ? vaultInfo.weeklyIncome == 0
                                           ? "--"
-                                          : weeklyIncome?.toPrecision(4)
+                                          : vaultInfo.weeklyIncome?.toPrecision(2)
                                         : timeframe == 2
-                                          ? monthlyIncome == 0
+                                          ? vaultInfo.monthlyIncome == 0
                                             ? "--"
-                                            : monthlyIncome?.toPrecision(4)
+                                            : vaultInfo.monthlyIncome?.toPrecision(4)
                                           : timeframe == 3
-                                            ? totalIncome == 0
+                                            ? vaultInfo.totalIncome == 0
                                               ? "--"
-                                              : totalIncome?.toPrecision(4)
+                                              : vaultInfo.totalIncome?.toPrecision(4)
                                             : "--"}
                                     %{" "}
                                   </Text>
