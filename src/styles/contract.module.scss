@@ -1,0 +1,124 @@
+@import "../variables.scss";
+
+.pageContent {
+  padding: 21px 200px 20px 49px;
+}
+
+.formContainer {
+  padding: 51px 43px;
+  border-radius: 30px;
+  margin: 40px 0;
+  .header {
+    font-weight: 700;
+    font-size: 35px;
+  }
+  .formGroup {
+    margin: 20px 0px;
+    label {
+      font-size: 16px;
+      line-height: 19px;
+      font-weight: 700;
+    }
+    span {
+      font-size: 14px;
+      line-height: 17px;
+    }
+    .toggler {
+      margin-left: 20px;
+      margin-right: 5px;
+      display: inline-block;
+      flex-shrink: 0;
+      span {
+        cursor: pointer;
+        display: inline-block;
+        min-width: 24px;
+        text-align: center;
+        --text: #ffffff;
+        --bgColor: black;
+        color: var(--text);
+        background-color: var(--bgColor);
+        padding: 8px 12px;
+        &:nth-child(1) {
+          border-radius: 10px 0px 0px 10px;
+        }
+        &:nth-child(2) {
+          border-radius: 0px 10px 10px 0px;
+        }
+        &:hover {
+          background-color: var(--text);
+          color: var(--bgColor);
+        }
+        &[data-color="primary"] {
+          --text: #ffffff;
+          --bgColor: var(--color-primary, black);
+        }
+        &[data-color="secondary"] {
+          --text: #ffffff;
+          --bgColor: var(--color-secondary, black);
+        }
+      }
+    }
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 9px 12px;
+      background: #090651;
+      color: white;
+      border: 1px solid #090651;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border-radius: 10px;
+      line-height: 19px;
+    }
+  }
+}
+
+.asset_container{
+  display: flex;
+  gap: 20px;  
+  flex-wrap: wrap;
+  padding: 2%;
+  overflow-y: scroll;
+  max-height: 120px;
+  .asset_button{
+    width: 80px;
+    height: fit-content;
+    min-height: 60px;
+    position: relative;
+    background-color: #0f0b1f69;
+    &.asset_selected{
+      >span.asset_selected_checkmark{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 24px;
+      }
+    }
+  }
+}
+
+.asset_container_2{
+  display: flex;
+  gap: 20px;  
+  width: 100%;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  max-height: 120px;
+  padding: 2%;
+  .asset_button{
+    width: 100px;
+    height: fit-content;
+    background-color: #0f0b1f69;
+    min-height: 100px;
+    position: relative;
+    &.asset_selected{
+      >span.asset_selected_checkmark{
+        position: absolute;
+        top: -55px;
+        right: 0;
+        width: 24px;
+      }
+    }
+  }
+}
+
