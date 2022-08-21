@@ -376,7 +376,6 @@ const vault: NextPage = () => {
 
   useEffect(() => {
     if (withdrawLiquidtyToken) {
-      console.log(withdrawLiquidtyToken)
 
       let LP1 = ""
       let LP2 = ""
@@ -403,7 +402,6 @@ const vault: NextPage = () => {
 
 
 
-      console.log("lesgo")
 
 
       const res1 = provider.callContract({
@@ -445,7 +443,6 @@ const vault: NextPage = () => {
         .then((value) => {
           const fundBalance__ = hexToDecimalString(value.result[0]);
           const fundBalance_ = parseFloat(fundBalance__) / 1000000000000000000;
-          console.log(fundBalance_)
           setBringLiquidityTokenFundBalance(fundBalance_)
         })
         .catch((err) => {
@@ -617,7 +614,6 @@ const vault: NextPage = () => {
                 const newPrice = parseFloat(hexToDecimalString(value.result[0])) / 1000000000000000000;
                 _sellShareDataTab[index].rate = newPrice
                 setSellShareDataTab(_sellShareDataTab)
-                console.log(sellShareDataTab)
               })
               .catch((err) => {
                 console.log(err);
@@ -680,7 +676,6 @@ const vault: NextPage = () => {
     setDataSetChange(!dataSetChange)
 
     if (sellShareDataTab.length != 0) {
-      console.log(sellShareDataTab)
       let count = 0
       for (let index = 0; index < sellShareDataTab.length; index++) {
         count = parseFloat(count.toString()) + parseFloat((sellShareDataTab[index].percent.toString()));
@@ -704,7 +699,6 @@ const vault: NextPage = () => {
     setDataSetChange(!dataSetChange)
 
     if (sellShareDataTab.length != 0) {
-      console.log(sellShareDataTab)
       let count = 0
       for (let index = 0; index < sellShareDataTab.length; index++) {
         count = count + sellShareDataTab[index].percent;
@@ -1745,7 +1739,6 @@ const vault: NextPage = () => {
 
 
   const multicallWithdrawLiquidity = async (_tab: any[], _tab1: any[]) => {
-    console.log("invoke");
     try {
       await accountInterface.execute([
         {
@@ -1853,7 +1846,6 @@ const vault: NextPage = () => {
   };
 
   const multicallBringLiquidity = async (_tab: any[], _tab1: any[], _tab2) => {
-    console.log("invoke");
     try {
       await accountInterface.execute([
         {
@@ -1951,7 +1943,6 @@ const vault: NextPage = () => {
   };
 
   const multicallSwap = async (_tabApprove: any[], _tab: any[]) => {
-    console.log("invoke");
     try {
       await accountInterface.execute([
         {
@@ -2037,7 +2028,6 @@ const vault: NextPage = () => {
   };
 
   const multicall2 = async (_tab: any[]) => {
-    console.log("invoke");
     try {
       await accountInterface.execute([
         {
@@ -2126,44 +2116,34 @@ const vault: NextPage = () => {
           </Text>
         ) : fundExist == true ? (
           <Flex direction={"column"} gap={"2vw"}>
-            <Flex direction={"row"} justifyContent={"space-between"}>
-              <Flex direction={"column"} gap={"1vw"}>
-                <Flex direction={"row"} gap={"2vw"} alignItems={"center"}>
-                  <Box
-                    style={{
-                      width: "120px",
-                      height: "120px",
-                      borderRadius: "30px",
-                      overflow: "hidden",
-                      backgroundColor: "black",
-                    }}
-                  >
+            <Flex className={styles.top}>
+
+              {/* vault info */}
+              <Flex className={styles.vault_info}>
+                <Flex className={styles.head}>
+                  <Box className={styles.imgbox}>
                     <img
                       src={vaultInfo?.image}
                       style={{ objectFit: "cover" }}
                     />
                   </Box>
-                  <Flex direction={"column"}>
-                    <Flex direction={"row"} alignItems={"center"}>
-                      <Text fontWeight={"extrabold"} fontSize={"4xl"}>
+                  <Flex className={styles.name}>
+                    <Flex className={styles.titlespan}>
+                      <Text className={styles.title}>
                         {" "}
                         {name}
                       </Text>
-                      <Text
-                        fontWeight={"semibold"}
-                        fontSize={"1xl"}
-                        marginLeft={"5px"}
-                      >
+                      <Text className={styles.symbol}>
                         ({symbol})
                       </Text>
                     </Flex>
 
                     {vaultInfo !== undefined && (
-                      <Stack direction={"row"}>
+                      <Stack className={styles.tags}>
                         {[...Array(Object.keys(vaultInfo.tags).length)].map(
                           (e, i) => {
                             return (
-                              <Text fontWeight={"semibold"} fontSize={"1.5rem"}>
+                              <Text>
                                 {"#" + vaultInfo.tags[i]}
                               </Text>
                             );
@@ -2171,7 +2151,7 @@ const vault: NextPage = () => {
                         )}
                       </Stack>
                     )}
-                    <Text fontWeight={"light"} fontSize={"1rem"}>
+                    <Text className={styles.link}>
                       <Link
                         href={"https://goerli.voyager.online/contract/" + vad}
                       >
@@ -2183,47 +2163,32 @@ const vault: NextPage = () => {
                                 ...
                               </>
                             )}
-                            <ExternalLinkIcon mx="2px" marginTop={"-2px"} />
+                            <ExternalLinkIcon mx="1.5vw" marginTop={"-2px"} />
                           </>
                         </a>
                       </Link>
                     </Text>
                   </Flex>
                 </Flex>
-                <Box maxWidth={"40vw"} marginLeft={"1vw"}>
-                  <Text fontWeight={"light"} fontSize={"2xl"}>
+                <Box className={styles.descp}>
+                  <Text>
                     {vaultInfo?.strategy}
                   </Text>
                 </Box>
               </Flex>
 
-              <Flex
-                direction={"column"}
-                padding={"1vw"}
-                marginRight={"1vw"}
-                alignItems={"center"}
-                gap={"2vh"}
-                marginTop={"-50px"}
-              >
-                <Flex direction={"row"} alignItems={"center"} gap={"0.5vw"}>
+              {/* Finance info */}
+              <Flex className={styles.finance_info}>
+                <Flex className={styles.imgrow}>
                   {denominationAsset != "deno" && (
-                    <Box
-                      style={{
-                        width: "80px",
-                        height: "80px",
-                        borderRadius: "15px",
-                        overflow: "hidden",
-                        backgroundColor: "transparent",
-                      }}
-                    >
+                    <Box className={styles.imgbox}>
                       <Image
                         src={returnImagefromAddress(denominationAssetAddress)}
                       />
                     </Box>
                   )}
-                  <Flex direction={"column"}>
+                  <Flex className={styles.imgtitle}>
                     <Text
-                      fontSize={"4xl"}
                       color={
                         vaultInfo?.totalIncome
                           ? vaultInfo?.totalIncome < 0
@@ -2239,116 +2204,85 @@ const vault: NextPage = () => {
                     <Text
                       fontSize={"-moz-initial"}
                       marginTop={"-10px"}
-                      marginLeft={"60px"}
+                      marginLeft={"30px"}
                     >
                       Projected APR
                     </Text>
                   </Flex>
                 </Flex>
 
-                <Flex
-                  direction={"row"}
-                  borderRadius={"20px"}
-                  gap={"2vw"}
-                  padding={"2vh"}
-                  borderTop={" 2px solid #f6643c; "}
-                  borderBottom={" 2px solid #f6643c; "}
-                  backgroundColor={"#01000dc7"}
-                  className={` bg__dotted`}
-                >
-                  <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
-                    <Text fontWeight={"light"} fontSize={"-moz-initial"}>
+                <Flex className={styles.stats}>
+                  <Flex>
+                    <Text>
                       Risk
                     </Text>
-                    <Text fontWeight={"bold"} fontSize={"2xl"}>
+                    <Text>
                       Low
                     </Text>
                   </Flex>
-                  <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
-                    <Text fontWeight={"light"} fontSize={"-moz-initial"}>
+                  <Flex>
+                    <Text>
                       GAV
                     </Text>
-                    <Text fontWeight={"bold"} fontSize={"2xl"}>
+                    <Text>
                       {parseFloat(gav) < 0.01
                         ? parseFloat(gav).toExponential(2)
-                        : parseFloat(gav)}
+                        : parseFloat(gav).toPrecision(3)}
                     </Text>
                   </Flex>
-                  <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
-                    <Text fontWeight={"light"} fontSize={"-moz-initial"}>
+                  <Flex>
+                    <Text>
                       Rank
                     </Text>
-                    <Text fontWeight={"bold"} fontSize={"2xl"}>
+                    <Text>
                       --
                     </Text>
                   </Flex>
-                  <Flex direction={"column"} gap={"1vh"} alignItems={"center"}>
-                    <Text fontWeight={"light"} fontSize={"-moz-initial"}>
+                  <Flex>
+                    <Text>
                       Access
                     </Text>
-                    <Text fontWeight={"bold"} fontSize={"2xl"}>
+                    <Text>
                       {isPublic == "1" ? "Public" : "Private"}
                     </Text>
                   </Flex>
                 </Flex>
               </Flex>
             </Flex>
-            <Box
-              className={` bg__dotted`}
-              padding={"3vh"}
-              backgroundColor={"#01000dc7"}
-              borderRadius={"25px"}
-              display={"flex"}
-              flexDirection={"column"}
-              gap={"1vh"}
-            >
-              <Flex
-                direction={"row"}
-                alignItems={"center"}
-                justifyContent={"space-between"}
-              >
-                <Flex direction={"row"} gap={"1vw"}>
-                  <Box
-                    style={{
-                      width: "80px",
-                      height: "80px",
-                      borderRadius: "50%",
-                      overflow: "hidden",
-                      backgroundColor: "black",
-                    }}
-                  >
+
+            {/* User info */}
+            <Box className={styles.bigbox}>
+              <Flex className={styles.user_info}>
+                <Flex className={styles.personal_info}>
+                  <Box className={styles.imgbox}>
                     <img
                       src={assetManagerImage}
                       style={{ objectFit: "cover" }}
                     />
                   </Box>
                   <Flex direction={"column"}>
-                    <div>
-                      <Flex direction={"row"} gap={"0.5rem"}>
-                        <Text fontWeight={"light"} fontSize={"2xl"}>
-                          Managed by{" "}
-                        </Text>
-                        <Text fontWeight={"semibold"} fontSize={"2xl"}>
-                          <Link href={"../user/" + assetManager}>
-                            <a>
-                              {assetManagerName != "" ? (
-                                assetManagerName
-                              ) : (
-                                <>
-                                  {assetManager.substring(0, 5)}
-                                  ...
-                                  {assetManager.substring(
-                                    assetManager.length - 5,
-                                    assetManager.length
-                                  )}
-                                </>
-                              )}
-                            </a>
-                          </Link>
-                        </Text>
-                      </Flex>
-                    </div>
                     <Flex direction={"column"}>
+                      <Text fontWeight={"light"} fontSize={"2xl"}>
+                        Managed by{" "}
+                      </Text>
+                      <Text fontWeight={"semibold"} fontSize={"2xl"}>
+                        <Link href={"../user/" + assetManager}>
+                          <a>
+                            {assetManagerName != "" ? (
+                              assetManagerName
+                            ) : (
+                              <>
+                                {assetManager.substring(0, 5)}
+                                ...
+                                {assetManager.substring(
+                                  assetManager.length - 5,
+                                  assetManager.length
+                                )}
+                              </>
+                            )}
+                          </a>
+                        </Link>
+                      </Text>
                       <Flex direction={"row"} gap={"2px"}>
                         <Text fontSize={"0.8rem"} fontWeight={"light"}>
                           Last active{" "}
@@ -2369,9 +2303,9 @@ const vault: NextPage = () => {
                           style={{ fontWeight: "bold" }}
                         >
                           {assetManagerShareAmount
-                            ? (assetManagerShareAmount / (parseFloat(shareSupply))
+                            ? ((assetManagerShareAmount / parseFloat(shareSupply)
                             ) *
-                            100
+                              100).toPrecision(2)
                             : "--"}
                           %
                         </Text>
@@ -2383,164 +2317,147 @@ const vault: NextPage = () => {
                   direction={"row"}
                   gap={"1vw"}
                   marginRight={"2vw"}
-                  marginTop={"-25px"}
+                  alignItems={"center"}
                 >
                   <Text fontWeight={"light"} fontSize={"2xl"} marginTop={"5px"}>
-                    Did You Tweet Sir ?
+                    Tweet it !
                   </Text>
-                  <a href={"http://twitter.com/share?text=My Fund is going on the moon, don't Miss it🚀 &url=" + process.env.URL + "vault/" + vaultAddress + "&hashtags=Magnety,Starknet,StarkPilled,L222"}>
+                  <a href={"http://twitter.com/share?text=My Fund is going to the moon, invest now & fly with us🚀 &url=" + process.env.URL + "vault/" + vaultAddress + "&hashtags=Magnety,Starknet,StarkPilled,L222"}>
                     <Button backgroundColor={"#030135"} padding={"10px"}>
                       <Icon as={BsShare} w={6} h={6} />
                     </Button>
                   </a>
 
-                  {menuSelected == 1 ? (
-                    <Button
-                      backgroundColor={"#f6643c"}
-                      padding={"10px"}
-                      onClick={() => setMenuSelected(0)}
-                    >
-                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                        <Icon as={BiArrowBack} w={6} h={6} />
-                        <Text fontWeight={"bold"} fontSize={"2xl"}>
-                          Back
-                        </Text>
-                      </Flex>
-                    </Button>
-                  ) : (
-                    <Button
-                      backgroundColor={"#f6643c"}
-                      padding={"10px"}
-                      onClick={() => setMenuSelected(1)}
-                    >
-                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                        <Icon as={GiPayMoney} w={6} h={6} />
-                        <Text fontWeight={"bold"} fontSize={"2xl"}>
-                          Invest
-                        </Text>
-                      </Flex>
-                    </Button>
-                  )}
-                  {assetManager == acccountAddress &&
+                  <Flex className={styles.interact}>
+                    {menuSelected == 1 ? (
+                      <Button
+                        backgroundColor={"#f6643c"}
+                        padding={"10px"}
+                        onClick={() => setMenuSelected(0)}
+                      >
+                        <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                          <Icon as={BiArrowBack} w={6} h={6} />
+                          <Text fontWeight={"bold"} fontSize={"2xl"}>
+                            Back
+                          </Text>
+                        </Flex>
+                      </Button>
+                    ) : (
+                      <Button
+                        backgroundColor={"#f6643c"}
+                        padding={"10px"}
+                        onClick={() => setMenuSelected(1)}
+                      >
+                        <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                          <Icon as={GiPayMoney} w={6} h={6} />
+                          <Text fontWeight={"bold"} fontSize={"2xl"}>
+                            Invest
+                          </Text>
+                        </Flex>
+                      </Button>
+                    )}
 
-                    menuSelected == 5 ? (
-                    <Button
-                      backgroundColor={"#f6643c"}
-                      padding={"10px"}
-                      onClick={() => setMenuSelected(0)}
-                    >
-                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                        <Icon as={BiArrowBack} w={6} h={6} />
-                        <Text fontWeight={"bold"} fontSize={"2xl"}>
-                          Back
-                        </Text>
-                      </Flex>
-                    </Button>
-                  ) : (
-                    <Button
-                      backgroundColor={"#f6643c"}
-                      padding={"10px"}
-                      onClick={() => setMenuSelected(5)}
-                    >
-                      <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
-                        <Icon as={MdManageSearch} w={6} h={6} />
-                        <Text fontWeight={"bold"} fontSize={"2xl"}>
-                          Manage
-                        </Text>
-                      </Flex>
-                    </Button>
-                  )}
+                    {assetManager == acccountAddress ?
+
+                      menuSelected == 5 ? (
+                        <Button
+                          backgroundColor={"#f6643c"}
+                          padding={"10px"}
+                          onClick={() => setMenuSelected(0)}
+                        >
+                          <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                            <Icon as={BiArrowBack} w={6} h={6} />
+                            <Text fontWeight={"bold"} fontSize={"2xl"}>
+                              Back
+                            </Text>
+                          </Flex>
+                        </Button>
+                      ) : (
+                        <Button
+                          backgroundColor={"#f6643c"}
+                          padding={"10px"}
+                          onClick={() => setMenuSelected(5)}
+                        >
+                          <Flex direction={"row"} gap={"5px"} alignItems={"center"}>
+                            <Icon as={MdManageSearch} w={6} h={6} />
+                            <Text fontWeight={"bold"} fontSize={"2xl"}>
+                              Manage
+                            </Text>
+                          </Flex>
+                        </Button>
+                      )
+                      :
+                      <></>
+                    }
+                  </Flex>
                 </Flex>
               </Flex>
-              <Box
-                // backgroundColor={"linear-gradient(blue, pink)"}
-                padding={"1vw"}
-                borderTop={"solid 1px #f6643c"}
-              >
+              <Box className={styles.menuline}>
                 {menuSelected == 0 ? (
                   <Tabs>
-                    <Flex
-                      direction={"column"}
-                      alignItems={"center"}
-                      gap={"1vw"}
-                    >
-                      <TabList>
-                        <Flex direction={"row"} alignItems={"center"}>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                    <Flex className={styles.graph_menu}>
+                      <TabList  className={styles.menu}>
+                        <Flex>
+                          <Tab>
                             Overview
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Holdings
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Fees
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Policies
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Financial
                           </Tab>
-                          {/* <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          {/* <Tab>
                             Activity
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Depositors
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Social
                           </Tab> */}
                         </Flex>
                       </TabList>
                       <Box
-                        width={"60vw"}
                         minHeight={"30vw"}
                         borderRadius="10%"
                         borderTop={"solid 2px #f6643c"}
                         borderBottom={"solid 2px #f6643c"}
                         backgroundColor="blackAlpha.400"
-                        padding={"2%"}
+                        marginTop={"1vw"}
+                        width={"100%"}
                       >
-                        <TabPanels>
-                          <TabPanel>
-                            <Flex flexDirection={"column"} gap={"1rem"}>
-                              <Flex
-                                justifyContent={"space-between"}
-                                direction={"row"}
-                              >
-                                <Flex
-                                  direction={"row"}
-                                  gap={"1vw"}
-                                  alignItems={"center"}
-                                >
-                                  <Flex direction={"column"}>
-                                    <Flex direction={"row"}>
-                                      <Text fontSize={"4xl"}>
+                        <TabPanels className={styles.graph_container}>
+                          <TabPanel className={styles.graph}>
+                            <Flex>
+                              <Flex className={styles.wrapper}>
+                                <Flex className={styles.toptext}>
+                                  <Flex className={styles.price}>
+                                    <Flex>
+                                      <Text>
                                         {" "}
                                         {chartSelected == 1
                                           ? `${parseFloat(sharePrice) < 1
                                             ? parseFloat(
                                               sharePrice
                                             ).toExponential(2)
-                                            : parseFloat(sharePrice)
+                                            : parseFloat(sharePrice).toFixed(2)
                                           }`
                                           : `GAV: ${parseFloat(gav) < 1
                                             ? parseFloat(gav).toExponential(
                                               2
                                             )
-                                            : parseFloat(gav)
+                                            : parseFloat(gav).toFixed(2)
                                           }`}
                                       </Text>
                                       {denominationAsset != "deno" && (
-                                        <Box
-                                          style={{
-                                            width: "50px",
-                                            height: "50px",
-                                            borderRadius: "15px",
-                                            overflow: "hidden",
-                                            backgroundColor: "transparent",
-                                          }}
-                                        >
+                                        <Box>
                                           <Image
                                             src={returnImagefromAddress(
                                               denominationAssetAddress
@@ -2550,33 +2467,32 @@ const vault: NextPage = () => {
                                       )}
                                     </Flex>
                                     {chartSelected == 1 && (
-                                      <Text fontSize={"2xl"}>/ Share</Text>
+                                      <Text>/ Share</Text>
                                     )}
                                   </Flex>
                                   <Text
-                                    fontSize={"4xl"}
                                     color={
                                       timeframe == 0
-                                        ? dailyIncome
-                                          ? dailyIncome > 0
+                                        ? vaultInfo
+                                          ? vaultInfo.dailyIncome > 0
                                             ? "#31c48d"
                                             : "rgb(237,33,49)"
                                           : "#31c48d"
                                         : timeframe == 1
-                                          ? weeklyIncome
-                                            ? weeklyIncome > 0
+                                          ? vaultInfo
+                                            ? vaultInfo.weeklyIncome > 0
                                               ? "#31c48d"
                                               : "rgb(237,33,49)"
                                             : "#31c48d"
                                           : timeframe == 2
-                                            ? monthlyIncome
-                                              ? monthlyIncome > 0
+                                            ? vaultInfo
+                                              ? vaultInfo.monthlyIncome > 0
                                                 ? "#31c48d"
                                                 : "rgb(237,33,49)"
                                               : "#31c48d"
                                             : timeframe == 3
-                                              ? totalIncome
-                                                ? totalIncome > 0
+                                              ? vaultInfo
+                                                ? vaultInfo.totalIncome > 0
                                                   ? "#31c48d"
                                                   : "rgb(237,33,49)"
                                                 : "#31c48d"
@@ -2585,35 +2501,31 @@ const vault: NextPage = () => {
                                   >
                                     {" "}
                                     {timeframe == 0
-                                      ? dailyIncome == 0
+                                      ? vaultInfo.dailyIncome == 0
                                         ? "--"
-                                        : dailyIncome?.toPrecision(4)
+                                        : vaultInfo.dailyIncome?.toPrecision(2)
                                       : timeframe == 1
-                                        ? weeklyIncome == 0
+                                        ? vaultInfo.weeklyIncome == 0
                                           ? "--"
-                                          : weeklyIncome?.toPrecision(4)
+                                          : vaultInfo.weeklyIncome?.toPrecision(2)
                                         : timeframe == 2
-                                          ? monthlyIncome == 0
+                                          ? vaultInfo.monthlyIncome == 0
                                             ? "--"
-                                            : monthlyIncome?.toPrecision(4)
+                                            : vaultInfo.monthlyIncome?.toPrecision(4)
                                           : timeframe == 3
-                                            ? totalIncome == 0
+                                            ? vaultInfo.totalIncome == 0
                                               ? "--"
-                                              : totalIncome?.toPrecision(4)
+                                              : vaultInfo.totalIncome?.toPrecision(4)
                                             : "--"}
                                     %{" "}
                                   </Text>
                                 </Flex>
-                                <Flex
-                                  direction={"row"}
-                                  alignItems={"center"}
-                                  gap={"1rem"}
-                                >
+                                <Flex className={styles.selectors}>
                                   <Select onChange={handleInputChange}>
                                     <option value={1}>Share price</option>
                                     <option value={2}>Gross Asset value</option>
                                   </Select>
-                                  <Flex direction={"row"} gap={"1px"}>
+                                  <Flex>
                                     <Button
                                       borderRadius={"25% 0% 0% 25%"}
                                       backgroundColor={
@@ -2641,7 +2553,6 @@ const vault: NextPage = () => {
                                     >
                                       1M
                                     </Button>
-
                                     <Button
                                       borderRadius={"0% 25% 25% 0%"}
                                       backgroundColor={
@@ -2731,38 +2642,27 @@ const vault: NextPage = () => {
                                   {/* <Area type="monotone" dataKey="sharePriceInitial" stroke="" fill="url(#splitColor2)" /> */}
                                 </AreaChart>
                               </ResponsiveContainer>
-                              <Flex
-                                direction={"row"}
-                                justifyContent={"space-between"}
-                              >
-                                <Flex direction={"column"} gap={".200rem"}>
-                                  <Text
-                                    fontWeight={"light"}
-                                    fontSize={".875rem"}
-                                  >
+                              <Flex className={styles.infos}>
+                                <Flex>
+                                  <Text style={{textAlign: "left"}}>
                                     Creation Date
                                   </Text>
-                                  <Text
-                                    fontWeight={"bold"}
-                                    fontSize={"1.125rem"}
-                                  >
+                                  <Text style={{textAlign: "left"}}>
                                     {vaultInfo?.dataFinance != undefined &&
                                       moment(
                                         vaultInfo?.dataFinance[0].date
-                                      ).format("dddd, MMMM Do, YYYY h:mm:ss A")}
+                                      ).format("dddd, MMMM Do, YYYY")}
                                   </Text>
                                 </Flex>
-                                <Flex direction={"row"} gap={"1rem"}>
-                                  <Flex direction={"column"} gap={".200rem"}>
+                                <Flex>
+                                  <Flex>
                                     <Text
-                                      fontWeight={"light"}
-                                      fontSize={".875rem"}
+                                       
                                     >
                                       Last Day
                                     </Text>
                                     <Text
-                                      fontWeight={"bold"}
-                                      fontSize={"1.125rem"}
+                                       
                                       color={
                                         vaultInfo?.dailyIncome
                                           ? vaultInfo?.dailyIncome < 0
@@ -2777,16 +2677,14 @@ const vault: NextPage = () => {
                                       %
                                     </Text>
                                   </Flex>
-                                  <Flex direction={"column"} gap={".200rem"}>
+                                  <Flex  >
                                     <Text
-                                      fontWeight={"light"}
-                                      fontSize={".875rem"}
+                                       
                                     >
                                       Last Week
                                     </Text>
                                     <Text
-                                      fontWeight={"bold"}
-                                      fontSize={"1.125rem"}
+                                       
                                       color={
                                         vaultInfo?.weeklyIncome
                                           ? vaultInfo?.weeklyIncome < 0
@@ -2801,16 +2699,14 @@ const vault: NextPage = () => {
                                       %
                                     </Text>
                                   </Flex>
-                                  <Flex direction={"column"} gap={".200rem"}>
+                                  <Flex  >
                                     <Text
-                                      fontWeight={"light"}
-                                      fontSize={".875rem"}
+                                       
                                     >
                                       Last Month
                                     </Text>
                                     <Text
-                                      fontWeight={"bold"}
-                                      fontSize={"1.125rem"}
+                                       
                                       color={
                                         vaultInfo?.monthlyIncome
                                           ? vaultInfo?.monthlyIncome < 0
@@ -2825,16 +2721,12 @@ const vault: NextPage = () => {
                                       %
                                     </Text>
                                   </Flex>
-                                  <Flex direction={"column"} gap={".200rem"}>
-                                    <Text
-                                      fontWeight={"light"}
-                                      fontSize={".875rem"}
-                                    >
+                                  <Flex >
+                                    <Text>
                                       Since Creation
                                     </Text>
                                     <Text
-                                      fontWeight={"bold"}
-                                      fontSize={"1.125rem"}
+                                       
                                       color={
                                         vaultInfo?.totalIncome
                                           ? vaultInfo?.totalIncome < 0
@@ -3274,17 +3166,13 @@ const vault: NextPage = () => {
                   </Tabs>
                 ) : menuSelected == 1 ? (
                   <Tabs>
-                    <Flex
-                      direction={"column"}
-                      alignItems={"center"}
-                      gap={"1vw"}
-                    >
-                      <TabList borderBottom={"0px solid "}>
-                        <Flex direction={"row"} alignItems={"center"}>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                    <Flex className={styles.graph_menu}>
+                      <TabList>
+                        <Flex>
+                          <Tab>
                             Buy
                           </Tab>
-                          <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                          <Tab>
                             Sell
                           </Tab>
                         </Flex>
@@ -3902,12 +3790,12 @@ const vault: NextPage = () => {
                             <Tab fontSize={"1xl"} fontWeight={"bold"}>
                               Track
                             </Tab>
-                            <Tab fontSize={"1xl"} fontWeight={"bold"}>
+                            {/* <Tab fontSize={"1xl"} fontWeight={"bold"}>
                               Policies
                             </Tab>
                             <Tab fontSize={"1xl"} fontWeight={"bold"}>
                               Fee
-                            </Tab>
+                            </Tab> */}
                           </Flex>
                         </TabList>
                         <Box
@@ -4884,7 +4772,6 @@ const vault: NextPage = () => {
                                     <Flex direction={"row"} gap={"25px"} justifyContent={"center"} width={"100%"} alignItems={"baseline"}>
 
                                       <Flex direction={"column"} gap={"5px"} justifyContent={"center"} alignSelf={"center"} width={"40%"}>
-                                        {console.log(generalAllowedTrackedAsset.filter(item => allowedTrackedAsset.includes(item)).length)}
                                         {generalAllowedTrackedAsset.filter(item => allowedTrackedAsset.includes(item)).length == 0 ?
                                           <Text>You are up to date with the current assets available on Magnety</Text>
                                           :

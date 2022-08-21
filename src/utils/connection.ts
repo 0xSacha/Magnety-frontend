@@ -12,7 +12,6 @@ export const connect = async () => {
   const conn = await mongoose
     .connect("mongodb+srv://Sacha:Sacha123@cluster0.qcw22fq.mongodb.net/?retryWrites=true&w=majority")
     .catch(err => console.log(err))
-  console.log("Mongoose Connection Established")
 
   // OUR TODO SCHEMA
   const TodoSchema = new mongoose.Schema({

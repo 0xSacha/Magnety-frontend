@@ -13,21 +13,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const handleCase: ResponseFuncs = {
     // RESPONSE FOR GET REQUESTS
     GET: async (req: NextApiRequest, res: NextApiResponse) => {
-      const { Contract } = await connect() // connect to database
-      res.json(await Contract.find({}).sort({ $natural: -1 }).limit(15).catch(catcher))
+      const { User } = await connect() // connect to database
+      res.json(await User.find({}).catch(catcher))
     },
     // RESPONSE POST REQUESTS
-    // POST: async (req: NextApiRequest, res: NextApiResponse) => {
-    //     if(!req.body.name || !req.body.symbol || !req.body.description || !req.body.type || !req.body.min || !req.body.max || !req.body.lockup || !req.body.limit || !req.body. entranceFees || !req.body.exitFees || !req.body.managementFees || !req.body.performanceFees || !req.body.tags || req.body.image) {
-    //         return res.status(400).json({
-    //             status_code: 0,
-    //             error_msg: "Require Params Missing",
-    //         });
-    //     }
-    //   const { Contract } = await connect() // connect to database
-    //   console.log(req.body)
-    //   res.json(await Contract.create(req.body).catch(catcher))
-    // },
+    POST: async (req: NextApiRequest, res: NextApiResponse) => {
+        if(req.body.name || req.body.description) {
+            return res.status(400).json({
+                status_code: 0,
+                error_msg: "Require Params Missing",
+            });
+        }
+      const { User } = await connect() // connect to database
+      res.json(await User.create(req.body).catch(catcher))
+    },
   }
 
   // Check if there is a response for the particular method, if so invoke it, if not response with an error

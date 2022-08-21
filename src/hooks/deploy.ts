@@ -51,17 +51,14 @@ export function useContractFactory({
 
     const deploy = useCallback(
         async ({ constructorCalldata }: DeployArgs) => {
-            console.log(compiledContract)
 
             if (compiledContract) {
 
                 const factory2: ContractFactory = new ContractFactory(compiledContract, library, abi)
 
 
-                console.log(factory2)
 
                 if (factory) {
-                    console.log("facory is here")
                     const contract = await factory.deploy(constructorCalldata);
                     addTransaction({
                         status: "TRANSACTION_RECEIVED",
